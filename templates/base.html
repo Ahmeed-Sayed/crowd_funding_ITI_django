@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{%load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{%block title%} {%endblock%}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}" />
+  </head>
+  <body>
+    <div class="bg-dark p-3 mb-5">
+      <a href="{% url 'accountLogin'%}" class="text-decoration-none text-white"
+        >Login</a
+      >
+      <a
+        href="{% url 'accountRegister'%}"
+        class="text-decoration-none text-white"
+        >Register</a
+      >
+    </div>
+    <div class="container">{%block body%} {%endblock%}</div>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
+  </body>
+</html>
