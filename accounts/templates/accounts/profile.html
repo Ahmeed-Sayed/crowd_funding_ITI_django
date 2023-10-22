@@ -1,0 +1,24 @@
+{%extends 'base.html'%} {%load static%} {%block body%} username :
+{{user.user.username}}<br />
+First Name: {{user.user.first_name}}<br />
+Last Name: {{user.user.last_name}}<br />
+Email :{{user.user.email}}/<br />
+User Id: {{user.id}}/<br />
+<img src="{{  user.image.url }}" width="200px" height="200px" /><br />
+----------------------- <br />
+address : {{user.address}}<br />
+birthdate : {{user.birthdate}} <br />
+
+<a href='{% url "profileEdit" user.id%}'>
+  <button class="btn btn-info">edit</button></a
+>
+<form method="POST" action="{% url 'profileDelete' user.id %}">
+  {% csrf_token %}
+  <input
+    type="submit"
+    value="Delete Profile"
+    class="bg-danger text-light"
+    onclick="return confirm('Are you sure you want to delete your profile?')"
+  />
+</form>
+{%endblock%}

@@ -24,9 +24,20 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("username", "email", "phoneNumber", "password1", "password2", "image")
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "phoneNumber",
+            "password1",
+            "password2",
+            "image",
+        )
         widgets = {
             "username": forms.TextInput(attrs={"class": "form-control"}),
+            "first_name": forms.TextInput(attrs={"class": "form-control"}),
+            "last_name": forms.TextInput(attrs={"class": "form-control"}),
             "email": forms.EmailInput(attrs={"class": "form-control"}),
         }
 
@@ -51,3 +62,50 @@ class RegisterForm(UserCreationForm):
             user.save()
             user_profile.save()
         return user, user_profile
+
+
+class ProfileEditForm(forms.ModelForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    last_name = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+
+    class Meta:
+        model = UserProfile
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "phoneNumber",
+            "birthdate",
+            "address",
+            "image",
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileEditForm, self).__init__(*args, **kwargs)
+        self.fields["username"].initial = self.instance.user.username
+        self.fields["first_name"].initial = self.instance.user.first_name
+        self.fields["last_name"].initial = self.instance.user.last_name
+        self.fields["email"].initial = self.instance.user.email
+        self.fields["phoneNumber"].widget = forms.TextInput(
+            attrs={"class": "form-control"}
+        )
+        self.fields["image"].widget = forms.FileInput(attrs={"class": "form-control"})
+        self.fields["birthdate"].widget = forms.DateInput(
+            attrs={"class": "form-control", "type": "date"}
+        )
+        self.fields["address"].widget = forms.TextInput(attrs={"class": "form-control"})
+    def save(self, commit=True):
+        user = super(ProfileEditForm, self).save(commit=False)
+        user.user.username = self.cleaned_data["username"]
+        user.user.first_name = self.cleaned_data["first_name"]
+        user.user.last_name = self.cleaned_data["last_name"]
+
+        if commit:
+            user.user.save()
+            user.save()
+
+        return user

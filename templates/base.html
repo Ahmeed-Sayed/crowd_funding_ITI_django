@@ -17,6 +17,9 @@
       <a href="{% url 'accountLogout'%}" class="text-decoration-none text-white mx-3"
         >Logout</a
       >
+      <a href="{% url 'profile' request.session.profileId %}" class="text-decoration-none text-white mx-3"
+        >Profile</a
+      >
       {%else%}
       <a href="{% url 'accountLogin'%}" class="text-decoration-none text-white mx-3"
         >Login</a

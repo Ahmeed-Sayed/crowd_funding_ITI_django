@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.urls import reverse
 from django.views import View
 from .models import UserProfile
-from .forms import RegisterForm
+from .forms import RegisterForm, ProfileEditForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
@@ -54,8 +54,8 @@ def activateEmail(request, user, to_email):
     if email.send():
         messages.success(
             request,
-            f"Dear <b>{user}</b>, please go to you email <b>{to_email}</b> inbox and click on \
-                received activation link to confirm and complete the registration. <b>Note:</b> Check your spam folder.",
+            f"Dear {user}, please go to you email {to_email} inbox and click on \
+                received activation link to confirm and complete the registration. Note: Check your spam folder.",
         )
     else:
         messages.error(
@@ -75,6 +75,8 @@ class AccountRegister(View):
             user, user_profile = form.save(commit=False)
             user.is_active = False
             user.save()
+            user_profile.user = user  #
+            user_profile.save()
             activateEmail(request, user, form.cleaned_data["email"])
             return redirect(reverse("accountRegister"))
         return render(request, "accounts/accountRegister.html", {"form": form})
@@ -88,8 +90,9 @@ class AccountLogin(View):
             password = form.cleaned_data.get("password")
             user = authenticate(request, username=email, password=password)
             if user is not None:
-                request.session["username"] = user.username
-                request.session["userId"] = user.id
+                profile=UserProfile.objects.get(user=user)
+                request.session["username"] = profile.user.username
+                request.session["profileId"] = profile.id
                 return redirect(reverse("accountRegister"))
             else:
                 form.add_error(None, "Invalid email or password")
@@ -103,3 +106,35 @@ class AccountLogin(View):
 def accountLogout(request):
     request.session.flush()
     return redirect(reverse("accountRegister"))
+
+
+def profileView(request,id):
+    user = get_object_or_404(UserProfile, id=id)
+    form = ProfileEditForm(instance=user)
+    return render(request, "accounts/profile.html", {"user": user, "form": form})
+
+
+class ProfileEditView(View):
+    def get(self, request, *args, **kwargs):
+        id = kwargs.pop("id")
+        user=get_object_or_404(UserProfile, id=id)
+        form= ProfileEditForm(instance=user)
+        return render(request, "accounts/profileEdit.html", {"form": form})
+    def post(self, request, *args, **kwargs):
+        id=kwargs.pop("id")
+        user=get_object_or_404(UserProfile, id=id)
+        form = ProfileEditForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("profile", args=[user.id]))
+        else :
+            return render(request, "accounts/profileEdit.html", {"form": form})
+        
+def profileDelete(request,id):
+         if request.method=="POST":
+            profile=get_object_or_404(UserProfile, id=id)
+            user=profile.user
+            request.session.flush()
+            user.delete()
+            return redirect(reverse("accountRegister"))
+         else: return None  

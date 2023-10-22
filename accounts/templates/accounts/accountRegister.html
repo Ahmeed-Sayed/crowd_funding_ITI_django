@@ -1,11 +1,11 @@
 {%extends 'base.html'%} {%block title%} Register {%endblock%} {%block body%}
 {%if messages%} {% for message in messages%} {{ message }} {% endfor %}
 {%endif%} {% if request.session.username %}
-<p>Welcome, {{ request.session.username }}!</p>
+<p class='fs-4 fw-bold'>Welcome, {{ request.session.username }}!</p>
 {% comment %}
 <p>Welcome, {{ request.session.userId }}!</p>
 {% endcomment %} {% else %}
-<p>Welcome, guest!</p>
+<p class='fs-4 fw-bold' >Welcome, guest!</p>
 {% endif %}
 
 <form method="post" enctype="multipart/form-data">
