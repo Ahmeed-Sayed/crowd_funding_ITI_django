@@ -2,7 +2,22 @@
 {%if messages%} {% for message in messages%} {{ message }} {% endfor %}
 {%endif%}
 <form method="post" enctype="multipart/form-data">
-  {% csrf_token %} {{ form.as_p}}
+  {% csrf_token %}
+  {%for field in form%}
+  <div class='d-flex flex-column'>{%if field.label == 'Username'%}
+    <div class='mb-2'>Email
+  {%else%}
+  <div class='mb-2'>{{field.label}}
+  {%endif%}
+  
+  {{field}}
+  {{field.errors}}
+</div>
+  <div>
+  {%endfor%}
+  {%if  form.errors%}
+  <div class="alert alert-danger fw-bold">Please enter a valid email and password</div>
+  {%endif%}
   <button type="submit">Submit</button>
 </form>
 {%endblock%}

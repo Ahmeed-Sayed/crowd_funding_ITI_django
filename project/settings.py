@@ -131,3 +131,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+
+
+AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend']
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM = 'djangitittest@gmail.com'
+EMAIL_HOST_USER = 'djangoititest@gmail.com'
+EMAIL_HOST_PASSWORD = 'ohmw oypo azym xhkf'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+PASSWORD_RESET_TIMEOUT = 86400
