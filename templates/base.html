@@ -11,9 +11,10 @@
     
     
     
-    <div class="bg-dark p-3 mb-5 text-end fs-5 ">
+    <div class="bg-dark p-3 mb-5 text-end fs-5 text-light">
     
       {%if request.session.username %}
+      request.session.profileId= {{request.session.profileId}}
       <a href="{% url 'accountLogout'%}" class="text-decoration-none text-white mx-3"
         >Logout</a
       >

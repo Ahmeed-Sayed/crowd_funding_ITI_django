@@ -17,6 +17,7 @@ class TagsModel(models.Model):
 
 
 class ProjectsModel(models.Model):
+    user=models.ForeignKey(UserProfile, related_name='projects',on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     details = models.TextField(max_length=500)
     category = models.ManyToManyField(CategoriesModel)
