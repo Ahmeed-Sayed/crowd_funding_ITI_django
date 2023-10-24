@@ -1,0 +1,56 @@
+{%extends 'base.html'%} {%block body%}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="container bg-dark text-light rounded shadow shadow-lg my-3 p-3">
+  <p>Project Title: {{ currentProject.title }}</p>
+  <p>Project Details: {{ currentProject.details }}</p>
+  <p>Total target: {{ currentProject.target }}</p>
+  <p>Start Time: {{ currentProject.start_time }}</p>
+  <p>End Time: {{ currentProject.end_time }}</p>
+  <p>Donations: {{ currentProject.donations }}</p>
+
+  <h3>Ratings:</h3>
+  {% for rating in currentProject.ratings.all %}
+  <p>{{ rating.user.user.username }} || {{ rating.rating }}</p>
+    {% endfor %}
+
+  <h3>Categories:</h3>
+  {% for category in currentProject.category.all %}
+  <p>{{ category.name }}</p>
+  {% endfor %}
+
+  <h3>Tags:</h3>
+  {% for tag in currentProject.tags.all %}
+  <p>{{ tag.name }}</p>
+  {% endfor %}
+  <form method="post" class="form-group">
+    {% csrf_token %}
+    <label for="ratingInput">Rating:</label>
+    <input type="number" name="rating" id="ratingInput" class="form-control" min="1" max="5" required>
+    <input type="submit" name="submit-rating" value="Submit Rating" class="btn btn-primary mt-2">
+</form>
+</div>
+
+<h3>Comments:</h3>
+  {% for comment in currentProject.comments.all %}
+  <div class='form-control bg-info'>
+  <p>{{ comment.user.user.username }}</p>
+  <p>{{ comment.text }}</p>
+  </div>
+  {% endfor %}
+<form method="post" class="form-group">
+    {% csrf_token %}
+    <label for="commentText">Comment:</label>
+    <textarea name="text" id="commentText" class="form-control" required></textarea>
+    <input type="submit" name="submit-comment" value="Submit Comment" class="btn btn-primary mt-2">
+</form>
+
+
+{%endblock%}
