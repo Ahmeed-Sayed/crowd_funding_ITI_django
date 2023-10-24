@@ -1,0 +1,33 @@
+{%extends 'base.html'%} {%block body%}
+<div class="container bg-dark text-light rounded shadow shadow-lg my-3 p-3">
+  <p>Project Title: {{ currentProject.title }}</p>
+  <p>Project Details: {{ currentProject.details }}</p>
+  <p>Total target: {{ currentProject.target }}</p>
+  <p>Start Time: {{ currentProject.start_time }}</p>
+  <p>End Time: {{ currentProject.end_time }}</p>
+  <p>Donations: {{ currentProject.donations }}</p>
+
+  <!-- For ManyToMany fields like category and tags, you need to loop through the objects -->
+  <h3>Categories:</h3>
+  {% for category in currentProject.category.all %}
+  <p>{{ category.name }}</p>
+  {% endfor %}
+
+  <h3>Tags:</h3>
+  {% for tag in currentProject.tags.all %}
+  <p>{{ tag.name }}</p>
+  {% endfor %} --------------------------------<br />
+</div>
+<div class="bg-info pb-4">
+  <h2>Comments</h2>
+  {%for comment in projectComments %}
+  <h5>{{comment.user.user.username}}</h5>
+  <p class='form-control fs-5'>{{comment.text}}</p>
+  {%endfor%}
+</div>
+--------------------------------<br />
+<form method="post">
+  {%csrf_token%} {{commentForm.as_p}}
+  <button type="submit" class="btn btn-primary">Submit</button>
+  {%endblock%}
+</form>

@@ -37,6 +37,8 @@ class CommentsModel(models.Model):
     project = models.ForeignKey(
         ProjectsModel, on_delete=models.CASCADE, related_name="comments"
     )
+    def __str__(self):
+        return f'comment User: {self.user.user.username} || Comment Text: {self.text} || Comment Project: {self.project}'
 
 
 class UserProjectRating(models.Model):
