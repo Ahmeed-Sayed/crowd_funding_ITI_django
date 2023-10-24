@@ -1,5 +1,5 @@
 from django import forms
-from .models import ProjectsModel, PictuersModel, CommentsModel
+from .models import ProjectsModel, UserProjectRating, CommentsModel
 
 
 class ProjectCreationForm(forms.ModelForm):
@@ -32,3 +32,10 @@ class CommentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CommentForm, self).__init__(*args, **kwargs)
         self.fields["text"].widget = forms.TextInput(attrs={"class": "form-control"})
+
+
+
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = UserProjectRating
+        fields = ['rating']
