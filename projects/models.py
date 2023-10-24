@@ -25,8 +25,8 @@ class ProjectsModel(models.Model):
     tags = models.ManyToManyField(TagsModel)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    donations = models.FloatField(default=0)
-
+    completed=models.BooleanField(default=False)
+    closed=models.BooleanField(default=False)
     def __str__(self):
         return self.title
 
@@ -70,3 +70,12 @@ class CommentReportModel(models.Model):
         ProjectsModel, related_name="commentReports", on_delete=models.CASCADE
     )
     text = models.TextField(max_length=200)
+
+class DonationModel(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    project = models.ForeignKey(
+        ProjectsModel, related_name="donations", on_delete=models.CASCADE
+    )
+    donation = models.FloatField()
+    def __self__(self):
+        return self.donation

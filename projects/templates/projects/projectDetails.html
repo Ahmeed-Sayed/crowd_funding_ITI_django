@@ -14,12 +14,18 @@
   <p>Total target: {{ currentProject.target }}</p>
   <p>Start Time: {{ currentProject.start_time }}</p>
   <p>End Time: {{ currentProject.end_time }}</p>
-  <p>Donations: {{ currentProject.donations }}</p>
+  <p>Donations:     
+    {% for donation in currentProject.donations.all %}
+        <p>User: {{ donation.user.user.username }}, Amount: {{ donation.donation }}</p>
+    {% endfor %}
+    </p>
 
   <h3>Ratings:</h3>
   {% for rating in currentProject.ratings.all %}
   <p>{{ rating.user.user.username }} || {{ rating.rating }}</p>
     {% endfor %}
+<p>Average Rating: {{ averageRating }}</p>
+
 
   <h3>Categories:</h3>
   {% for category in currentProject.category.all %}
@@ -30,12 +36,26 @@
   {% for tag in currentProject.tags.all %}
   <p>{{ tag.name }}</p>
   {% endfor %}
+ <h3> Rate Project </h3>
   <form method="post" class="form-group">
     {% csrf_token %}
-    <label for="ratingInput">Rating:</label>
-    <input type="number" name="rating" id="ratingInput" class="form-control" min="1" max="5" required>
+    {{ratingForm}}
     <input type="submit" name="submit-rating" value="Submit Rating" class="btn btn-primary mt-2">
 </form>
+
+<h3 class='mt-4'> Donate Now </h3>
+<form method="post" class="form-group">
+    {% csrf_token %}
+    {% if not currentProject.completed %}
+        <input type="number" name="donation" class="form-control" min="1" required>
+        <input type="submit" value="Donate" class="btn btn-primary mt-2">
+    {% else %}
+        <input type="number" name="donation" class="form-control" min="1" disabled>
+        <input type="submit" value="Donate" class="btn btn-primary mt-2" disabled>
+    {% endif %}
+</form>
+
+
 </div>
 
 <h3>Comments:</h3>

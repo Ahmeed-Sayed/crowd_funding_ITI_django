@@ -1,5 +1,5 @@
 from django import forms
-from .models import ProjectsModel, UserProjectRating, CommentsModel
+from .models import ProjectsModel, UserProjectRating, CommentsModel,DonationModel
 
 
 class ProjectCreationForm(forms.ModelForm):
@@ -39,3 +39,14 @@ class RatingForm(forms.ModelForm):
     class Meta:
         model = UserProjectRating
         fields = ['rating']
+    def __init__(self, *args, **kwargs):
+        super(RatingForm, self).__init__(*args, **kwargs)
+        self.fields["rating"].widget = forms.NumberInput(attrs={"class": "form-control"})
+
+class DonationForm(forms.ModelForm):
+    class Meta:
+        model=DonationModel
+        fields=('donation',)
+    def __init__(self, *args, **kwargs):
+        super(DonationForm, self).__init__(*args, **kwargs)
+        self.fields["donation"].widget = forms.NumberInput(attrs={"class": "form-control"})
