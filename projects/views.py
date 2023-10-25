@@ -28,6 +28,9 @@ class BasePictureFormSet(forms.BaseFormSet):
 
 PictureFormSet = forms.formset_factory(PictureForm, extra=0, min_num=5, formset=BasePictureFormSet)
 
+def project_list(request):
+    projects = ProjectsModel.objects.all()  # Fetch all projects
+    return render(request, 'projects/project_list.html', {'projects': projects})
 
 class CreateProject(View):
     def get(self, request, *args, **kwargs):
