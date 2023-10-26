@@ -8,9 +8,16 @@ from django.db.models import Avg
 # Create your views here.
 from .forms import ProjectCreationForm, CommentForm, RatingForm, DonationForm
 
+def home(request):
+    top_projects = ProjectsModel.objects.filter(completed=True).annotate(avg_rating=Avg('ratings__rating')).order_by('-avg_rating')[:5]
+    print(top_projects)
+    return render(request, 'projects/home.html', {'top_projects': top_projects})
+
 def project_list(request):
     projects = ProjectsModel.objects.all()  # Fetch all projects
     return render(request, 'projects/project_list.html', {'projects': projects})
+
+
 
 # class CreateProject(View):
 #     def get(self, request, *args, **kwargs):
