@@ -48,10 +48,19 @@ def home(request):
                     'featured_projects': featured_projects,
                     'categories': categories,
                     'category_projects': category_projects})
-{ }
+
+
+
+
+
 def project_list(request):
     projects = ProjectsModel.objects.all()  # Fetch all projects
     return render(request, "projects/project_list.html", {"projects": projects})
+
+def category_projects(request, category_id):
+    category = CategoriesModel.objects.get(pk=category_id)
+    projects = ProjectsModel.objects.filter(category=category)
+    return render(request, 'projects/category_projects.html', {'category': category, 'projects': projects})
 
 # class CreateProject(View):
 #     def get(self, request, *args, **kwargs):
