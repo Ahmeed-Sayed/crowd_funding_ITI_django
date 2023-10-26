@@ -1,7 +1,13 @@
 from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.views import View
 from accounts.models import UserProfile
-from .models import ProjectsModel, CommentsModel, UserProjectRating, CommentReportModel, CategoriesModel
+from .models import (
+    ProjectsModel,
+    CommentsModel,
+    UserProjectRating,
+    CommentReportModel,
+    CategoriesModel,
+)
 from django.contrib import messages
 from django.db.models import Avg
 from django import forms
@@ -31,9 +37,17 @@ PictureFormSet = forms.formset_factory(
 
 
 def home(request):
-    top_projects = ProjectsModel.objects.filter(completed=True).annotate(avg_rating=Avg('ratings__rating')).order_by('-avg_rating')[:5]
-    latest_projects = ProjectsModel.objects.filter(completed=True).order_by('-start_time')[:5]
-    featured_projects = ProjectsModel.objects.filter(is_featured=True).order_by('-start_time')[:5]
+    top_projects = (
+        ProjectsModel.objects.all()
+        .annotate(avg_rating=Avg("ratings__rating"))
+        .order_by("-avg_rating")[:5]
+    )
+    latest_projects = ProjectsModel.objects.all().order_by(
+        "-start_time"
+    )[:5]
+    featured_projects = ProjectsModel.objects.filter(is_featured=True).order_by(
+        "-start_time"
+    )[:5]
 
     categories = CategoriesModel.objects.all()
     category_projects = {}  # A dictionary to store projects for each category
@@ -42,32 +56,45 @@ def home(request):
         projects = ProjectsModel.objects.filter(category=category)
         category_projects[category] = projects
 
-    return render(request, 'projects/home.html',
-                   {'top_projects': top_projects,
-                    'latest_projects': latest_projects,
-                    'featured_projects': featured_projects,
-                    'categories': categories,
-                    'category_projects': category_projects})
-
-
-
+    return render(
+        request,
+        "projects/home.html",
+        {
+            "top_projects": top_projects,
+            "latest_projects": latest_projects,
+            "featured_projects": featured_projects,
+            "categories": categories,
+            "category_projects": category_projects,
+        },
+    )
 
 
 def project_list(request):
     projects = ProjectsModel.objects.all()  # Fetch all projects
     return render(request, "projects/project_list.html", {"projects": projects})
 
+
 def category_projects(request, category_id):
     category = CategoriesModel.objects.get(pk=category_id)
     projects = ProjectsModel.objects.filter(category=category)
-    return render(request, 'projects/category_projects.html', {'category': category, 'projects': projects})
+    return render(
+        request,
+        "projects/category_projects.html",
+        {"category": category, "projects": projects},
+    )
 
-# class CreateProject(View):
-#     def get(self, request, *args, **kwargs):
-#         if "profileId" not in request.session:
-#             return redirect(reverse("accountLogin"))
-#         form = ProjectCreationForm()
-#         return render(request, "projects/create.html", {"form": form})
+
+class CreateProject(View):
+    def get(self, request, *args, **kwargs):
+        if "profileId" not in request.session:
+            return redirect(reverse("accountLogin"))
+        project_form = ProjectCreationForm()
+        picture_formset = PictureFormSet(prefix="pictures")
+        return render(
+            request,
+            "projects/create.html",
+            {"project_form": project_form, "picture_formset": picture_formset},
+        )
 
     def post(self, request, *args, **kwargs):
         if "profileId" not in request.session:
@@ -96,6 +123,7 @@ def category_projects(request, category_id):
                 "projects/create.html",
                 {"project_form": project_form, "picture_formset": picture_formset},
             )
+
 
 
 class ProjectDetailsView(View):
