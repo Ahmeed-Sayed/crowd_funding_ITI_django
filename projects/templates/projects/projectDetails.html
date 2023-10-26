@@ -59,18 +59,23 @@
 </div>
 
 <h3>Comments:</h3>
-  {% for comment in currentProject.comments.all %}
-  <div class='form-control bg-info'>
-  <p>{{ comment.user.user.username }}</p>
+<form method="post" class="form-group">
+  {% csrf_token %}
+  <label for="commentText">Comment:</label>
+ <textarea name="text" id="commentText" class="form-control" required></textarea>
+  <input type="submit" name="submit-comment" value="Submit Comment" class="btn btn-primary my-2">
+</form>
+
+
+{% for comment in currentProject.comments.all %}
+  <div class='form-control bg-info my-3'>
+    <div class='d-flex justify-content-between'> 
+   <p>{{ comment.user.user.username }}</p>
+  <a href='{%url "reportComment" id=currentProject.id commentID=comment.id %}'><button type'button' class='btn btn-danger'>Report</button></a>
+    </div>
   <p>{{ comment.text }}</p>
   </div>
   {% endfor %}
-<form method="post" class="form-group">
-    {% csrf_token %}
-    <label for="commentText">Comment:</label>
-    <textarea name="text" id="commentText" class="form-control" required></textarea>
-    <input type="submit" name="submit-comment" value="Submit Comment" class="btn btn-primary mt-2">
-</form>
 
 
 {%endblock%}
