@@ -69,8 +69,7 @@ class CommentReportModel(models.Model):
     project = models.ForeignKey(
         ProjectsModel, related_name="commentReports", on_delete=models.CASCADE
     )
-    text = models.TextField(max_length=200)
-
+    comment=models.ForeignKey(CommentsModel,on_delete=models.CASCADE,related_name='reportedComment')
 class DonationModel(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     project = models.ForeignKey(
