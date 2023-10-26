@@ -25,6 +25,7 @@ class ProjectsModel(models.Model):
     tags = models.ManyToManyField(TagsModel)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    is_featured = models.BooleanField(default=False)
     completed=models.BooleanField(default=False)
     closed=models.BooleanField(default=False)
     def __str__(self):
