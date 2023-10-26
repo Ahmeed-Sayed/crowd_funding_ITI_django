@@ -9,7 +9,8 @@ urlpatterns = [
     path("create/", views.CreateProject.as_view(), name="createProject"),
     path("<int:id>/projectDetails/",views.ProjectDetailsView.as_view(),name="projectDetails",
     ),
-     path("<int:id>/projectDetails/report-comment/<int:commentID>",views.reportComment,name="reportComment",)
+     path("<int:id>/projectDetails/report-comment/<int:commentID>",views.reportComment,name="reportComment"),
+     path("<int:id>/projectDetails/reportProject",views.reportProject,name="reportProject",)
     # path('/<int:id>/edit',editProject,name='editProject'),
     # path('/<int:id>/delete',deleteProject,name='deleteProject'),
     # path('/<int:id>/add-comment',addComment,name='addComment'),
