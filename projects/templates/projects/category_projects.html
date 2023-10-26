@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link href="{% static  'css/bootstrap.min.css' %}" rel="stylesheet" />
+    <link
+      href="{% static 'css/bootstrap-icons/font/bootstrap-icons.css' %}"
+      rel="stylesheet"
+    />
+    <title>Projects in {{ category.name }}</title>
+</head>
+<body>
+    <h1>Projects in {{ category.name }}</h1>
+
+    
+        {% for project in projects %}
+            <div class="card d-flex" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                    <p class="card-text">{{ project.details }}</p>
+                    <p>Target: ${{ project.target }}</p>
+                    <p>Start Time: {{ project.start_time }}</p>
+                    <p>End Time: {{ project.end_time }}</p>
+                    <p>Is Featured: {% if project.is_featured %}Yes{% else %}No{% endif %}</p>
+                    <a href="#" class="btn btn-primary">View Project</a>
+                </div>
+            </div>
+            
+        {% endfor %}
+    
+
+    <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+    <script src="{% static  'js/bootstrap.bundle.min.js' %}"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
