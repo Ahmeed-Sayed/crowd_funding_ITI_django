@@ -7,6 +7,7 @@ from .models import (
     UserProjectRating,
     CommentReportModel,
     CategoriesModel,
+    ProjectReportModel,
 )
 from django.contrib import messages
 from django.db.models import Avg
@@ -42,9 +43,7 @@ def home(request):
         .annotate(avg_rating=Avg("ratings__rating"))
         .order_by("-avg_rating")[:5]
     )
-    latest_projects = ProjectsModel.objects.all().order_by(
-        "-start_time"
-    )[:5]
+    latest_projects = ProjectsModel.objects.all().order_by("-start_time")[:5]
     featured_projects = ProjectsModel.objects.filter(is_featured=True).order_by(
         "-start_time"
     )[:5]
@@ -123,7 +122,6 @@ class CreateProject(View):
                 "projects/create.html",
                 {"project_form": project_form, "picture_formset": picture_formset},
             )
-
 
 
 class ProjectDetailsView(View):
@@ -226,7 +224,26 @@ def reportComment(request, id, commentID):
     if existingReport:
         messages.info(request, "You have already reported this comment.")
         return redirect("projectDetails", id=id)
-    newReport = CommentReportModel.objects.create(
+    CommentReportModel.objects.create(
         user=currentUser, project=currentProject, comment=currentComment
     )
+    return redirect("projectDetails", id=id)
+
+
+def reportProject(request, id):
+    if "profileId" not in request.session:
+        return redirect(reverse("accountLogin"))
+    currentProject = get_object_or_404(ProjectsModel, id=id)
+    currentUser = get_object_or_404(UserProfile, id=request.session["profileId"])
+    if currentProject.user.id == request.session["profileId"]:
+        messages.info(request,"You Can't Report your own project")
+        return redirect("projectDetails", id=id)
+    existingReport = ProjectReportModel.objects.filter(
+        user=currentUser, project=currentProject
+    ).first()
+    if existingReport:
+        messages.info(request, "You have already reported this comment.")
+        return redirect("projectDetails", id=id)
+    ProjectReportModel.objects.create(
+        user=currentUser, project=currentProject)
     return redirect("projectDetails", id=id)
