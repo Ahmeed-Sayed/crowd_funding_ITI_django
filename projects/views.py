@@ -1,10 +1,11 @@
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.views import View
 from accounts.models import UserProfile
-from .models import ProjectsModel, CommentsModel, UserProjectRating, PictuersModel
+from .models import ProjectsModel, CommentsModel, UserProjectRating, CommentReportModel
 from django.contrib import messages
 from django.db.models import Avg
 from django import forms
+
 # Create your views here.
 from .forms import (
     ProjectCreationForm,
@@ -14,23 +15,25 @@ from .forms import (
     PictureForm,
 )
 
+
 class BasePictureFormSet(forms.BaseFormSet):
     def clean(self):
         super().clean()
-        
-        # Add your custom validation for minimum number of forms
-        if any(self.errors):
-            return "Please enter at least five pictures"
 
         uploaded_pictures = len([form for form in self.forms if form.cleaned_data])
         if uploaded_pictures < 5:
             raise forms.ValidationError("You must upload at least 5 pictures.")
 
-PictureFormSet = forms.formset_factory(PictureForm, extra=0, min_num=5, formset=BasePictureFormSet)
+
+PictureFormSet = forms.formset_factory(
+    PictureForm, extra=0, min_num=5, formset=BasePictureFormSet
+)
+
 
 def project_list(request):
     projects = ProjectsModel.objects.all()  # Fetch all projects
-    return render(request, 'projects/project_list.html', {'projects': projects})
+    return render(request, "projects/project_list.html", {"projects": projects})
+
 
 class CreateProject(View):
     def get(self, request, *args, **kwargs):
@@ -53,7 +56,7 @@ class CreateProject(View):
             print(project_form.errors)
         if not picture_formset.is_valid():
             print(picture_formset.errors)
-        
+
         if project_form.is_valid() and picture_formset.is_valid():
             project = project_form.save(commit=False)
             project.user = UserProfile.objects.get(id=request.session["profileId"])
@@ -105,6 +108,7 @@ class ProjectDetailsView(View):
         id = kwargs.pop("id")
         currentProject = ProjectsModel.objects.get(id=id)
         ratingForm = RatingForm(request.POST or None)
+        commentForm = CommentForm(request.POST or None)
         donationForm = DonationForm(request.POST or None)
         total_donations = sum(
             donation.donation for donation in currentProject.donations.all()
@@ -144,6 +148,35 @@ class ProjectDetailsView(View):
                     newRating.user = currentUser
                     newRating.save()
             else:
-                messages.error(request, "Error, Failed to add rating to project")
+                messages.error(
+                    request,
+                    "Error, Failed to add rating to project,rating must be between 1-5 and you can't rate your project",
+                )
 
+        if request.POST.get("text"):
+            if commentForm.is_valid():
+                newComment = commentForm.save(commit=False)
+                newComment.project = currentProject
+                newComment.user = currentUser
+                newComment.save()
+            else:
+                messages.error(request, "Error, Failed to add comment to project")
         return redirect("projectDetails", id=id)
+
+
+def reportComment(request, id, commentID):
+    if "profileId" not in request.session:
+        return redirect(reverse("accountLogin"))
+    currentProject = get_object_or_404(ProjectsModel, id=id)
+    currentComment = get_object_or_404(CommentsModel, id=commentID)
+    currentUser = get_object_or_404(UserProfile, id=request.session["profileId"])
+    existingReport = CommentReportModel.objects.filter(
+        user=currentUser, comment=currentComment
+    ).first()
+    if existingReport:
+        messages.info(request, "You have already reported this comment.")
+        return redirect("projectDetails", id=id)
+    newReport = CommentReportModel.objects.create(
+        user=currentUser, project=currentProject, comment=currentComment
+    )
+    return redirect("projectDetails", id=id)
