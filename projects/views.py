@@ -32,8 +32,11 @@ PictureFormSet = forms.formset_factory(
 
 def home(request):
     top_projects = ProjectsModel.objects.filter(completed=True).annotate(avg_rating=Avg('ratings__rating')).order_by('-avg_rating')[:5]
-    print(top_projects)
-    return render(request, 'projects/home.html', {'top_projects': top_projects})
+    latest_projects = ProjectsModel.objects.filter(completed=True).order_by('-start_time')[:5]
+    
+    return render(request, 'projects/home.html',
+                   {'top_projects': top_projects,
+                    'latest_projects': latest_projects,})
 
 def project_list(request):
     projects = ProjectsModel.objects.all()  # Fetch all projects

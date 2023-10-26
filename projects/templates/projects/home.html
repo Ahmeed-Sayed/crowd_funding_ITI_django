@@ -48,6 +48,23 @@
         <span class="sr-only">Next</span>
       </a>
     </div>
+    <div class="container ">
+        <h2>Last added</h2>
+        {% for project in latest_projects %}
+        <div class="d-flex">
+        <div class="card d-flex" style="width: 18rem;">
+            <!-- <img src="..." class="card-img-top" alt="..."> -->
+            <div class="card-body">
+              <h5 class="card-title">{{ project.title }}</h5>
+              <p class="card-text">{{ project.details }}</p>
+              <small> Started at {{ project.start_time }} </small>
+              <small> End in {{ project.end_time }} </small>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+        </div>
+          {% endfor %}
+    </div>
     <script src="{% static  'js/bootstrap.bundle.min.js' %}"></script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
