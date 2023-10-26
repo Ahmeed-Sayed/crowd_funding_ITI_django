@@ -1,7 +1,7 @@
 from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.views import View
 from accounts.models import UserProfile
-from .models import ProjectsModel, CommentsModel, UserProjectRating, CommentReportModel
+from .models import ProjectsModel, CommentsModel, UserProjectRating, CommentReportModel, CategoriesModel
 from django.contrib import messages
 from django.db.models import Avg
 from django import forms
@@ -35,11 +35,20 @@ def home(request):
     latest_projects = ProjectsModel.objects.filter(completed=True).order_by('-start_time')[:5]
     featured_projects = ProjectsModel.objects.filter(is_featured=True).order_by('-start_time')[:5]
 
+    categories = CategoriesModel.objects.all()
+    category_projects = {}  # A dictionary to store projects for each category
+
+    for category in categories:
+        projects = ProjectsModel.objects.filter(category=category)
+        category_projects[category] = projects
+
     return render(request, 'projects/home.html',
                    {'top_projects': top_projects,
                     'latest_projects': latest_projects,
-                    'featured_projects': featured_projects})
-
+                    'featured_projects': featured_projects,
+                    'categories': categories,
+                    'category_projects': category_projects})
+{ }
 def project_list(request):
     projects = ProjectsModel.objects.all()  # Fetch all projects
     return render(request, "projects/project_list.html", {"projects": projects})
