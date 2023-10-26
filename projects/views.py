@@ -30,22 +30,21 @@ PictureFormSet = forms.formset_factory(
 )
 
 
+def home(request):
+    top_projects = ProjectsModel.objects.filter(completed=True).annotate(avg_rating=Avg('ratings__rating')).order_by('-avg_rating')[:5]
+    print(top_projects)
+    return render(request, 'projects/home.html', {'top_projects': top_projects})
+
 def project_list(request):
     projects = ProjectsModel.objects.all()  # Fetch all projects
     return render(request, "projects/project_list.html", {"projects": projects})
 
-
-class CreateProject(View):
-    def get(self, request, *args, **kwargs):
-        if "profileId" not in request.session:
-            return redirect(reverse("accountLogin"))
-        project_form = ProjectCreationForm()
-        picture_formset = PictureFormSet(prefix="pictures")
-        return render(
-            request,
-            "projects/create.html",
-            {"project_form": project_form, "picture_formset": picture_formset},
-        )
+# class CreateProject(View):
+#     def get(self, request, *args, **kwargs):
+#         if "profileId" not in request.session:
+#             return redirect(reverse("accountLogin"))
+#         form = ProjectCreationForm()
+#         return render(request, "projects/create.html", {"form": form})
 
     def post(self, request, *args, **kwargs):
         if "profileId" not in request.session:
