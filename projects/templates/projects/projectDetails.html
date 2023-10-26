@@ -11,14 +11,17 @@
 <div class="container bg-dark text-light rounded shadow shadow-lg my-3 p-3">
   <div class='d-flex justify-content-between'>
     <p>Project Title: {{ currentProject.title }}</p>
-  <a href='{%url "reportProject" id=currentProject.id%}'><button class='btn btn-danger'>Report Project</button></a></div>
+    <div>
+  <a href='{%url "reportProject" id=currentProject.id%}'><button class='btn btn-danger'>Report Project</button></a>
+  <a href='{%url "deleteProject" id=currentProject.id%}'><button class='btn btn-danger'>Delete Project</button></a></div>
+</div>
   <p>Project Details: {{ currentProject.details }}</p>
   <p>Total target: {{ currentProject.target }}</p>
   <p>Start Time: {{ currentProject.start_time }}</p>
   <p>End Time: {{ currentProject.end_time }}</p>
   <p>Donations:     
     {% for donation in currentProject.donations.all %}
-        <p>User: {{ donation.user.user.username }}, Amount: {{ donation.donation }}</p>
+        <p>User: {{ donation.user.user.username }} Donated, Amount: {{ donation.donation }}</p>
     {% endfor %}
     </p>
 

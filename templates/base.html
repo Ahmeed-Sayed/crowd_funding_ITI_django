@@ -6,13 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{%block title%} {%endblock%}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}" />
+
   </head>
   <body>
     
     
     
-    <div class="bg-dark p-3 mb-5 text-end fs-5 text-light">
-    
+    <div class="bg-dark p-3 mb-5 text-light d-flex justify-content-between ">
+      <div>
+        <a href='{%url "home" %}' class='text-decoration-none text-light me-4'> Home </a>
+        <a href='{%url "createProject" %}' class='text-decoration-none text-light'> Create Project </a>
+      </div>
+    <div>
       {%if request.session.username %}
       request.session.profileId= {{request.session.profileId}}
       <a href="{% url 'accountLogout'%}" class="text-decoration-none text-white mx-3"
@@ -32,6 +37,8 @@
       >
       {%endif%}
     </div>
+    </div>
+     
     <div class="container">{%block body%} {%endblock%}</div>
 
     <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>

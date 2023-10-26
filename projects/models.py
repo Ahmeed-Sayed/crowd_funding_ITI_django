@@ -72,7 +72,7 @@ class CommentReportModel(models.Model):
     )
     comment=models.ForeignKey(CommentsModel,on_delete=models.CASCADE,related_name='reportedComment')
 class DonationModel(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='donations')
     project = models.ForeignKey(
         ProjectsModel, related_name="donations", on_delete=models.CASCADE
     )
