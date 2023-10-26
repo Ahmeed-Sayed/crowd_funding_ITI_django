@@ -83,6 +83,32 @@
         </div>
           {% endfor %}
     </div>
+
+    <!-- Catigories Section -->
+    <h2>Categories</h2>
+<ul>
+    {% for category in categories %}
+        <li>
+            <a href="#">{{ category.name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<h2>Projects by Category</h2>
+<ul>
+    {% for category, projects in category_projects.items %}
+        <li>
+            <h3>{{ category.name }}</h3>
+            <ul>
+                {% for project in projects %}
+                    <li>
+                        <a href="#">{{ project.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
     <script src="{% static  'js/bootstrap.bundle.min.js' %}"></script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
