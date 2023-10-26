@@ -247,3 +247,20 @@ def reportProject(request, id):
     ProjectReportModel.objects.create(
         user=currentUser, project=currentProject)
     return redirect("projectDetails", id=id)
+
+def deleteProject(request,id):
+    if "profileId" not in request.session:
+        return redirect(reverse("accountLogin"))
+    currentUser=get_object_or_404(UserProfile,id=request.session["profileId"])
+    currentProject=get_object_or_404(ProjectsModel,id=id)
+    if currentProject.user.id != request.session["profileId"]:
+        messages.info(request,"Only the project creator can delete the project")
+        return redirect("projectDetails", id=id)
+    total_donations = sum(
+            donation.donation for donation in currentProject.donations.all()
+        ) 
+    if total_donations >= currentProject.target * 0.25:
+        messages.info(request,"Project donations has passed 25% of the target, you can't delete the project")
+        return redirect("projectDetails", id=id)
+    currentProject.delete()
+    return redirect("home")   

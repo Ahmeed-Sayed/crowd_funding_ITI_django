@@ -21,4 +21,31 @@ birthdate : {{user.birthdate}} <br />
     onclick="return confirm('Are you sure you want to delete your profile?')"
   />
 </form>
+---- <br>
+<h2> Your Projects </h2>
+{% for project in user.projects.all%}
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">{{ project.title }}</h5>
+    <p class="card-text">{{ project.details }}</p>
+    <small> Started at {{ project.start_time }} </small>
+    <small> End in {{ project.end_time }} </small>
+    <a href="{%url 'projectDetails' project.id%}" class="btn btn-primary mt-2">Go to Project</a>
+  </div>
+</div>
+{%endfor%}<br>
+---- <br>
+<h2> Your Donations </h2>
+
+<div class='d-flex flex-col  mb-5'>
+{% for donation in user.donations.all%}
+<div class="card me-3 p-3" >
+    <h5 >You Donated {{donation.donation}} to {{donation.project.title}} Project </h5>
+</div>
+{%endfor%}
+</div>
+
+
+
+
 {%endblock%}
