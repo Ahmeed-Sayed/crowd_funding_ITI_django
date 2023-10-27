@@ -3,11 +3,10 @@ from django.urls import reverse
 from django.views import View
 from .models import UserProfile
 from .forms import RegisterForm, ProfileEditForm
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import  authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -93,7 +92,7 @@ class AccountLogin(View):
                 profile=UserProfile.objects.get(user=user)
                 request.session["username"] = profile.user.username
                 request.session["profileId"] = profile.id
-                return redirect(reverse("accountRegister"))
+                return redirect(reverse("home"))
             else:
                 form.add_error(None, "Invalid email or password")
         return render(request, "accounts/accountLogin.html", {"form": form})
@@ -105,7 +104,7 @@ class AccountLogin(View):
 
 def accountLogout(request):
     request.session.flush()
-    return redirect(reverse("accountRegister"))
+    return redirect(reverse("home"))
 
 
 def profileView(request,id):
@@ -136,5 +135,5 @@ def profileDelete(request,id):
             user=profile.user
             request.session.flush()
             user.delete()
-            return redirect(reverse("accountRegister"))
+            return redirect(reverse("home"))
          else: return None  
