@@ -8,9 +8,10 @@ from .models import (
     CommentReportModel,
     CategoriesModel,
     ProjectReportModel,
+    DonationModel
 )
 from django.contrib import messages
-from django.db.models import Avg
+from django.db.models import Avg,Sum
 from django import forms
 
 # Create your views here.
@@ -21,7 +22,6 @@ from .forms import (
     DonationForm,
     PictureForm,
 )
-
 
 class BasePictureFormSet(forms.BaseFormSet):
     def clean(self):
@@ -38,11 +38,13 @@ PictureFormSet = forms.formset_factory(
 
 
 def home(request):
-    top_projects = (
-        ProjectsModel.objects.all()
-        .annotate(avg_rating=Avg("ratings__rating"))
-        .order_by("-avg_rating")[:5]
-    )
+    top_projects = ProjectsModel.objects.all().annotate(avg_rating=Avg("ratings__rating")).order_by("-avg_rating")[:5]
+    for project in top_projects:
+        project.total_donations = DonationModel.objects.filter(project=project).aggregate(sum=Sum('donation'))['sum']
+        if project.total_donations is None:
+            project.total_donations = 0
+        project.progress = (project.total_donations / project.target) * 100
+
     latest_projects = ProjectsModel.objects.all().order_by("-start_time")[:5]
     featured_projects = ProjectsModel.objects.filter(is_featured=True).order_by(
         "-start_time"
@@ -54,7 +56,7 @@ def home(request):
     for category in categories:
         projects = ProjectsModel.objects.filter(category=category)
         category_projects[category] = projects
-
+    
     return render(
         request,
         "projects/home.html",
