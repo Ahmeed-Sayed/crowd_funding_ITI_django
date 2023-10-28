@@ -1,97 +1,262 @@
-{%extends 'base.html'%}
-{% load static %}
-{%block body%}
-    <div id="projectSlider" class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner">
-        {% for project in top_projects %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-          <img src="{{ project.image.url }}" alt="{{ project.title }}" />
-          <div class="carousel-caption">
-            <h3>{{ project.title }}</h3>
-            <p>Average Rating: {{ project.details }}</p>
-            <a href="">Learn More</a>
+{%extends 'base.html'%} {% load static %} {%block body%}
+
+<div class="border border-1 shadow shadow-lg my-5 rounded p-3">
+  <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
+    <ol class="carousel-indicators">
+      <li
+        data-bs-target="#carouselId"
+        data-bs-slide-to="0"
+        class="active"
+        aria-current="true"
+        aria-label="First slide"
+      ></li>
+      <li
+        data-bs-target="#carouselId"
+        data-bs-slide-to="1"
+        aria-label="Second slide"
+      ></li>
+      <li
+        data-bs-target="#carouselId"
+        data-bs-slide-to="2"
+        aria-label="Third slide"
+      ></li>
+      <li
+        data-bs-target="#carouselId"
+        data-bs-slide-to="3"
+        aria-label="Fourth slide"
+      ></li>
+      <li
+        data-bs-target="#carouselId"
+        data-bs-slide-to="4"
+        aria-label="Fifth slide"
+      ></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+      {% for project in top_projects %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <div
+          class="d-block w-100 rounded"
+          style="background: url({{ project.images.first.image.url }}) no-repeat center center; height: 400px;"
+        >
+          <div class="carousel-caption d-none d-md-block">
+            <h3 class="" style="color: black !important">
+              {{ project.title }}
+            </h3>
+            <h5 class="" style="color: black !important">
+              Project Target: ${{ project.target }}
+            </h5>
+            <div class="progress" style="height: 30px">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                style="width: {{ project.progress }}%; font-size: 20px;"
+                aria-valuenow="{{ project.progress }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                $ {{ project.total_donations }}
+              </div>
+            </div>
           </div>
         </div>
-        {% endfor %}
       </div>
-      <a
-        class="carousel-control-prev"
-        href="#projectSlider"
-        role="button"
-        data-slide="prev"
-      >
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-      </a>
-      <a
-        class="carousel-control-next"
-        href="#projectSlider"
-        role="button"
-        data-slide="next"
-      >
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-      </a>
+      {% endfor %}
     </div>
-    <div class="container ">
-        <h2>Last added</h2>
-        {% for project in latest_projects %}
-        <div class="d-flex">
-        <div class="card d-flex" style="width: 18rem;">
-            <!-- <img src="..." class="card-img-top" alt="..."> -->
-            <div class="card-body">
-              <h5 class="card-title">{{ project.title }}</h5>
-              <p class="card-text">{{ project.details }}</p>
-              <small> Started at {{ project.start_time }} </small>
-              <small> End in {{ project.end_time }} </small>
-              <a href="{%url 'projectDetails' id=project.id%}" class="btn btn-primary">Go somewhere</a>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselId"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselId"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+
+<div class="border border-1 shadow shadow-lg my-5 rounded p-3">
+  <h1>Latest Projects</h1>
+  <div id="latest" class="carousel slide" data-bs-ride="carousel">
+    <ol class="carousel-indicators">
+      <li
+        data-bs-target="#latest"
+        data-bs-slide-to="0"
+        class="active"
+        aria-current="true"
+        aria-label="First slide"
+      ></li>
+      <li
+        data-bs-target="#latest"
+        data-bs-slide-to="1"
+        aria-label="Second slide"
+      ></li>
+      <li
+        data-bs-target="#latest"
+        data-bs-slide-to="2"
+        aria-label="Third slide"
+      ></li>
+      <li
+        data-bs-target="#latest"
+        data-bs-slide-to="3"
+        aria-label="Fourth slide"
+      ></li>
+      <li
+        data-bs-target="#latest"
+        data-bs-slide-to="4"
+        aria-label="Fifth slide"
+      ></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+      {% for project in latest_projects %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <div
+          class="d-block w-100 rounded"
+          style="background: url({{ project.images.first.image.url }}) no-repeat center center; height: 400px;"
+        >
+          <div class="carousel-caption d-none d-md-block">
+            <h3 class="" style="color: black !important">
+              {{ project.title }}
+            </h3>
+            <h5 class="" style="color: black !important">
+              Project Target: ${{ project.target }}
+            </h5>
+            <div class="progress" style="height: 30px">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                style="width: {{ project.progress }}%; font-size: 20px;"
+                aria-valuenow="{{ project.progress }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                $ {{ project.total_donations }}
+              </div>
             </div>
           </div>
         </div>
-          {% endfor %}
+      </div>
+      {% endfor %}
     </div>
-
-    <!-- Adding Featuerd Project -->
-    <h2>Feature Projects</h2>
-        {% for project in latest_projects %}
-        <div class="d-flex">
-        <div class="card d-flex" style="width: 18rem;">
-            <!-- <img src="..." class="card-img-top" alt="..."> -->
-            <div class="card-body">
-              <h5 class="card-title">{{ project.title }}</h5>
-              <p class="card-text">{{ project.details }}</p>
-              <small> Started at {{ project.start_time }} </small>
-              <small> End in {{ project.end_time }} </small>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#latest"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#latest"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+<div class="border border-1 shadow shadow-lg my-5 rounded p-3">
+  <h1>Featuerd Projects</h1>
+  <div id="featuerd" class="carousel slide" data-bs-ride="carousel">
+    <ol class="carousel-indicators">
+      <li
+        data-bs-target="#featuerd"
+        data-bs-slide-to="0"
+        class="active"
+        aria-current="true"
+        aria-label="First slide"
+      ></li>
+      <li
+        data-bs-target="#featuerd"
+        data-bs-slide-to="1"
+        aria-label="Second slide"
+      ></li>
+      <li
+        data-bs-target="#featuerd"
+        data-bs-slide-to="2"
+        aria-label="Third slide"
+      ></li>
+      <li
+        data-bs-target="#featuerd"
+        data-bs-slide-to="3"
+        aria-label="Fourth slide"
+      ></li>
+      <li
+        data-bs-target="#featuerd"
+        data-bs-slide-to="4"
+        aria-label="Fifth slide"
+      ></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+      {% for project in featured_projects %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <div
+          class="d-block w-100 rounded"
+          style="background: url({{ project.images.first.image.url }}) no-repeat center center; height: 400px;"
+        >
+          <div class="carousel-caption d-none d-md-block">
+            <h3 class="" style="color: black !important">
+              {{ project.title }}
+            </h3>
+            <h5 class="" style="color: black !important">
+              Project Target: ${{ project.target }}
+            </h5>
+            <div class="progress" style="height: 30px">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                style="width: {{ project.progress }}%; font-size: 20px;"
+                aria-valuenow="{{ project.progress }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                $ {{ project.total_donations }}
+              </div>
             </div>
           </div>
         </div>
-          {% endfor %}
+      </div>
+      {% endfor %}
     </div>
-
-    <!-- Catigories Section -->
-    <h2>Categories</h2>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#featuerd"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#featuerd"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+<!-- Catigories Section -->
+<h2>Categories</h2>
 <ul>
-    {% for category in categories %}
-        <li>
-            <a href="#">{{ category.name }}</a>
-        </li>
-    {% endfor %}
+  {% for category in categories %}
+  <li>
+    <a href="#">{{ category.name }}</a>
+  </li>
+  {% endfor %}
 </ul>
 
-<h2>Projects by Category</h2>
-<ul>
-    {% for category, projects in category_projects.items %}
-        <li>
-            <h3>{{ category.name }}</h3>
-            <ul>
-                {% for project in projects %}
-                    <li>
-                        <a href="#">{{ project.title }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </li>
-    {% endfor %}
-</ul>
 {%endblock%}
