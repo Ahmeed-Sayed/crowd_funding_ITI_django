@@ -16,6 +16,17 @@
     <title>home</title>
   </head>
   <body>
+
+    <form method="get" action="{% url 'home' %}">
+        {{ search_form.query.label_tag }}
+        <input type="text" name="query" value="{{ search_form.query.value }}" placeholder="Search by Title or Tag">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% else %}
+
     <div id="projectSlider" class="carousel slide" data-ride="carousel">
       <div class="carousel-inner">
         {% for project in top_projects %}
@@ -109,6 +120,7 @@
         </li>
     {% endfor %}
 </ul>
+{% endif %}
     <script src="{% static  'js/bootstrap.bundle.min.js' %}"></script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -100,3 +100,7 @@ class PictureForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PictureForm, self).__init__(*args, **kwargs)
         self.fields["image"].widget = forms.FileInput(attrs={"class": "form-control"})
+
+
+class ProjectSearchForm(forms.Form):
+    query = forms.CharField(label='Search by Title or Tag', max_length=100)

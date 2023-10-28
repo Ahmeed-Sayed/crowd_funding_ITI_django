@@ -5,6 +5,7 @@ from .models import ProjectsModel, CommentsModel, UserProjectRating, CommentRepo
 from django.contrib import messages
 from django.db.models import Avg
 from django import forms
+from django.db.models import Q
 
 # Create your views here.
 from .forms import (
@@ -13,6 +14,7 @@ from .forms import (
     RatingForm,
     DonationForm,
     PictureForm,
+    ProjectSearchForm
 )
 
 
@@ -34,9 +36,23 @@ def home(request):
     top_projects = ProjectsModel.objects.filter(completed=True).annotate(avg_rating=Avg('ratings__rating')).order_by('-avg_rating')[:5]
     latest_projects = ProjectsModel.objects.filter(completed=True).order_by('-start_time')[:5]
     featured_projects = ProjectsModel.objects.filter(is_featured=True).order_by('-start_time')[:5]
-
     categories = CategoriesModel.objects.all()
-    category_projects = {}  # A dictionary to store projects for each category
+
+    category_projects = {}
+    search_form = ProjectSearchForm(request.GET)
+    message = None  
+
+    if search_form.is_valid():
+        query = search_form.cleaned_data.get('query')
+        if query:
+
+            projects = ProjectsModel.objects.filter(Q(title__icontains=query) | Q(tags__name__icontains=query))
+            if projects:
+                for category in categories:
+                    category_projects[category] = projects.filter(category=category)
+        else:
+            message = "The project doesn't exist."
+    
 
     for category in categories:
         projects = ProjectsModel.objects.filter(category=category)
@@ -47,14 +63,16 @@ def home(request):
                     'latest_projects': latest_projects,
                     'featured_projects': featured_projects,
                     'categories': categories,
-                    'category_projects': category_projects})
+                    'category_projects': category_projects,
+                    'search_form': search_form,
+                'message': message})
 
 
 
 
 
 def project_list(request):
-    projects = ProjectsModel.objects.all()  # Fetch all projects
+    projects = ProjectsModel.objects.all()  
     return render(request, "projects/project_list.html", {"projects": projects})
 
 def category_projects(request, category_id):
