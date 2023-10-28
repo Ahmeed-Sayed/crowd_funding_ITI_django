@@ -33,39 +33,44 @@ PictureFormSet = forms.formset_factory(
 
 
 def home(request):
-    top_projects = ProjectsModel.objects.filter(completed=True).annotate(avg_rating=Avg('ratings__rating')).order_by('-avg_rating')[:5]
-    latest_projects = ProjectsModel.objects.filter(completed=True).order_by('-start_time')[:5]
+    top_projects = ProjectsModel.objects.filter().annotate(avg_rating=Avg('ratings__rating')).order_by('-avg_rating')[:5]
+    latest_projects = ProjectsModel.objects.filter().order_by('-start_time')[:5]
     featured_projects = ProjectsModel.objects.filter(is_featured=True).order_by('-start_time')[:5]
     categories = CategoriesModel.objects.all()
-
+    
     category_projects = {}
     search_form = ProjectSearchForm(request.GET)
-    message = None  
+    message = ""  
 
-    if search_form.is_valid():
+    if search_form.is_valid():  
         query = search_form.cleaned_data.get('query')
-        if query:
+        print(f"Query: {query}")  
 
+        if query:
             projects = ProjectsModel.objects.filter(Q(title__icontains=query) | Q(tags__name__icontains=query))
+            print(f"Projects: {projects}")  
             if projects:
                 for category in categories:
                     category_projects[category] = projects.filter(category=category)
+            else:
+                message = "The project doesn't exist."
         else:
-            message = "The project doesn't exist."
-    
+            message = "No query provided."
+        print(f"Message: {message}")  
 
     for category in categories:
         projects = ProjectsModel.objects.filter(category=category)
         category_projects[category] = projects
 
-    return render(request, 'projects/home.html',
-                   {'top_projects': top_projects,
-                    'latest_projects': latest_projects,
-                    'featured_projects': featured_projects,
-                    'categories': categories,
-                    'category_projects': category_projects,
-                    'search_form': search_form,
-                'message': message})
+    return render(request, 'projects/home.html', {
+        'top_projects': top_projects,
+        'latest_projects': latest_projects,
+        'featured_projects': featured_projects,
+        'categories': categories,
+        'category_projects': category_projects,
+        'search_form': search_form,
+        'message': message  # Pass the message to the template
+    })
 
 
 
