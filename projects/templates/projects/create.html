@@ -1,4 +1,18 @@
 {%extends 'base.html'%} {%block body%}
+<style>
+  select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSI4Ij48cGF0aCBkPSJNMSAuOTVMNS45NSA1LjkgMTAuOS45NSIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz48L3N2Zz4K) no-repeat;
+      background-position-x: 100%;
+      background-position-y: 50%;
+  }
+</style>
+
+
+
+
 <div class="container">
   <div class="row">
     <div class="col">
@@ -24,6 +38,9 @@
           >{{ project_form.target.label }}</label
         >
         {{ project_form.target }} {{ picture_formset.management_form }}
+        {% if project_form.target.errors %}
+        <div class="alert alert-danger mt-3">{{ project_form.target.errors }}</div>
+        {% endif %}
         <button type="submit" class="btn btn-primary fs-5 mt-4 px-5">
           Create
         </button>
