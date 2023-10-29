@@ -9,14 +9,19 @@
 {% endif %}
 
 <div class="container bg-dark text-light rounded shadow shadow-lg my-3 p-3">
-  <p>Project Title: {{ currentProject.title }}</p>
+  <div class='d-flex justify-content-between'>
+    <p>Project Title: {{ currentProject.title }}</p>
+    <div>
+  <a href='{%url "reportProject" id=currentProject.id%}'><button class='btn btn-danger'>Report Project</button></a>
+  <a href='{%url "deleteProject" id=currentProject.id%}'><button class='btn btn-danger'>Delete Project</button></a></div>
+</div>
   <p>Project Details: {{ currentProject.details }}</p>
   <p>Total target: {{ currentProject.target }}</p>
   <p>Start Time: {{ currentProject.start_time }}</p>
   <p>End Time: {{ currentProject.end_time }}</p>
   <p>Donations:     
     {% for donation in currentProject.donations.all %}
-        <p>User: {{ donation.user.user.username }}, Amount: {{ donation.donation }}</p>
+        <p>User: {{ donation.user.user.username }} Donated, Amount: {{ donation.donation }}</p>
     {% endfor %}
     </p>
 
@@ -71,7 +76,7 @@
   <div class='form-control bg-info my-3'>
     <div class='d-flex justify-content-between'> 
    <p>{{ comment.user.user.username }}</p>
-  <a href='{%url "reportComment" id=currentProject.id commentID=comment.id %}'><button type'button' class='btn btn-danger'>Report</button></a>
+  <a href='{%url "reportComment" id=currentProject.id commentID=comment.id %}'><button type'button' class='btn btn-danger'>Report Comment</button></a>
     </div>
   <p>{{ comment.text }}</p>
   </div>

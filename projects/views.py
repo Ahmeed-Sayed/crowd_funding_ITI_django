@@ -1,9 +1,17 @@
 from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.views import View
 from accounts.models import UserProfile
-from .models import ProjectsModel, CommentsModel, UserProjectRating, CommentReportModel, CategoriesModel
+from .models import (
+    ProjectsModel,
+    CommentsModel,
+    UserProjectRating,
+    CommentReportModel,
+    CategoriesModel,
+    ProjectReportModel,
+    DonationModel
+)
 from django.contrib import messages
-from django.db.models import Avg
+from django.db.models import Avg,Sum
 from django import forms
 from django.db.models import Q
 
@@ -16,7 +24,6 @@ from .forms import (
     PictureForm,
     ProjectSearchForm
 )
-
 
 class BasePictureFormSet(forms.BaseFormSet):
     def clean(self):
@@ -80,17 +87,28 @@ def project_list(request):
     projects = ProjectsModel.objects.all()  
     return render(request, "projects/project_list.html", {"projects": projects})
 
+
 def category_projects(request, category_id):
     category = CategoriesModel.objects.get(pk=category_id)
     projects = ProjectsModel.objects.filter(category=category)
-    return render(request, 'projects/category_projects.html', {'category': category, 'projects': projects})
+    return render(
+        request,
+        "projects/category_projects.html",
+        {"category": category, "projects": projects},
+    )
 
-# class CreateProject(View):
-#     def get(self, request, *args, **kwargs):
-#         if "profileId" not in request.session:
-#             return redirect(reverse("accountLogin"))
-#         form = ProjectCreationForm()
-#         return render(request, "projects/create.html", {"form": form})
+
+class CreateProject(View):
+    def get(self, request, *args, **kwargs):
+        if "profileId" not in request.session:
+            return redirect(reverse("accountLogin"))
+        project_form = ProjectCreationForm()
+        picture_formset = PictureFormSet(prefix="pictures")
+        return render(
+            request,
+            "projects/create.html",
+            {"project_form": project_form, "picture_formset": picture_formset},
+        )
 
     def post(self, request, *args, **kwargs):
         if "profileId" not in request.session:
@@ -221,7 +239,43 @@ def reportComment(request, id, commentID):
     if existingReport:
         messages.info(request, "You have already reported this comment.")
         return redirect("projectDetails", id=id)
-    newReport = CommentReportModel.objects.create(
+    CommentReportModel.objects.create(
         user=currentUser, project=currentProject, comment=currentComment
     )
     return redirect("projectDetails", id=id)
+
+
+def reportProject(request, id):
+    if "profileId" not in request.session:
+        return redirect(reverse("accountLogin"))
+    currentProject = get_object_or_404(ProjectsModel, id=id)
+    currentUser = get_object_or_404(UserProfile, id=request.session["profileId"])
+    if currentProject.user.id == request.session["profileId"]:
+        messages.info(request,"You Can't Report your own project")
+        return redirect("projectDetails", id=id)
+    existingReport = ProjectReportModel.objects.filter(
+        user=currentUser, project=currentProject
+    ).first()
+    if existingReport:
+        messages.info(request, "You have already reported this comment.")
+        return redirect("projectDetails", id=id)
+    ProjectReportModel.objects.create(
+        user=currentUser, project=currentProject)
+    return redirect("projectDetails", id=id)
+
+def deleteProject(request,id):
+    if "profileId" not in request.session:
+        return redirect(reverse("accountLogin"))
+    currentUser=get_object_or_404(UserProfile,id=request.session["profileId"])
+    currentProject=get_object_or_404(ProjectsModel,id=id)
+    if currentProject.user.id != request.session["profileId"]:
+        messages.info(request,"Only the project creator can delete the project")
+        return redirect("projectDetails", id=id)
+    total_donations = sum(
+            donation.donation for donation in currentProject.donations.all()
+        ) 
+    if total_donations >= currentProject.target * 0.25:
+        messages.info(request,"Project donations has passed 25% of the target, you can't delete the project")
+        return redirect("projectDetails", id=id)
+    currentProject.delete()
+    return redirect("home")   

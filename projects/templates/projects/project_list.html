@@ -1,26 +1,14 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{% static  'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrap-icons/font/bootstrap-icons.css' %}" rel="stylesheet" />
-    <title>Projects</title>
-</head>
-<body>
-    {% for project in projects %}
-    <div class="card" style="width: 18rem;">
-        <!-- <img src="..." class="card-img-top" alt="..."> -->
-        <div class="card-body">
-          <h5 class="card-title">{{ project.title }}</h5>
-          <p class="card-text">{{ project.details }}</p>
-          <small> Started at {{ project.start_time }} </small>
-          <small> End in {{ project.end_time }} </small>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div>
-      {% endfor %}
-    <script src="{% static  'js/bootstrap.bundle.min.js' %}"></script>
-</body>
-</html>
+{%extends 'base.html'%} {% load static %}
+{%block body%}
+{% for project in projects %}
+
+<div class="card" style="width: 18rem">
+  <div class="card-body">
+    <h5 class="card-title">{{ project.title }}</h5>
+    <p class="card-text">{{ project.details }}</p>
+    <small> Started at {{ project.start_time }} </small>
+    <small> End in {{ project.end_time }} </small>
+    <a href="#" class="btn btn-primary">Go to Project</a>
+  </div>
+</div>
+{% endfor %} {%endblock%}
