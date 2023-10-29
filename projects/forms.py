@@ -38,11 +38,17 @@ class ProjectCreationForm(forms.ModelForm):
             raise ValidationError("End date should be after the start date.")
         return end_time
 
+    def clean_target(self):
+        target = self.cleaned_data.get('target')
+        if target and target <= 0:
+            raise ValidationError('Target must be greater than 0.')
+        return target  
+    
     def __init__(self, *args, **kwargs):
         super(ProjectCreationForm, self).__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control"})
-        
+      
 class CommentForm(forms.ModelForm):
     class Meta:
         model = CommentsModel
@@ -103,4 +109,12 @@ class PictureForm(forms.ModelForm):
 
 
 class ProjectSearchForm(forms.Form):
-    query = forms.CharField(label='Search by Title or Tag', max_length=100)
+    query = forms.CharField(label='Search', max_length=100)
+    def clean_query(self):
+        query = self.cleaned_data.get('query')
+        if not query or query.isspace():
+            raise forms.ValidationError("This field cannot be empty.")
+        return query
+    def __init__(self, *args, **kwargs):
+        super(ProjectSearchForm, self).__init__(*args, **kwargs)
+        self.fields["query"].widget = forms.TextInput(attrs={"class": "form-control"})

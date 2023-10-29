@@ -1,26 +1,15 @@
 {%extends 'base.html'%} {% load static %} {%block body%}
 
-
-
-
-
-
-
-
-
-
-
-<div class="border border-1 shadow shadow-lg my-5 rounded p-3">
-
-  <form method="get" action="{% url 'home' %}">
-    {{ search_form.query.label_tag }}
-    <input type="text" name="query" value="{{ search_form.query.value }}" placeholder="Search by Title or Tag">
-    <button type="submit">Search</button>
+<form method="POST">
+  {%csrf_token%} {{ search_form }}
+  <div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-primary mt-3 px-4 py-2">Search</button>
+  </div>
 </form>
 
-
-
-
+<div class="border border-1 shadow shadow-lg my-5 rounded p-3">
+  <h1 class='mb-3'>Top Projects</h1>
+ 
   <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
     <ol class="carousel-indicators">
       <li
@@ -54,28 +43,26 @@
     <div class="carousel-inner" role="listbox">
       {% for project in top_projects %}
       <div class="carousel-item {% if forloop.first %}active{% endif %}">
-        <div
-          class="d-block w-100 rounded"
-          style="background: url({{ project.images.first.image.url }}) no-repeat center center; height: 400px;"
-        >
-          <div class="carousel-caption d-none d-md-block">
-            <h3 class="" style="color: black !important">
-              {{ project.title }}
-            </h3>
-            <h5 class="" style="color: black !important">
-              Project Target: ${{ project.target }}
-            </h5>
-            <div class="progress" style="height: 30px">
-              <div
-                class="progress-bar"
-                role="progressbar"
-                style="width: {{ project.progress }}%; font-size: 20px;"
-                aria-valuenow="{{ project.progress }}"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                $ {{ project.total_donations }}
-              </div>
+        <div class="d-flex justify-content-center  mb-5">
+          <img src="{{ project.images.first.image.url }}" height="400px" />
+        </div>
+        <div class="carousel-caption d-none d-md-block">
+          <h3 class="" style="color: black !important">{{ project.title }}</h3>
+          <h5 class="" style="color: black !important">
+            Project Target: ${{ project.target }}
+          </h5>
+          <div class="progress" style="height: 30px">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              style="width: {{ project.progress }}%; font-size: 20px;"
+              aria-valuenow="{{ project.progress }}"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              {%if project.total_donations%} 
+              $ {{ project.total_donations }}
+              {%endif%}
             </div>
           </div>
         </div>
@@ -138,28 +125,26 @@
     <div class="carousel-inner" role="listbox">
       {% for project in latest_projects %}
       <div class="carousel-item {% if forloop.first %}active{% endif %}">
-        <div
-          class="d-block w-100 rounded"
-          style="background: url({{ project.images.first.image.url }}) no-repeat center center; height: 400px;"
-        >
-          <div class="carousel-caption d-none d-md-block">
-            <h3 class="" style="color: black !important">
-              {{ project.title }}
-            </h3>
-            <h5 class="" style="color: black !important">
-              Project Target: ${{ project.target }}
-            </h5>
-            <div class="progress" style="height: 30px">
-              <div
-                class="progress-bar"
-                role="progressbar"
-                style="width: {{ project.progress }}%; font-size: 20px;"
-                aria-valuenow="{{ project.progress }}"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                $ {{ project.total_donations }}
-              </div>
+        <div class="d-flex justify-content-center mb-5">
+          <img src="{{ project.images.first.image.url }}" height="400px" />
+        </div>
+        <div class="carousel-caption d-none d-md-block">
+          <h3 class="" style="color: black !important">{{ project.title }}</h3>
+          <h5 class="" style="color: black !important">
+            Project Target: ${{ project.target }}
+          </h5>
+          <div class="progress" style="height: 30px">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              style="width: {{ project.progress }}%; font-size: 20px;"
+              aria-valuenow="{{ project.progress }}"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              {%if project.total_donations%} 
+              $ {{ project.total_donations }}
+              {%endif%}
             </div>
           </div>
         </div>
@@ -221,28 +206,25 @@
     <div class="carousel-inner" role="listbox">
       {% for project in featured_projects %}
       <div class="carousel-item {% if forloop.first %}active{% endif %}">
-        <div
-          class="d-block w-100 rounded"
-          style="background: url({{ project.images.first.image.url }}) no-repeat center center; height: 400px;"
-        >
-          <div class="carousel-caption d-none d-md-block">
-            <h3 class="" style="color: black !important">
-              {{ project.title }}
-            </h3>
-            <h5 class="" style="color: black !important">
-              Project Target: ${{ project.target }}
-            </h5>
-            <div class="progress" style="height: 30px">
-              <div
-                class="progress-bar"
-                role="progressbar"
-                style="width: {{ project.progress }}%; font-size: 20px;"
-                aria-valuenow="{{ project.progress }}"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                $ {{ project.total_donations }}
-              </div>
+        <div class="d-flex justify-content-center mb-5">
+          <img src="{{ project.images.first.image.url }}" height="400px" />
+        </div>
+        <div class="carousel-caption d-none d-md-block">
+          <h3 class="" style="color: black !important">{{ project.title }}</h3>
+          <h5 class="" style="color: black !important">
+            Project Target: ${{ project.target }}
+          </h5>
+          <div class="progress" style="height: 30px">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              style="width: {{ project.progress }}%; font-size: 20px;"
+              aria-valuenow="{{ project.progress }}"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              {%if project.total_donations%} 
+              $ {{project.total_donations}} {%endif%}
             </div>
           </div>
         </div>

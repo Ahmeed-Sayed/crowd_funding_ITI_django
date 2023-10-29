@@ -41,48 +41,32 @@ PictureFormSet = forms.formset_factory(
 
 
 def home(request):
-    top_projects = (
-        ProjectsModel.objects.all()
-        .annotate(avg_rating=Avg("ratings__rating"))
-        .order_by("-avg_rating")[:5]
-    )
-    for project in top_projects:
-        project.total_donations = DonationModel.objects.filter(
-            project=project
-        ).aggregate(sum=Sum("donation"))["sum"]
-        if project.total_donations is None:
-            project.total_donations = 0
-        project.progress = (project.total_donations / project.target) * 100
+    if request.method == 'POST':
+        search_form = ProjectSearchForm(request.POST)
+        if search_form.is_valid():
+            query = search_form.cleaned_data.get("query")
+            return redirect('searchResults', query=query)
+    else:
+        categories = CategoriesModel.objects.all()
+        category_projects = {}
 
-    latest_projects = ProjectsModel.objects.all().order_by("-start_time")[:5]
-    featured_projects = ProjectsModel.objects.filter(is_featured=True).order_by(
-        "-start_time"
-    )[:5]
-    search_form = ProjectSearchForm(request.GET)
-    message = ""
-    categories = CategoriesModel.objects.all()
-    category_projects = {}
+        project_lists = [
+            ProjectsModel.objects.all().annotate(avg_rating=Avg("ratings__rating")).order_by("-avg_rating")[:5],  # top_projects
+            ProjectsModel.objects.all().order_by("-start_time")[:5],  # latest_projects
+            ProjectsModel.objects.filter(is_featured=True).order_by("-start_time")[:5]  # featured_projects
+        ]
 
-    if search_form.is_valid():
-        query = search_form.cleaned_data.get("query")
-        print(f"Query: {query}")
+        for project_list in project_lists:
+            for project in project_list:
+                project.total_donations = DonationModel.objects.filter(project=project).aggregate(sum=Sum("donation"))["sum"]
+                if project.total_donations is None:
+                    project.total_donations = 0
+                project.progress = (project.total_donations / project.target) * 100
 
-        if query:
-            projects = ProjectsModel.objects.filter(
-                Q(title__icontains=query) | Q(tags__name__icontains=query)
-            )
-            print(f"Projects: {projects}")
-            if projects:
-                for category in categories:
-                    category_projects[category] = projects.filter(category=category)
-            else:
-                message = "The project doesn't exist."
-        else:
-            message = "No query provided."
-        print(f"Message: {message}")
+        top_projects, latest_projects, featured_projects = project_lists
 
+        search_form = ProjectSearchForm()
 
-    
     return render(
         request,
         "projects/home.html",
@@ -92,10 +76,26 @@ def home(request):
             "featured_projects": featured_projects,
             "categories": categories,
             "search_form": search_form,
-            "message": message,
         },
     )
 
+def searchResults(request,query):
+    
+    if request.method=="POST":
+        search_form = ProjectSearchForm(request.POST)
+        if search_form.is_valid():
+            query=search_form.cleaned_data['query']
+            projects = ProjectsModel.objects.filter(
+            Q(title__icontains=query) | Q(tags__name__icontains=query)
+        ).distinct()
+        search_form = ProjectSearchForm(initial={'query': query})
+        return render(request, 'projects/search.html', {'projects': projects, 'search_form': search_form})
+    else:
+        projects = ProjectsModel.objects.filter(
+            Q(title__icontains=query) | Q(tags__name__icontains=query)
+        ).distinct()
+        search_form = ProjectSearchForm(initial={'query': query})
+        return render(request, 'projects/search.html', {'projects': projects, 'search_form': search_form})
 
 def project_list(request):
     projects = ProjectsModel.objects.all()
@@ -129,11 +129,6 @@ class CreateProject(View):
             return redirect(reverse("accountLogin"))
         project_form = ProjectCreationForm(request.POST)
         picture_formset = PictureFormSet(request.POST, request.FILES, prefix="pictures")
-        if not project_form.is_valid():
-            print(project_form.errors)
-        if not picture_formset.is_valid():
-            print(picture_formset.errors)
-
         if project_form.is_valid() and picture_formset.is_valid():
             project = project_form.save(commit=False)
             project.user = UserProfile.objects.get(id=request.session["profileId"])

@@ -1,5 +1,6 @@
 {%extends 'base.html'%} {%block title%} Register {%endblock%} {%block body%}
-{%if messages%} {% for message in messages%} {{ message }} {% endfor %}
+{%if messages%} {% for message in messages%}
+<div class=' alert alert-success rounded'> {{ message }}</div> {% endfor %}
 {%endif%} {% if request.session.username %}
 <p class='fs-4 fw-bold'>Welcome, {{ request.session.username }}!</p>
 {% comment %}

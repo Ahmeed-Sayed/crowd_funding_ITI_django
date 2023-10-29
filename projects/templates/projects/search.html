@@ -1,0 +1,33 @@
+{%extends 'base.html'%} {%block body%}
+
+<form method="POST">
+  {%csrf_token%} {{ search_form }}
+  <div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-primary mt-3 px-4 py-2">Search</button>
+  </div>
+</form>
+
+<div class="row">
+  {% for project in projects %}
+  <div class="card col-4 me-3 mb-3" style="width: 15rem">
+    <div class="card-body">
+      <img
+        src="{{project.images.first.image.url}}"
+        width="200px"
+        height="300px"
+      />
+
+      <h5 class="card-title">{{ project.title }}</h5>
+      <p class="card-text">{{ project.details }}</p>
+      <small> Started at {{ project.start_time }} </small>
+      <small> End in {{ project.end_time }} </small>
+      <a href="{%url 'projectDetails' project.id%}" class="btn btn-primary"
+        >Go to Project</a
+      >
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+
+{%endblock%}

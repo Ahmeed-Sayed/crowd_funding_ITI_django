@@ -21,7 +21,10 @@ class RegisterForm(UserCreationForm):
         widget=forms.TextInput(attrs={"class": "form-control"}),
     )
     image = forms.ImageField(widget=forms.FileInput(attrs={"class": "form-control"}))
-
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={"class": "form-control"}),
+    )
     class Meta:
         model = User
         fields = (
@@ -53,9 +56,15 @@ class RegisterForm(UserCreationForm):
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
+        phone_number = self.cleaned_data["phoneNumber"]
+        
+        if UserProfile.objects.filter(phoneNumber=phone_number).exists():
+            self.add_error('phoneNumber', 'This phone number is already in use.')
+            return None
+
         user_profile = UserProfile(
             user=user,
-            phoneNumber=self.cleaned_data["phoneNumber"],
+            phoneNumber=phone_number,
             image=self.cleaned_data["image"],
         )
         if commit:
