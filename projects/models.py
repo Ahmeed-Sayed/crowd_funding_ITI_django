@@ -39,7 +39,7 @@ class CommentsModel(models.Model):
         ProjectsModel, on_delete=models.CASCADE, related_name="comments"
     )
     def __str__(self):
-        return f'comment User: {self.user.user.username} || Comment Text: {self.text} || Comment Project: {self.project}'
+        return f'comment User: {self.user.user.username} || Comment Text: {self.text} || Comment Project: {self.project.title}'
 
 
 class UserProjectRating(models.Model):
@@ -67,9 +67,6 @@ class ProjectReportModel(models.Model):
 
 class CommentReportModel(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    project = models.ForeignKey(
-        ProjectsModel, related_name="commentReports", on_delete=models.CASCADE
-    )
     comment=models.ForeignKey(CommentsModel,on_delete=models.CASCADE,related_name='reportedComment')
     def __str__(self):
         return f'User {self.user.user.username} report on Project {self.project.title}'
