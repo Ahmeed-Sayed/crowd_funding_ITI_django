@@ -13,6 +13,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
+from django.db import IntegrityError
 
 
 def activate(request, uidb64, token):
@@ -63,6 +64,7 @@ def activateEmail(request, user, to_email):
         )
 
 
+
 class AccountRegister(View):
     def get(self, request):
         form = RegisterForm()
@@ -71,10 +73,14 @@ class AccountRegister(View):
     def post(self, request):
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
-            user, user_profile = form.save(commit=False)
+            result = form.save(commit=False)
+            if result is None:
+                return render(request, "accounts/accountRegister.html", {"form": form})
+            
+            user, user_profile = result
             user.is_active = False
             user.save()
-            user_profile.user = user  #
+            user_profile.user = user 
             user_profile.save()
             activateEmail(request, user, form.cleaned_data["email"])
             return redirect(reverse("accountRegister"))
