@@ -49,23 +49,21 @@ def home(request):
     else:
         categories = CategoriesModel.objects.all()
         category_projects = {}
-        top_projects = (
-            ProjectsModel.objects.all()
-            .annotate(avg_rating=Avg("ratings__rating"))
-            .order_by("-avg_rating")[:5]
-        )
-        for project in top_projects:
-            project.total_donations = DonationModel.objects.filter(
-                project=project
-            ).aggregate(sum=Sum("donation"))["sum"]
-            if project.total_donations is None:
-                project.total_donations = 0
-            project.progress = (project.total_donations / project.target) * 100
 
-        latest_projects = ProjectsModel.objects.all().order_by("-start_time")[:5]
-        featured_projects = ProjectsModel.objects.filter(is_featured=True).order_by(
-            "-start_time"
-        )[:5]
+        project_lists = [
+            ProjectsModel.objects.all().annotate(avg_rating=Avg("ratings__rating")).order_by("-avg_rating")[:5],  # top_projects
+            ProjectsModel.objects.all().order_by("-start_time")[:5],  # latest_projects
+            ProjectsModel.objects.filter(is_featured=True).order_by("-start_time")[:5]  # featured_projects
+        ]
+
+        for project_list in project_lists:
+            for project in project_list:
+                project.total_donations = DonationModel.objects.filter(project=project).aggregate(sum=Sum("donation"))["sum"]
+                if project.total_donations is None:
+                    project.total_donations = 0
+                project.progress = (project.total_donations / project.target) * 100
+
+        top_projects, latest_projects, featured_projects = project_lists
 
         search_form = ProjectSearchForm()
 
