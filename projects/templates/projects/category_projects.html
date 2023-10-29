@@ -1,25 +1,27 @@
-{% extends 'base.html'%}
+{% extends 'base.html'%} {% load static %} {%block body%}
+<h1>Projects in {{ category.name }}</h1>
 
-{% load static %}
-{%block body%}
-    <h1>Projects in {{ category.name }}</h1>
+<div class="row">
+  {% for project in projects %}
+  <div class="card col-3 me-3 mb-3" style="width: 18rem">
+    <div class="card-body">
+      <img
+        src="{{project.images.first.image.url}}"
+        width="200px"
+        height="300px"
+      />
 
-    
-        {% for project in projects %}
-            <div class="card d-flex" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ project.title }}</h5>
-                    <p class="card-text">{{ project.details }}</p>
-                    <p>Target: ${{ project.target }}</p>
-                    <p>Start Time: {{ project.start_time }}</p>
-                    <p>End Time: {{ project.end_time }}</p>
-                    <p>Is Featured: {% if project.is_featured %}Yes{% else %}No{% endif %}</p>
-                    <a href="{% url 'projectDetails' project.id%}" class="btn btn-primary">View Project</a>
-                </div>
-            </div>
-            
-        {% endfor %}
-    
+      <h5 class="card-title">{{ project.title }}</h5>
+      <p class="card-text">{{ project.details }}</p>
+      <small> Started at {{ project.start_time }} </small>
+      <small> End in {{ project.end_time }} </small>
+      <a href="{%url 'projectDetails' project.id%}" class="btn btn-primary"
+        >Go to Project</a
+      >
+    </div>
+  </div>
 
-    <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
-    {%endblock%}
+    {%endfor%}
+</div>
+
+{%endblock%}
