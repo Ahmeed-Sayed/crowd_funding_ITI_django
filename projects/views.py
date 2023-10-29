@@ -8,10 +8,10 @@ from .models import (
     CommentReportModel,
     CategoriesModel,
     ProjectReportModel,
-    DonationModel
+    DonationModel,
 )
 from django.contrib import messages
-from django.db.models import Avg,Sum
+from django.db.models import Avg, Sum
 from django import forms
 
 # Create your views here.
@@ -22,6 +22,7 @@ from .forms import (
     DonationForm,
     PictureForm,
 )
+
 
 class BasePictureFormSet(forms.BaseFormSet):
     def clean(self):
@@ -38,9 +39,15 @@ PictureFormSet = forms.formset_factory(
 
 
 def home(request):
-    top_projects = ProjectsModel.objects.all().annotate(avg_rating=Avg("ratings__rating")).order_by("-avg_rating")[:5]
+    top_projects = (
+        ProjectsModel.objects.all()
+        .annotate(avg_rating=Avg("ratings__rating"))
+        .order_by("-avg_rating")[:5]
+    )
     for project in top_projects:
-        project.total_donations = DonationModel.objects.filter(project=project).aggregate(sum=Sum('donation'))['sum']
+        project.total_donations = DonationModel.objects.filter(
+            project=project
+        ).aggregate(sum=Sum("donation"))["sum"]
         if project.total_donations is None:
             project.total_donations = 0
         project.progress = (project.total_donations / project.target) * 100
@@ -51,12 +58,12 @@ def home(request):
     )[:5]
 
     categories = CategoriesModel.objects.all()
-    category_projects = {}  # A dictionary to store projects for each category
+    category_projects = {}  
 
     for category in categories:
         projects = ProjectsModel.objects.filter(category=category)
         category_projects[category] = projects
-    
+
     return render(
         request,
         "projects/home.html",
@@ -71,7 +78,7 @@ def home(request):
 
 
 def project_list(request):
-    projects = ProjectsModel.objects.all()  # Fetch all projects
+    projects = ProjectsModel.objects.all()  
     return render(request, "projects/project_list.html", {"projects": projects})
 
 
@@ -167,7 +174,14 @@ class ProjectDetailsView(View):
 
         if request.POST.get("donation"):
             donation_amount = float(request.POST.get("donation"))
-            if total_donations < currentProject.target:
+            if donation_amount < 0:
+                messages.error(request, "Error, donation amount cannot be negative.")
+            elif donation_amount > currentProject.target - total_donations:
+                messages.error(
+                    request,
+                    f"Error, donation amount cannot exceed the remaining target amount. You can donate {currentProject.target-total_donations}$",
+                )
+            elif total_donations < currentProject.target:
                 if donationForm.is_valid():
                     newDonation = donationForm.save(commit=False)
                     newDonation.project = currentProject
@@ -185,26 +199,33 @@ class ProjectDetailsView(View):
                     "This project has already reached its target. No more donations are needed.",
                 )
         if request.POST.get("rating"):
-            if ratingForm.is_valid() and currentUser != currentProject.user:
-                existingRating = UserProjectRating.objects.filter(
-                    user=currentUser, project=currentProject
-                ).first()
-                if existingRating:
-                    existingRating.rating = ratingForm.cleaned_data["rating"]
-                    existingRating.save()
+            if ratingForm.is_valid():
+                if currentUser != currentProject.user:
+                    existingRating = UserProjectRating.objects.filter(
+                        user=currentUser, project=currentProject
+                    ).first()
+                    if existingRating:
+                        existingRating.rating = ratingForm.cleaned_data["rating"]
+                        existingRating.save()
+                    else:
+                        newRating = ratingForm.save(commit=False)
+                        newRating.project = currentProject
+                        newRating.user = currentUser
+                        newRating.save()
                 else:
-                    newRating = ratingForm.save(commit=False)
-                    newRating.project = currentProject
-                    newRating.user = currentUser
-                    newRating.save()
+                    messages.error(
+                        request,
+                        "You can't rate your own project",
+                    )
+
             else:
                 messages.error(
                     request,
-                    "Error, Failed to add rating to project,rating must be between 1-5 and you can't rate your project",
+                    "Error, Failed to add rating to project, rating must be between 1-5",
                 )
 
         if request.POST.get("text"):
-            if commentForm.is_valid():
+            if commentForm.is_valid() and commentForm.cleaned_data["text"]:
                 newComment = commentForm.save(commit=False)
                 newComment.project = currentProject
                 newComment.user = currentUser
@@ -220,9 +241,10 @@ def reportComment(request, id, commentID):
     currentProject = get_object_or_404(ProjectsModel, id=id)
     currentComment = get_object_or_404(CommentsModel, id=commentID)
     currentUser = get_object_or_404(UserProfile, id=request.session["profileId"])
-    existingReport = CommentReportModel.objects.filter(
-        user=currentUser, comment=currentComment
-    ).first()
+    if currentUser == currentComment.user:
+        messages.error(request, "You can't report your own comment.")
+        return redirect("projectDetails", id=id)
+    existingReport = CommentReportModel.objects.filter(user=currentUser, comment=currentComment).first()
     if existingReport:
         messages.info(request, "You have already reported this comment.")
         return redirect("projectDetails", id=id)
@@ -238,7 +260,7 @@ def reportProject(request, id):
     currentProject = get_object_or_404(ProjectsModel, id=id)
     currentUser = get_object_or_404(UserProfile, id=request.session["profileId"])
     if currentProject.user.id == request.session["profileId"]:
-        messages.info(request,"You Can't Report your own project")
+        messages.info(request, "You Can't Report your own project")
         return redirect("projectDetails", id=id)
     existingReport = ProjectReportModel.objects.filter(
         user=currentUser, project=currentProject
@@ -246,23 +268,26 @@ def reportProject(request, id):
     if existingReport:
         messages.info(request, "You have already reported this comment.")
         return redirect("projectDetails", id=id)
-    ProjectReportModel.objects.create(
-        user=currentUser, project=currentProject)
+    ProjectReportModel.objects.create(user=currentUser, project=currentProject)
     return redirect("projectDetails", id=id)
 
-def deleteProject(request,id):
+
+def deleteProject(request, id):
     if "profileId" not in request.session:
         return redirect(reverse("accountLogin"))
-    currentUser=get_object_or_404(UserProfile,id=request.session["profileId"])
-    currentProject=get_object_or_404(ProjectsModel,id=id)
+    currentUser = get_object_or_404(UserProfile, id=request.session["profileId"])
+    currentProject = get_object_or_404(ProjectsModel, id=id)
     if currentProject.user.id != request.session["profileId"]:
-        messages.info(request,"Only the project creator can delete the project")
+        messages.info(request, "Only the project creator can delete the project")
         return redirect("projectDetails", id=id)
     total_donations = sum(
-            donation.donation for donation in currentProject.donations.all()
-        ) 
+        donation.donation for donation in currentProject.donations.all()
+    )
     if total_donations >= currentProject.target * 0.25:
-        messages.info(request,"Project donations has passed 25% of the target, you can't delete the project")
+        messages.info(
+            request,
+            "Project donations has passed 25% of the target, you can't delete the project",
+        )
         return redirect("projectDetails", id=id)
     currentProject.delete()
-    return redirect("home")   
+    return redirect("home")

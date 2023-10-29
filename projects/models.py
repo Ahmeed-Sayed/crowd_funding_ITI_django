@@ -48,7 +48,7 @@ class UserProjectRating(models.Model):
         ProjectsModel, on_delete=models.CASCADE, related_name="ratings"
     )
     rating = models.IntegerField(validators=[MaxValueValidator(5)])
-
+    
 
 class PictuersModel(models.Model):
     image = models.ImageField(upload_to="projectImages")
@@ -71,6 +71,9 @@ class CommentReportModel(models.Model):
         ProjectsModel, related_name="commentReports", on_delete=models.CASCADE
     )
     comment=models.ForeignKey(CommentsModel,on_delete=models.CASCADE,related_name='reportedComment')
+    def __str__(self):
+        return f'User {self.user.user.username} report on Project {self.project.title}'
+
 class DonationModel(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='donations')
     project = models.ForeignKey(

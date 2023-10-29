@@ -1,25 +1,27 @@
 {% extends 'base.html' %}
-{% block title %} Register {% endblock %}
+{% block title %} Login {% endblock %}
 {% block body %}
-<form method="post" enctype="multipart/form-data">
+<div class='container rounded  fw-bold w-50 shadow shadow-lg px-5 py-5 mt-5'>
+    <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="mb-2">
-        <label for="{{ form.username.id_for_label }}">Email</label>
-        <input type="text" name="{{ form.username.html_name }}" class="form-control">
-        {{ form.username.errors }}
+    <div class="mb-4">
+        <label class='mb-2' for="{{ form.username.id_for_label }}">Email</label>
+        <input type="text" name="{{ form.username.html_name }}" class="form-control border-2">
+        <div class='alert alert-danger fw-bold my-3 '>{{ form.username.errors }}</div>
     </div>
-    <div class="mb-2">
-        <label for="{{ form.password.id_for_label }}">Password</label>
-        <input type="password" name="{{ form.password.html_name }}" class="form-control">
-        {{ form.password.errors }}
+    <div class="">
+        <label class='mb-2' for="{{ form.password.id_for_label }}">Password</label>
+        <input type="password" name="{{ form.password.html_name }}" class="form-control border-2">
+        <div class='alert alert-danger fw-bold my-3 '>{{ form.password.errors }}</div>
     </div>
-    <div>
+    <div class='mt-4'>
         {% if form.errors %}
             <div class="alert alert-danger fw-bold">
                 Please enter a valid email and password
             </div>
         {% endif %}
     </div>
-    <button type="submit" class="btn btn-primary px-4 fs-5">Submit</button>
+    <button type="submit" class="btn btn-primary px-4 fs-5 mt-4">Submit</button>
 </form>
+</div>
 {% endblock %}

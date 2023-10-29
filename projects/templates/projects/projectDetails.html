@@ -1,11 +1,11 @@
 {%extends 'base.html'%} {%block body%}
 
 {% if messages %}
-<ul class="messages">
+<div class="messages">
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    <div{% if message.tags %} class="{{ message.tags }} alert alert-danger"{% endif %}>{{ message }}</div>
     {% endfor %}
-</ul>
+</div>
 {% endif %}
 
 <div class="container bg-dark text-light rounded shadow shadow-lg my-3 p-3">
@@ -45,42 +45,51 @@
   <form method="post" class="form-group">
     {% csrf_token %}
     {{ratingForm}}
-    <input type="submit" name="submit-rating" value="Submit Rating" class="btn btn-primary mt-2">
-</form>
+    <div class='d-flex justify-content-end me-2 '>
+    <input type="submit" name="submit-rating" value="Submit Rating" class="btn btn-primary mt-2 px-3 py-2">
+    </div>
+  </form>
 
 <h3 class='mt-4'> Donate Now </h3>
 <form method="post" class="form-group">
     {% csrf_token %}
     {% if not currentProject.completed %}
         <input type="number" name="donation" class="form-control" min="1" required>
-        <input type="submit" value="Donate" class="btn btn-primary mt-2">
-    {% else %}
+        <div class='d-flex justify-content-end me-2 '>
+          <input type="submit" name="submit-donation" value="Donate" class="btn btn-primary mt-2 px-4 py-2">
+          </div>    {% else %}
         <input type="number" name="donation" class="form-control" min="1" disabled>
-        <input type="submit" value="Donate" class="btn btn-primary mt-2" disabled>
-    {% endif %}
+        <div class='d-flex justify-content-end me-2 '>
+          <input type="submit" name="submit-donation" value="Donate" class="btn btn-primary mt-2 px-5 py-2">
+          </div>    {% endif %}
 </form>
 
 
 </div>
+<div class='border p-3  shadow shadow-lg rounded'>
 
-<h3>Comments:</h3>
+<h2 class='mb-3'>Give us your opinion </h2>
 <form method="post" class="form-group">
   {% csrf_token %}
-  <label for="commentText">Comment:</label>
  <textarea name="text" id="commentText" class="form-control" required></textarea>
-  <input type="submit" name="submit-comment" value="Submit Comment" class="btn btn-primary my-2">
-</form>
+ <div class="d-flex justify-content-end ">
+  <input type="submit" name="submit-comment" value="Submit Comment" class="btn btn-primary ms-2 px-4 my-3 ">
+</div></form>
 
-
+{%if currentProject.comments.all %}
+<div class='p-3'>
+<h2>Comments </h2>
 {% for comment in currentProject.comments.all %}
-  <div class='form-control bg-info my-3'>
+  <div class='form-control shadow shadow-lg pt-3 my-3'>
     <div class='d-flex justify-content-between'> 
-   <p>{{ comment.user.user.username }}</p>
+   <p>{{ comment.user.user.username }} : </p>
   <a href='{%url "reportComment" id=currentProject.id commentID=comment.id %}'><button type'button' class='btn btn-danger'>Report Comment</button></a>
     </div>
   <p>{{ comment.text }}</p>
   </div>
   {% endfor %}
-
+</div>
+  {%endif%}
+</div>
 
 {%endblock%}
