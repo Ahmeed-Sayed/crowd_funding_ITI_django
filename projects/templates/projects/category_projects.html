@@ -14,7 +14,7 @@
                     <p>Start Time: {{ project.start_time }}</p>
                     <p>End Time: {{ project.end_time }}</p>
                     <p>Is Featured: {% if project.is_featured %}Yes{% else %}No{% endif %}</p>
-                    <a href="#" class="btn btn-primary">View Project</a>
+                    <a href="{% url 'projectDetails' project.id%}" class="btn btn-primary">View Project</a>
                 </div>
             </div>
             

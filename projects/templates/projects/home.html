@@ -1,46 +1,26 @@
-<<<<<<< HEAD
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
-    <link href="{% static  'css/bootstrap.min.css' %}" rel="stylesheet" />
-    <link
-      href="{% static 'css/bootstrap-icons/font/bootstrap-icons.css' %}"
-      rel="stylesheet"
-    />
-    <title>home</title>
-  </head>
-  <body>
-
-    <form method="get" action="{% url 'home' %}">
-        {{ search_form.query.label_tag }}
-        <input type="text" name="query" value="{{ search_form.query.value }}" placeholder="Search by Title or Tag">
-        <button type="submit">Search</button>
-    </form>
-
-    {% if message %}
-        <p>{{ message }}</p>
-    {% else %}
-
-    <div id="projectSlider" class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner">
-        {% for project in top_projects %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-          <img src="{{ project.image.url }}" alt="{{ project.title }}" />
-          <div class="carousel-caption">
-            <h3>{{ project.title }}</h3>
-            <p>Average Rating: {{ project.details }}</p>
-            <a href="">Learn More</a>
-=======
 {%extends 'base.html'%} {% load static %} {%block body%}
 
+
+
+
+
+
+
+
+
+
+
 <div class="border border-1 shadow shadow-lg my-5 rounded p-3">
+
+  <form method="get" action="{% url 'home' %}">
+    {{ search_form.query.label_tag }}
+    <input type="text" name="query" value="{{ search_form.query.value }}" placeholder="Search by Title or Tag">
+    <button type="submit">Search</button>
+</form>
+
+
+
+
   <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
     <ol class="carousel-indicators">
       <li
@@ -97,7 +77,6 @@
                 $ {{ project.total_donations }}
               </div>
             </div>
->>>>>>> main
           </div>
         </div>
       </div>
@@ -290,40 +269,4 @@
     </button>
   </div>
 </div>
-<!-- Catigories Section -->
-<h2>Categories</h2>
-<ul>
-  {% for category in categories %}
-  <li>
-    <a href="#">{{ category.name }}</a>
-  </li>
-  {% endfor %}
-</ul>
-
-<<<<<<< HEAD
-<h2>Projects by Category</h2>
-<ul>
-    {% for category, projects in category_projects.items %}
-        <li>
-            <h3>{{ category.name }}</h3>
-            <ul>
-                {% for project in projects %}
-                    <li>
-                        <a href="#">{{ project.title }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </li>
-    {% endfor %}
-</ul>
-{% endif %}
-    <script src="{% static  'js/bootstrap.bundle.min.js' %}"></script>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  </body>
-</html>
-=======
 {%endblock%}
->>>>>>> main
