@@ -7,12 +7,13 @@
     <div class="mb-4">
         <label class='mb-2' for="{{ form.username.id_for_label }}">Email</label>
         <input type="text" name="{{ form.username.html_name }}" class="form-control border-2">
-        <div class='alert alert-danger fw-bold my-3 '>{{ form.username.errors }}</div>
+        {%if form.username.errors%}x<div class='alert alert-danger fw-bold my-3 '>{{ form.username.errors }}</div>{%endif%}
     </div>
     <div class="">
         <label class='mb-2' for="{{ form.password.id_for_label }}">Password</label>
         <input type="password" name="{{ form.password.html_name }}" class="form-control border-2">
-        <div class='alert alert-danger fw-bold my-3 '>{{ form.password.errors }}</div>
+        {%if form.password.errors%}x<div class='alert alert-danger fw-bold my-3 '>{{ form.password.errors }}</div>{%endif%}
+
     </div>
     <div class='mt-4'>
         {% if form.errors %}

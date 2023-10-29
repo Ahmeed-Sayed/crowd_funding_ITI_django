@@ -22,7 +22,7 @@ from .forms import (
     RatingForm,
     DonationForm,
     PictureForm,
-    ProjectSearchForm
+    ProjectSearchForm,
 )
 
 
@@ -41,9 +41,15 @@ PictureFormSet = forms.formset_factory(
 
 
 def home(request):
-    top_projects = ProjectsModel.objects.all().annotate(avg_rating=Avg("ratings__rating")).order_by("-avg_rating")[:5]
+    top_projects = (
+        ProjectsModel.objects.all()
+        .annotate(avg_rating=Avg("ratings__rating"))
+        .order_by("-avg_rating")[:5]
+    )
     for project in top_projects:
-        project.total_donations = DonationModel.objects.filter(project=project).aggregate(sum=Sum('donation'))['sum']
+        project.total_donations = DonationModel.objects.filter(
+            project=project
+        ).aggregate(sum=Sum("donation"))["sum"]
         if project.total_donations is None:
             project.total_donations = 0
         project.progress = (project.total_donations / project.target) * 100
@@ -53,15 +59,19 @@ def home(request):
         "-start_time"
     )[:5]
     search_form = ProjectSearchForm(request.GET)
-    message = ""  
+    message = ""
+    categories = CategoriesModel.objects.all()
+    category_projects = {}
 
-    if search_form.is_valid():  
-        query = search_form.cleaned_data.get('query')
-        print(f"Query: {query}")  
+    if search_form.is_valid():
+        query = search_form.cleaned_data.get("query")
+        print(f"Query: {query}")
 
         if query:
-            projects = ProjectsModel.objects.filter(Q(title__icontains=query) | Q(tags__name__icontains=query))
-            print(f"Projects: {projects}")  
+            projects = ProjectsModel.objects.filter(
+                Q(title__icontains=query) | Q(tags__name__icontains=query)
+            )
+            print(f"Projects: {projects}")
             if projects:
                 for category in categories:
                     category_projects[category] = projects.filter(category=category)
@@ -71,12 +81,7 @@ def home(request):
             message = "No query provided."
         print(f"Message: {message}")
 
-    categories = CategoriesModel.objects.all()
-    category_projects = {}  
 
-    for category in categories:
-        projects = ProjectsModel.objects.filter(category=category)
-        category_projects[category] = projects
     
     return render(
         request,
@@ -86,13 +91,14 @@ def home(request):
             "latest_projects": latest_projects,
             "featured_projects": featured_projects,
             "categories": categories,
-            "category_projects": category_projects,
+            "search_form": search_form,
+            "message": message,
         },
     )
 
 
 def project_list(request):
-    projects = ProjectsModel.objects.all()  
+    projects = ProjectsModel.objects.all()
     return render(request, "projects/project_list.html", {"projects": projects})
 
 
@@ -258,7 +264,9 @@ def reportComment(request, id, commentID):
     if currentUser == currentComment.user:
         messages.error(request, "You can't report your own comment.")
         return redirect("projectDetails", id=id)
-    existingReport = CommentReportModel.objects.filter(user=currentUser, comment=currentComment).first()
+    existingReport = CommentReportModel.objects.filter(
+        user=currentUser, comment=currentComment
+    ).first()
     if existingReport:
         messages.info(request, "You have already reported this comment.")
         return redirect("projectDetails", id=id)
