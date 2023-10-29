@@ -52,9 +52,27 @@ def home(request):
     featured_projects = ProjectsModel.objects.filter(is_featured=True).order_by(
         "-start_time"
     )[:5]
+    search_form = ProjectSearchForm(request.GET)
+    message = ""  
+
+    if search_form.is_valid():  
+        query = search_form.cleaned_data.get('query')
+        print(f"Query: {query}")  
+
+        if query:
+            projects = ProjectsModel.objects.filter(Q(title__icontains=query) | Q(tags__name__icontains=query))
+            print(f"Projects: {projects}")  
+            if projects:
+                for category in categories:
+                    category_projects[category] = projects.filter(category=category)
+            else:
+                message = "The project doesn't exist."
+        else:
+            message = "No query provided."
+        print(f"Message: {message}")
 
     categories = CategoriesModel.objects.all()
-    category_projects = {}  # A dictionary to store projects for each category
+    category_projects = {}  
 
     for category in categories:
         projects = ProjectsModel.objects.filter(category=category)
