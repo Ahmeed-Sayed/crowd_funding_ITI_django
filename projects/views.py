@@ -129,11 +129,6 @@ class CreateProject(View):
             return redirect(reverse("accountLogin"))
         project_form = ProjectCreationForm(request.POST)
         picture_formset = PictureFormSet(request.POST, request.FILES, prefix="pictures")
-        if not project_form.is_valid():
-            print(project_form.errors)
-        if not picture_formset.is_valid():
-            print(picture_formset.errors)
-
         if project_form.is_valid() and picture_formset.is_valid():
             project = project_form.save(commit=False)
             project.user = UserProfile.objects.get(id=request.session["profileId"])

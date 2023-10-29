@@ -38,11 +38,17 @@ class ProjectCreationForm(forms.ModelForm):
             raise ValidationError("End date should be after the start date.")
         return end_time
 
+    def clean_target(self):
+        target = self.cleaned_data.get('target')
+        if target and target <= 0:
+            raise ValidationError('Target must be greater than 0.')
+        return target  
+    
     def __init__(self, *args, **kwargs):
         super(ProjectCreationForm, self).__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control"})
-        
+      
 class CommentForm(forms.ModelForm):
     class Meta:
         model = CommentsModel
