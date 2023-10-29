@@ -13,6 +13,7 @@ from .models import (
 from django.contrib import messages
 from django.db.models import Avg, Sum
 from django import forms
+from django.db.models import Q
 
 # Create your views here.
 from .forms import (
@@ -21,6 +22,7 @@ from .forms import (
     RatingForm,
     DonationForm,
     PictureForm,
+    ProjectSearchForm
 )
 
 
@@ -39,15 +41,9 @@ PictureFormSet = forms.formset_factory(
 
 
 def home(request):
-    top_projects = (
-        ProjectsModel.objects.all()
-        .annotate(avg_rating=Avg("ratings__rating"))
-        .order_by("-avg_rating")[:5]
-    )
+    top_projects = ProjectsModel.objects.all().annotate(avg_rating=Avg("ratings__rating")).order_by("-avg_rating")[:5]
     for project in top_projects:
-        project.total_donations = DonationModel.objects.filter(
-            project=project
-        ).aggregate(sum=Sum("donation"))["sum"]
+        project.total_donations = DonationModel.objects.filter(project=project).aggregate(sum=Sum('donation'))['sum']
         if project.total_donations is None:
             project.total_donations = 0
         project.progress = (project.total_donations / project.target) * 100
@@ -56,6 +52,24 @@ def home(request):
     featured_projects = ProjectsModel.objects.filter(is_featured=True).order_by(
         "-start_time"
     )[:5]
+    search_form = ProjectSearchForm(request.GET)
+    message = ""  
+
+    if search_form.is_valid():  
+        query = search_form.cleaned_data.get('query')
+        print(f"Query: {query}")  
+
+        if query:
+            projects = ProjectsModel.objects.filter(Q(title__icontains=query) | Q(tags__name__icontains=query))
+            print(f"Projects: {projects}")  
+            if projects:
+                for category in categories:
+                    category_projects[category] = projects.filter(category=category)
+            else:
+                message = "The project doesn't exist."
+        else:
+            message = "No query provided."
+        print(f"Message: {message}")
 
     categories = CategoriesModel.objects.all()
     category_projects = {}  
@@ -63,7 +77,7 @@ def home(request):
     for category in categories:
         projects = ProjectsModel.objects.filter(category=category)
         category_projects[category] = projects
-
+    
     return render(
         request,
         "projects/home.html",
@@ -289,5 +303,4 @@ def deleteProject(request, id):
             "Project donations has passed 25% of the target, you can't delete the project",
         )
         return redirect("projectDetails", id=id)
-    currentProject.delete()
     return redirect("home")
