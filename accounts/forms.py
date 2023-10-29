@@ -29,8 +29,8 @@ class RegisterForm(UserCreationForm):
             "first_name",
             "last_name",
             "email",
-            "phoneNumber",
             "password1",
+            "phoneNumber",
             "password2",
             "image",
         )

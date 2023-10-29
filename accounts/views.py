@@ -66,7 +66,7 @@ def activateEmail(request, user, to_email):
 class AccountRegister(View):
     def get(self, request):
         form = RegisterForm()
-        return render(request, "accounts/test.html", {"form": form})
+        return render(request, "accounts/accountRegister.html", {"form": form})
 
     def post(self, request):
         form = RegisterForm(request.POST, request.FILES)
