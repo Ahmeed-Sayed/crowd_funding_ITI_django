@@ -109,4 +109,12 @@ class PictureForm(forms.ModelForm):
 
 
 class ProjectSearchForm(forms.Form):
-    query = forms.CharField(label='Search by Title or Tag', max_length=100)
+    query = forms.CharField(label='Search', max_length=100)
+    def clean_query(self):
+        query = self.cleaned_data.get('query')
+        if not query or query.isspace():
+            raise forms.ValidationError("This field cannot be empty.")
+        return query
+    def __init__(self, *args, **kwargs):
+        super(ProjectSearchForm, self).__init__(*args, **kwargs)
+        self.fields["query"].widget = forms.TextInput(attrs={"class": "form-control"})

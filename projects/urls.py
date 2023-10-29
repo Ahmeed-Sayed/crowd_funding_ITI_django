@@ -11,6 +11,7 @@ urlpatterns = [
     ),
      path("<int:id>/projectDetails/report-comment/<int:commentID>",views.reportComment,name="reportComment"),
      path("<int:id>/projectDetails/reportProject",views.reportProject,name="reportProject"),
-     path("<int:id>/projectDetails/deleteProject",views.deleteProject,name="deleteProject",)
+     path("<int:id>/projectDetails/deleteProject",views.deleteProject,name="deleteProject",),
+     path('projectSearch/<str:query>?/', views.searchResults, name="searchResults")
    
 ]
