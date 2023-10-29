@@ -6,28 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %} {% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
     <script src="{% static 'js/jquery.min.js'%}"></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 mb-5">
-      <a class="navbar-brand fw-bold" href="{%url 'home'%}">Fundy</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div
-        class="collapse navbar-collapse d-flex justify-content-between"
-        id="navbarNav"
-      >
-        <ul class="navbar-nav tx">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 mb-5 align-items-baseline fs-5">
+      <a class="navbar-brand fw-bold fs-5" href="{%url 'home'%}">Fundy</a>
+      <div class="d-flex justify-content-between w-100">
+        <ul class="navbar-nav tx mx-auto">
           <li class="nav-item active">
             <a class="nav-link fw-bold text-light" href="{%url 'home' %}"
               >Home</a
@@ -92,8 +77,8 @@
         {% endif %}
       </div>
     </nav>
-    <div class="container">{%block body%} {%endblock%}</div>
 
+    <div class="container">{%block body%} {%endblock%}</div>
     <script src="{% static 'js/bootstrap.bundle.min.js'%}"></script>
   </body>
 </html>
