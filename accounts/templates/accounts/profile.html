@@ -114,7 +114,7 @@
                   <div class="tab-pane fade show active profile-overview" id="profile-overview">
                     <div class="row">
                       <h2> My Donations </h2>
-                      <div class='d-flex flex-col  mb-5'>
+                      <div class='d-flex flex-column  mb-5'>
                       {% for donation in user.donations.all%}
                           <div class="card me-3 p-3" >
                               <h5 >You Donated {{donation.donation}} to {{donation.project.title}} Project </h5>

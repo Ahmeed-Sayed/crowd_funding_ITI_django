@@ -29,11 +29,12 @@
         >
         {{ project_form.details }}
         <label class="fw-bold fs-5" for="{{ project_form.category.id_for_label }}">{{ project_form.category.label }}</label>
-        <select name="{{ project_form.category.html_name }}" id="{{ project_form.category.auto_id }}" class="form-control">
+        <select name="category" id="{{ project_form.category.auto_id }}" class="form-control" multiple>
         {% for category in project_form.fields.category.queryset %}
             <option value="{{ category.pk }}" >{{ category.name }}</option>
         {% endfor %}
         </select>
+
         <label class="fw-bold fs-5" for="{{ project_form.target.id_for_label }}"
           >{{ project_form.target.label }}</label
         >
@@ -47,11 +48,12 @@
     </div>
     <div class="col">
       <label class="fw-bold fs-5" for="{{ project_form.tags.id_for_label }}">{{ project_form.tags.label }}</label>
-      <select name="{{ project_form.tags.html_name }}" id="{{ project_form.tags.auto_id }}" class="form-control">
+      <select name="{{ project_form.tags.html_name }}" id="{{ project_form.tags.auto_id }}" class="form-control" multiple>
       {% for tag in project_form.fields.tags.queryset %}
           <option value="{{ tag.pk }}" >{{ tag.name }}</option>
       {% endfor %}
       </select>
+
       
         <label
           class="fw-bold fs-5"

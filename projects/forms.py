@@ -6,6 +6,8 @@ from .models import (
     CommentsModel,
     DonationModel,
     PictuersModel,
+    CategoriesModel,
+    TagsModel
 )
 
 from django.core.exceptions import ValidationError
@@ -19,6 +21,14 @@ class ProjectCreationForm(forms.ModelForm):
     )
     end_time = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={"type": "datetime-local"}),
+    )
+    category = forms.ModelMultipleChoiceField(
+        queryset=CategoriesModel.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+    )
+    tags = forms.ModelMultipleChoiceField(
+        queryset=TagsModel.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
     )
 
     class Meta:

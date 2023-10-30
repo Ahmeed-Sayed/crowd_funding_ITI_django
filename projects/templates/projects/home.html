@@ -1,5 +1,10 @@
 {%extends 'base.html'%} {% load static %} {%block body%}
 
+<style>
+  img {
+    min-width: 500px;
+  }
+</style>
 <form method="POST">
   {%csrf_token%} {{ search_form }}
   <div class="d-flex justify-content-end">
@@ -8,8 +13,8 @@
 </form>
 
 <div class="border border-1 shadow shadow-lg my-5 rounded p-3">
-  <h1 class='mb-3'>Top Projects</h1>
- 
+  <h1 class="mb-3">Top Projects</h1>
+
   <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
     <ol class="carousel-indicators">
       <li
@@ -43,8 +48,10 @@
     <div class="carousel-inner" role="listbox">
       {% for project in top_projects %}
       <div class="carousel-item {% if forloop.first %}active{% endif %}">
-        <div class="d-flex justify-content-center  mb-5">
-          <img src="{{ project.images.first.image.url }}" height="400px" />
+        <div class="d-flex justify-content-center mb-5">
+          <a href="{%url 'projectDetails' project.id%}">
+            <img src="{{ project.images.first.image.url }}" height="400px" />
+          </a>
         </div>
         <div class="carousel-caption d-none d-md-block">
           <h3 class="" style="color: white !important">{{ project.title }}</h3>
@@ -60,8 +67,7 @@
               aria-valuemin="0"
               aria-valuemax="100"
             >
-              {%if project.total_donations%} 
-              $ {{ project.total_donations }}
+              {%if project.total_donations%} $ {{ project.total_donations }}
               {%endif%}
             </div>
           </div>
@@ -126,7 +132,9 @@
       {% for project in latest_projects %}
       <div class="carousel-item {% if forloop.first %}active{% endif %}">
         <div class="d-flex justify-content-center mb-5">
-          <img src="{{ project.images.first.image.url }}" height="400px" />
+          <a href="{%url 'projectDetails' project.id%}">
+            <img src="{{ project.images.first.image.url }}" height="400px" />
+          </a>
         </div>
         <div class="carousel-caption d-none d-md-block">
           <h3 class="" style="color: white !important">{{ project.title }}</h3>
@@ -135,15 +143,14 @@
           </h5>
           <div class="progress" style="height: 30px">
             <div
-              class="progress-bar"
+              class="progress-bar text-center"
               role="progressbar"
               style="width: {{ project.progress }}%; font-size: 20px;"
               aria-valuenow="{{ project.progress }}"
               aria-valuemin="0"
               aria-valuemax="100"
             >
-              {%if project.total_donations%} 
-              $ {{ project.total_donations }}
+              {%if project.total_donations%} $ {{ project.total_donations }}
               {%endif%}
             </div>
           </div>
@@ -207,7 +214,9 @@
       {% for project in featured_projects %}
       <div class="carousel-item {% if forloop.first %}active{% endif %}">
         <div class="d-flex justify-content-center mb-5">
-          <img src="{{ project.images.first.image.url }}" height="400px" />
+          <a href="{%url 'projectDetails' project.id%}">
+            <img src="{{ project.images.first.image.url }}" height="400px" />
+          </a>
         </div>
         <div class="carousel-caption d-none d-md-block">
           <h3 class="" style="color: white !important">{{ project.title }}</h3>
@@ -223,8 +232,8 @@
               aria-valuemin="0"
               aria-valuemax="100"
             >
-              {%if project.total_donations%} 
-              $ {{project.total_donations}} {%endif%}
+              {%if project.total_donations%} $ {{project.total_donations}}
+              {%endif%}
             </div>
           </div>
         </div>
