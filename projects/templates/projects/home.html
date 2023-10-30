@@ -44,8 +44,7 @@
       {% for project in top_projects %}
       <div class="carousel-item {% if forloop.first %}active{% endif %}">
         <div class="d-flex justify-content-center  mb-5">
-          <img src="{{ project.images.first.image.url }}" height="400px" />
-        </div>
+          <a href="{%url 'projectDetails' project.id%}"> <img src="{{ project.images.first.image.url }}" height="400px" /> </a>        </div>
         <div class="carousel-caption d-none d-md-block">
           <h3 class="" style="color: white !important">{{ project.title }}</h3>
           <h5 class="" style="color: white !important">
@@ -126,7 +125,7 @@
       {% for project in latest_projects %}
       <div class="carousel-item {% if forloop.first %}active{% endif %}">
         <div class="d-flex justify-content-center mb-5">
-          <img src="{{ project.images.first.image.url }}" height="400px" />
+         <a href="{%url 'projectDetails' project.id%}"> <img src="{{ project.images.first.image.url }}" height="400px" /> </a>
         </div>
         <div class="carousel-caption d-none d-md-block">
           <h3 class="" style="color: white !important">{{ project.title }}</h3>
@@ -135,7 +134,7 @@
           </h5>
           <div class="progress" style="height: 30px">
             <div
-              class="progress-bar"
+              class="progress-bar text-center"
               role="progressbar"
               style="width: {{ project.progress }}%; font-size: 20px;"
               aria-valuenow="{{ project.progress }}"
@@ -207,8 +206,7 @@
       {% for project in featured_projects %}
       <div class="carousel-item {% if forloop.first %}active{% endif %}">
         <div class="d-flex justify-content-center mb-5">
-          <img src="{{ project.images.first.image.url }}" height="400px" />
-        </div>
+          <a href="{%url 'projectDetails' project.id%}"> <img src="{{ project.images.first.image.url }}" height="400px" /> </a>        </div>
         <div class="carousel-caption d-none d-md-block">
           <h3 class="" style="color: white !important">{{ project.title }}</h3>
           <h5 class="" style="color: white !important">
