@@ -121,7 +121,6 @@ class PictureForm(forms.ModelForm):
 class ProjectSearchForm(forms.Form):
     query = forms.CharField(label='',
                             max_length=100,
-                            widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Search for a Project..."}),
                             )
     def clean_query(self):
         query = self.cleaned_data.get('query')
