@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views import View
 from .models import UserProfile
 from .forms import RegisterForm, ProfileEditForm
-from django.contrib.auth import  authenticate
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -13,7 +13,6 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
-from django.db import IntegrityError
 
 
 def activate(request, uidb64, token):
@@ -64,7 +63,6 @@ def activateEmail(request, user, to_email):
         )
 
 
-
 class AccountRegister(View):
     def get(self, request):
         form = RegisterForm()
@@ -76,11 +74,11 @@ class AccountRegister(View):
             result = form.save(commit=False)
             if result is None:
                 return render(request, "accounts/accountRegister.html", {"form": form})
-            
+
             user, user_profile = result
             user.is_active = False
             user.save()
-            user_profile.user = user 
+            user_profile.user = user
             user_profile.save()
             activateEmail(request, user, form.cleaned_data["email"])
             return redirect(reverse("accountRegister"))
@@ -95,7 +93,7 @@ class AccountLogin(View):
             password = form.cleaned_data.get("password")
             user = authenticate(request, username=email, password=password)
             if user is not None:
-                profile=UserProfile.objects.get(user=user)
+                profile = UserProfile.objects.get(user=user)
                 request.session["username"] = profile.user.username
                 request.session["profileId"] = profile.id
                 return redirect(reverse("home"))
@@ -113,7 +111,7 @@ def accountLogout(request):
     return redirect(reverse("home"))
 
 
-def profileView(request,id):
+def profileView(request, id):
     user = get_object_or_404(UserProfile, id=id)
     form = ProfileEditForm(instance=user)
     return render(request, "accounts/profile.html", {"user": user, "form": form})
@@ -122,24 +120,27 @@ def profileView(request,id):
 class ProfileEditView(View):
     def get(self, request, *args, **kwargs):
         id = kwargs.pop("id")
-        user=get_object_or_404(UserProfile, id=id)
-        form= ProfileEditForm(instance=user)
+        user = get_object_or_404(UserProfile, id=id)
+        form = ProfileEditForm(instance=user)
         return render(request, "accounts/profileEdit.html", {"form": form})
+
     def post(self, request, *args, **kwargs):
-        id=kwargs.pop("id")
-        user=get_object_or_404(UserProfile, id=id)
+        id = kwargs.pop("id")
+        user = get_object_or_404(UserProfile, id=id)
         form = ProfileEditForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
             return redirect(reverse("profile", args=[user.id]))
-        else :
+        else:
             return render(request, "accounts/profileEdit.html", {"form": form})
-        
-def profileDelete(request,id):
-         if request.method=="POST":
-            profile=get_object_or_404(UserProfile, id=id)
-            user=profile.user
-            request.session.flush()
-            user.delete()
-            return redirect(reverse("home"))
-         else: return None  
+
+
+def profileDelete(request, id):
+    if request.method == "POST":
+        profile = get_object_or_404(UserProfile, id=id)
+        user = profile.user
+        request.session.flush()
+        user.delete()
+        return redirect(reverse("home"))
+    else:
+        return None

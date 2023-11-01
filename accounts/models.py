@@ -11,6 +11,6 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-def save(self, *args, **kwargs):
-    self.email = self.email.lower()
-    super(User, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.email = self.email.lower()
+        super(User, self).save(*args, **kwargs)

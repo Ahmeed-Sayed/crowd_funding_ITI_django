@@ -1,95 +1,143 @@
-{%extends 'base.html'%} {%block body%}
+{%extends 'base.html'%}
+{%block body%}
 
-{% if messages %}
-<div class="messages">
-    {% for message in messages %}
-    <div{% if message.tags %} class="{{ message.tags }} alert alert-danger"{% endif %}>{{ message }}</div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<div class="container bg-dark text-light rounded shadow shadow-lg my-3 p-3">
-  <div class='d-flex justify-content-between'>
-    <p>Project Title: {{ currentProject.title }}</p>
-    <div>
-  <a href='{%url "reportProject" id=currentProject.id%}'><button class='btn btn-danger'>Report Project</button></a>
-  <a href='{%url "deleteProject" id=currentProject.id%}'><button class='btn btn-danger'>Delete Project</button></a></div>
-</div>
-  <p>Project Details: {{ currentProject.details }}</p>
-  <p>Total target: {{ currentProject.target }}</p>
-  <p>Start Time: {{ currentProject.start_time }}</p>
-  <p>End Time: {{ currentProject.end_time }}</p>
-  <p>Donations:     
-    {% for donation in currentProject.donations.all %}
-        <p>User: {{ donation.user.user.username }} Donated, Amount: {{ donation.donation }}</p>
-    {% endfor %}
-    </p>
-
-  <h3>Ratings:</h3>
-  {% for rating in currentProject.ratings.all %}
-  <p>{{ rating.user.user.username }} || {{ rating.rating }}</p>
-    {% endfor %}
-<p>Average Rating: {{ averageRating }}</p>
-
-
-  <h3>Categories:</h3>
-  {% for category in currentProject.category.all %}
-  <p>{{ category.name }}</p>
-  {% endfor %}
-
-  <h3>Tags:</h3>
-  {% for tag in currentProject.tags.all %}
-  <p>{{ tag.name }}</p>
-  {% endfor %}
- <h3> Rate Project </h3>
-  <form method="post" class="form-group">
-    {% csrf_token %}
-    {{ratingForm}}
-    <div class='d-flex justify-content-end me-2 '>
-    <input type="submit" name="submit-rating" value="Submit Rating" class="btn btn-primary mt-2 px-3 py-2">
-    </div>
-  </form>
-
-<h3 class='mt-4'> Donate Now </h3>
-<form method="post" class="form-group">
-    {% csrf_token %}
-    {% if not currentProject.completed %}
-        <input type="number" name="donation" class="form-control" min="1" required>
-        <div class='d-flex justify-content-end me-2 '>
-          <input type="submit" name="submit-donation" value="Donate" class="btn btn-primary mt-2 px-4 py-2">
-          </div>    {% else %}
-        <input type="number" name="donation" class="form-control" min="1" disabled>
-        <div class='d-flex justify-content-end me-2 '>
-          <input type="submit" name="submit-donation" value="Donate" class="btn btn-primary mt-2 px-5 py-2">
-          </div>    {% endif %}
-</form>
-
-
-</div>
-<div class='border p-3  shadow shadow-lg rounded'>
-
-<h2 class='mb-3'>Give us your opinion </h2>
-<form method="post" class="form-group">
-  {% csrf_token %}
- <textarea name="text" id="commentText" class="form-control" required></textarea>
- <div class="d-flex justify-content-end ">
-  <input type="submit" name="submit-comment" value="Submit Comment" class="btn btn-primary ms-2 px-4 my-3 ">
-</div></form>
-
-{%if currentProject.comments.all %}
-<div class='p-3'>
-<h2>Comments </h2>
-{% for comment in currentProject.comments.all %}
-  <div class='form-control shadow shadow-lg pt-3 my-3'>
-    <div class='d-flex justify-content-between'> 
-   <p>{{ comment.user.user.username }} : </p>
-  <a href='{%url "reportComment" id=currentProject.id commentID=comment.id %}'><button type'button' class='btn btn-danger'>Report Comment</button></a>
-    </div>
-  <p>{{ comment.text }}</p>
+  {% if messages %}
+  <div class="messages">
+      {% for message in messages %}
+      <div{% if message.tags %} class="{{ message.tags }} alert alert-danger"{% endif %}>{{ message }}</div>
+      {% endfor %}
   </div>
-  {% endfor %}
-</div>
-  {%endif%}
-</div>
+  {% endif %}
+  {% comment %} slider {% endcomment %}
+  <div class="container mt-4 border p-3  shadow shadow-lg rounded">
+    <h3>Project Images</h3>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        {% for image in  currentProject.images.all %}
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
+        {% endfor %}
+      </div>
+      <div class="carousel-inner ">
+        {% for image in currentProject.images.all %}
+        <div class="carousel-item  {% if forloop.first %}active{% endif %}">
+          <div class='d-flex justify-content-center'>
+          <img src="{{ image.image.url }}" class="d-block w-75" height="650px" alt="{{ project.title }}">
+        </div>
+        </div>
+        {% endfor %}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+  {% comment %} projectDetails section {% endcomment %}
+  <div class="container mt-4 border p-3  shadow shadow-lg rounded">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>{{ currentProject.title }}</h1>
+            <h3>Project Description:</h3>
+            <p>{{ currentProject.details }}</p>
+            <h3>Categories:</h3>
+            {% for category in currentProject.category.all %}
+              <p>{{ category.name }}</p>
+            {% endfor %}
+            <h3>Tags:</h3>
+            {% for tag in currentProject.tags.all %}
+              <p>{{ tag.name }}</p>
+            {% endfor %}
+            <h3>Total target: {{ currentProject.target }}$</h3>
+            <h3>Start Date: </h3>{{ currentProject.start_time }}
+            <h3>End Date: </h3>{{ currentProject.end_time }}
+            <h3>Donations:
+              {% for donation in currentProject.donations.all %}
+                  <p style="color: red">User: {{ donation.user.user.username }} Donated, Amount: {{ donation.donation }}</p>
+              {% endfor %}
+            </h3>
+            <h3>Ratings:</h3>
+            {% for rating in currentProject.ratings.all %}
+            <p>{{ rating.user.user.username }} || {{ rating.rating }}</p>
+              {% endfor %}
+            <p>Average Rating: {{ averageRating }}</p>
 
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Support this Project</h5>
+                            <form method="post" class="form-group">
+                              {% csrf_token %}
+                              {% if not currentProject.completed %}
+                                <input type="number" name="donation" class="form-control" min="1" required>
+                                <div class='d-flex justify-content-end me-2 '>
+                                  <input type="submit" name="submit-donation" value="Donate" class="btn btn-primary mt-2 px-4 py-2">
+                                </div>
+                              {% else %}
+                                <input type="number" name="donation" class="form-control" min="1" disabled>
+                                <div class='d-flex justify-content-end me-2 '>
+                                  <input type="submit" name="submit-donation" value="Donate" class="btn btn-primary mt-2 px-5 py-2">
+                                </div>
+                              {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                  <div class="card">
+                    <div class="card-body">
+                      <h3> Rate Project </h3>
+                      <form method="post" class="form-group">
+                        {% csrf_token %}
+                        {{ratingForm}}
+                        <div class='d-flex justify-content-end me-2 '>
+                        <input type="submit" name="submit-rating" value="Submit Rating" class="btn btn-primary mt-2 px-3 py-2">
+                        </div>
+                      </form>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                  <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Actions</h5>
+                        <a href='{%url "reportProject" id=currentProject.id%}'><button class='btn btn-danger'>Report Project</button></a>
+                        <a href='{%url "deleteProject" id=currentProject.id%}'><button class='btn btn-danger'>Delete Project</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  {% comment %} comments section {% endcomment %}
+  <div class='border p-3  shadow shadow-lg rounded'>
+    <h2 class='mb-3'>Give us your opinion </h2>
+    <form method="post" class="form-group">
+      {% csrf_token %}
+      <textarea name="text" id="commentText" class="form-control" required></textarea>
+      <div class="d-flex justify-content-end ">
+        <input type="submit" name="submit-comment" value="Submit Comment" class="btn btn-primary ms-2 px-4 my-3 ">
+      </div>
+    </form>
+
+    {%if currentProject.comments.all %}
+      <div class='p-3'>
+      <h2>Comments </h2>
+      {% for comment in currentProject.comments.all %}
+        <div class='form-control shadow shadow-lg pt-3 my-3'>
+          <div class='d-flex justify-content-between'>
+            <p>{{ comment.user.user.username }} : </p>
+            <a href='{%url "reportComment" id=currentProject.id commentID=comment.id %}'><button type'button' class='btn btn-danger'>Report Comment</button></a>
+          </div>
+          <p>{{ comment.text }}</p>
+        </div>
+      {% endfor %}
+      </div>
+    {%endif%}
+  </div>
 {%endblock%}

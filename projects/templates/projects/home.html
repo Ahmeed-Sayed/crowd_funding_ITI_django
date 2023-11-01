@@ -1,212 +1,144 @@
-{%extends 'base.html'%} {% load static %} {%block body%}
+{%extends 'base.html'%}
+{% load static %}
+{%block body%}
 
-<form method="POST">
-  {%csrf_token%} {{ search_form }}
-  <div class="d-flex justify-content-end">
-    <button type="submit" class="btn btn-primary mt-3 px-4 py-2">Search</button>
-  </div>
-</form>
+<style>
+  img {
+    min-width: 500px;
+  }
+</style>
+<div class="container border p-3 shadow shadow-lg rounded">
+  <h2>Search For a Project</h2>
+  <form method="POST" class="d-flex text-center p-3 m-2 bg-dark text-white" style="border-radius: 10px">
+    {% csrf_token %}
+    {{ search_form }}
+    <div>
+        <input type="submit" class="btn btn-primary m-2 p-2" value="Search">
+    </div>
+  </form>
 
-<div class="border border-1 shadow shadow-lg my-5 rounded p-3">
-  <h1 class='mb-3'>Top Projects</h1>
- 
-  <div id="carouselId" class="carousel slide" data-bs-ride="carousel">
-    <ol class="carousel-indicators">
-      <li
-        data-bs-target="#carouselId"
-        data-bs-slide-to="0"
-        class="active"
-        aria-current="true"
-        aria-label="First slide"
-      ></li>
-      <li
-        data-bs-target="#carouselId"
-        data-bs-slide-to="1"
-        aria-label="Second slide"
-      ></li>
-      <li
-        data-bs-target="#carouselId"
-        data-bs-slide-to="2"
-        aria-label="Third slide"
-      ></li>
-      <li
-        data-bs-target="#carouselId"
-        data-bs-slide-to="3"
-        aria-label="Fourth slide"
-      ></li>
-      <li
-        data-bs-target="#carouselId"
-        data-bs-slide-to="4"
-        aria-label="Fifth slide"
-      ></li>
-    </ol>
-    <div class="carousel-inner" role="listbox">
-      {% for project in top_projects %}
-      <div class="carousel-item {% if forloop.first %}active{% endif %}">
-        <div class="d-flex justify-content-center  mb-5">
-          <a href="{%url 'projectDetails' project.id%}"> <img src="{{ project.images.first.image.url }}" height="400px" /> </a>        </div>
-        <div class="carousel-caption d-none d-md-block">
-          <h3 class="" style="color: white !important">{{ project.title }}</h3>
-          <h5 class="" style="color: white !important">
-            Project Target: ${{ project.target }}
-          </h5>
-          <div class="progress" style="height: 30px">
-            <div
-              class="progress-bar"
-              role="progressbar"
-              style="width: {{ project.progress }}%; font-size: 20px;"
-              aria-valuenow="{{ project.progress }}"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
-              {%if project.total_donations%} 
-              $ {{ project.total_donations }}
-              {%endif%}
+  <div class="border border-1 shadow shadow-lg my-5 rounded p-3">
+    <h1 class="mb-3">Top Projects</h1>
+    <div id="myCarousel" class="carousel slide center" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1"></li>
+          <li data-target="#myCarousel" data-slide-to="2"></li>
+          <li data-target="#myCarousel" data-slide-to="3"></li>
+          <li data-target="#myCarousel" data-slide-to="4"></li>
+      </ol>
+
+      <!-- Slides -->
+      <div class="carousel-inner text-center">
+        {% for project in top_projects %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+          <div class="d-flex justify-content-center mb-5">
+            <a href="{%url 'projectDetails' project.id%}">
+              <img src="{{ project.images.first.image.url }}" height="400px" />
+            </a>
+          </div>
+          <div class="carousel-caption d-none d-md-block">
+            <h3 class="" style="color: white !important">{{ project.title }}</h3>
+            <h5 class="" style="color: white !important">
+              Project Target: ${{ project.target }}
+            </h5>
+            <div class="progress" style="height: 30px">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                style="width: {{ project.progress }}%; font-size: 20px;"
+                aria-valuenow="{{ project.progress }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                {%if project.total_donations%} $ {{ project.total_donations }}
+                {%endif%}
+              </div>
             </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-    </div>
-    <button
-      class="carousel-control-prev"
-      type="button"
-      data-bs-target="#carouselId"
-      data-bs-slide="prev"
-    >
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button
-      class="carousel-control-next"
-      type="button"
-      data-bs-target="#carouselId"
-      data-bs-slide="next"
-    >
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-</div>
 
-<div class="border border-1 shadow shadow-lg my-5 rounded p-3">
-  <h1>Latest Projects</h1>
-  <div id="latest" class="carousel slide" data-bs-ride="carousel">
-    <ol class="carousel-indicators">
-      <li
-        data-bs-target="#latest"
-        data-bs-slide-to="0"
-        class="active"
-        aria-current="true"
-        aria-label="First slide"
-      ></li>
-      <li
-        data-bs-target="#latest"
-        data-bs-slide-to="1"
-        aria-label="Second slide"
-      ></li>
-      <li
-        data-bs-target="#latest"
-        data-bs-slide-to="2"
-        aria-label="Third slide"
-      ></li>
-      <li
-        data-bs-target="#latest"
-        data-bs-slide-to="3"
-        aria-label="Fourth slide"
-      ></li>
-      <li
-        data-bs-target="#latest"
-        data-bs-slide-to="4"
-        aria-label="Fifth slide"
-      ></li>
+      <!-- Controls -->
+      <a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+      </a>
+      <a class="carousel-control-next" href="#myCarousel" data-slide="next">
+          <span class="carousel-control-next-icon"></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="border border-1 shadow shadow-lg my-5 rounded p-3">
+    <h1>Latest Projects</h1>
+    <div id="myCarousel2" class="carousel slide" data-bs-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel2" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel2" data-slide-to="1"></li>
+        <li data-target="#myCarousel2" data-slide-to="2"></li>
+        <li data-target="#myCarousel2" data-slide-to="3"></li>
+        <li data-target="#myCarousel2" data-slide-to="4"></li>
     </ol>
-    <div class="carousel-inner" role="listbox">
-      {% for project in latest_projects %}
-      <div class="carousel-item {% if forloop.first %}active{% endif %}">
-        <div class="d-flex justify-content-center mb-5">
-         <a href="{%url 'projectDetails' project.id%}"> <img src="{{ project.images.first.image.url }}" height="400px" /> </a>
-        </div>
-        <div class="carousel-caption d-none d-md-block">
-          <h3 class="" style="color: white !important">{{ project.title }}</h3>
-          <h5 class="" style="color: white !important">
-            Project Target: ${{ project.target }}
-          </h5>
-          <div class="progress" style="height: 30px">
-            <div
-              class="progress-bar text-center"
-              role="progressbar"
-              style="width: {{ project.progress }}%; font-size: 20px;"
-              aria-valuenow="{{ project.progress }}"
-              aria-valuemin="0"
-              aria-valuemax="100"
-            >
-              {%if project.total_donations%} 
-              $ {{ project.total_donations }}
-              {%endif%}
+      <div class="carousel-inner" role="listbox">
+        {% for project in latest_projects %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+          <div class="d-flex justify-content-center mb-5">
+            <a href="{%url 'projectDetails' project.id%}">
+              <img src="{{ project.images.first.image.url }}" height="400px" />
+            </a>
+          </div>
+          <div class="carousel-caption d-none d-md-block">
+            <h3 class="" style="color: white !important">{{ project.title }}</h3>
+            <h5 class="" style="color: white !important">
+              Project Target: ${{ project.target }}
+            </h5>
+            <div class="progress" style="height: 30px">
+              <div
+                class="progress-bar text-center"
+                role="progressbar"
+                style="width: {{ project.progress }}%; font-size: 20px;"
+                aria-valuenow="{{ project.progress }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                {%if project.total_donations%} $ {{ project.total_donations }}
+                {%endif%}
+              </div>
             </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+      <!-- Controls -->
+      <a class="carousel-control-prev" href="#myCarousel2" data-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+      </a>
+      <a class="carousel-control-next" href="#myCarousel2" data-slide="next">
+          <span class="carousel-control-next-icon"></span>
+      </a>
     </div>
-    <button
-      class="carousel-control-prev"
-      type="button"
-      data-bs-target="#latest"
-      data-bs-slide="prev"
-    >
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button
-      class="carousel-control-next"
-      type="button"
-      data-bs-target="#latest"
-      data-bs-slide="next"
-    >
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
   </div>
-</div>
-<div class="border border-1 shadow shadow-lg my-5 rounded p-3">
-  <h1>Featuerd Projects</h1>
-  <div id="featuerd" class="carousel slide" data-bs-ride="carousel">
-    <ol class="carousel-indicators">
-      <li
-        data-bs-target="#featuerd"
-        data-bs-slide-to="0"
-        class="active"
-        aria-current="true"
-        aria-label="First slide"
-      ></li>
-      <li
-        data-bs-target="#featuerd"
-        data-bs-slide-to="1"
-        aria-label="Second slide"
-      ></li>
-      <li
-        data-bs-target="#featuerd"
-        data-bs-slide-to="2"
-        aria-label="Third slide"
-      ></li>
-      <li
-        data-bs-target="#featuerd"
-        data-bs-slide-to="3"
-        aria-label="Fourth slide"
-      ></li>
-      <li
-        data-bs-target="#featuerd"
-        data-bs-slide-to="4"
-        aria-label="Fifth slide"
-      ></li>
+
+  <div class="border border-1 shadow shadow-lg my-5 rounded p-3">
+    <h1>Featuerd Projects</h1>
+    <div id="myCarousel3" class="carousel slide" data-bs-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel3" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel3" data-slide-to="1"></li>
+        <li data-target="#myCarousel3" data-slide-to="2"></li>
+        <li data-target="#myCarousel3" data-slide-to="3"></li>
+        <li data-target="#myCarousel3" data-slide-to="4"></li>
     </ol>
     <div class="carousel-inner" role="listbox">
       {% for project in featured_projects %}
       <div class="carousel-item {% if forloop.first %}active{% endif %}">
         <div class="d-flex justify-content-center mb-5">
-          <a href="{%url 'projectDetails' project.id%}"> <img src="{{ project.images.first.image.url }}" height="400px" /> </a>        </div>
+          <a href="{%url 'projectDetails' project.id%}">
+            <img src="{{ project.images.first.image.url }}" height="400px" />
+          </a>
+        </div>
         <div class="carousel-caption d-none d-md-block">
           <h3 class="" style="color: white !important">{{ project.title }}</h3>
           <h5 class="" style="color: white !important">
@@ -221,32 +153,23 @@
               aria-valuemin="0"
               aria-valuemax="100"
             >
-              {%if project.total_donations%} 
-              $ {{project.total_donations}} {%endif%}
+              {%if project.total_donations%} $ {{project.total_donations}}
+              {%endif%}
             </div>
           </div>
         </div>
       </div>
       {% endfor %}
+      </div>
+      <!-- Controls -->
+      <a class="carousel-control-prev" href="#myCarousel3" data-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+      </a>
+      <a class="carousel-control-next" href="#myCarousel3" data-slide="next">
+          <span class="carousel-control-next-icon"></span>
+      </a>
     </div>
-    <button
-      class="carousel-control-prev"
-      type="button"
-      data-bs-target="#featuerd"
-      data-bs-slide="prev"
-    >
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button
-      class="carousel-control-next"
-      type="button"
-      data-bs-target="#featuerd"
-      data-bs-slide="next"
-    >
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
   </div>
+
 </div>
 {%endblock%}
