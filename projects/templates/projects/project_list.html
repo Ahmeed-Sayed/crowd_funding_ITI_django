@@ -1,20 +1,26 @@
-{%extends 'base.html'%} {% load static %} {%block body%}
+{%extends 'base.html'%}
+{% load static %}
+{%block body%}
 
+
+<div class="container mt-4 border p-5 m-1 shadow shadow-lg rounded">
+
+<a href="{% url 'createProject' %}">
+  <button class="btn btn-primary mb-3 px-5 py-2 fs-5">
+    Create New Project
+  </button>
+</a>
 <div class="d-flex justify-content-center">
-  <a href="{% url 'createProject' %}">
-    <button class="btn btn-primary mb-3 px-5 py-2 fs-5">
-      Create New Project
-    </button>
-  </a>
-</div>
+
 <div class="row">
   {% for project in projects %}
-  <div class="card col-4 me-3 mb-3" style="width: 15rem">
+  <div class="card col-4 me-3 mb-3" style="width: 18rem">
     <div class="card-body">
       <img
         src="{{project.images.first.image.url}}"
-        width="200px"
+        width="250px"
         height="300px"
+        class='rounded mb-2'
       />
 
       <h5 class="card-title">{{ project.title }}</h5>
@@ -28,5 +34,7 @@
   </div>
 
   {% endfor %}
+</div>
+</div>
 </div>
 {%endblock%}

@@ -48,7 +48,7 @@ class UserProjectRating(models.Model):
         ProjectsModel, on_delete=models.CASCADE, related_name="ratings"
     )
     rating = models.IntegerField(validators=[MaxValueValidator(5)])
-    
+
 
 class PictuersModel(models.Model):
     image = models.ImageField(upload_to="projectImages")

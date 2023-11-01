@@ -138,8 +138,9 @@ class CreateProject(View):
                 picture = picture_form.save(commit=False)
                 picture.project = project
                 picture.save()
+                project_form.save_m2m()
 
-            return redirect(reverse("createProject"))
+            return redirect(("home"))
         else:
             return render(
                 request,

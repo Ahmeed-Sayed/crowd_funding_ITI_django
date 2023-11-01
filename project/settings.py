@@ -85,6 +85,16 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "HOST": "localhost",
+#         "NAME": "crowdfund_db",
+#         "USER": "postgres",
+#         "PASSWORD": "ahmed123",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Password validation
