@@ -3,9 +3,7 @@
 <div class=' alert alert-success rounded'> {{ message }}</div> {% endfor %}
 {%endif%} {% if request.session.username %}
 <p class='fs-4 fw-bold'>Welcome, {{ request.session.username }}!</p>
-{% comment %}
-<p>Welcome, {{ request.session.userId }}!</p>
-{% endcomment %} {% else %}
+ {% else %}
 <p class='fs-4 fw-bold text-center' >Welcome, guest!</p>
 {% endif %}
 <div class='container shadow shadow-lg px-5 py-3 mt-3'>

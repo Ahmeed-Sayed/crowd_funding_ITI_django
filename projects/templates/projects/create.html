@@ -13,28 +13,35 @@
 
 
 
-<div class="container">
+<div class="container mb-5 shadow shadow-lg px-5 py-3 rounded">
   <div class="row">
     <div class="col">
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+      <div class='my-3'>
+        
         <label class="fw-bold fs-5" for="{{ project_form.title.id_for_label }}"
           >{{ project_form.title.label }}</label
         >
         {{ project_form.title }}
+      </div>
+      <div class='my-3'>
         <label
           class="fw-bold fs-5"
           for="{{ project_form.details.id_for_label }}"
           >{{ project_form.details.label }}</label
         >
         {{ project_form.details }}
+      </div>
+      <div class='my-3'>
         <label class="fw-bold fs-5" for="{{ project_form.category.id_for_label }}">{{ project_form.category.label }}</label>
         <select name="category" id="{{ project_form.category.auto_id }}" class="form-control" multiple>
         {% for category in project_form.fields.category.queryset %}
             <option value="{{ category.pk }}" >{{ category.name }}</option>
         {% endfor %}
         </select>
-
+      </div>
+      <div class='my-3'>
         <label class="fw-bold fs-5" for="{{ project_form.target.id_for_label }}"
           >{{ project_form.target.label }}</label
         >
@@ -42,19 +49,19 @@
         {% if project_form.target.errors %}
         <div class="alert alert-danger mt-3">{{ project_form.target.errors }}</div>
         {% endif %}
-        <button type="submit" class="btn btn-primary fs-5 mt-4 px-5">
-          Create
-        </button>
-    </div>
-    <div class="col">
-      <label class="fw-bold fs-5" for="{{ project_form.tags.id_for_label }}">{{ project_form.tags.label }}</label>
+      </div>
+      <div class='my-3'>
+        <label class="fw-bold fs-5" for="{{ project_form.tags.id_for_label }}">{{ project_form.tags.label }}</label>
       <select name="{{ project_form.tags.html_name }}" id="{{ project_form.tags.auto_id }}" class="form-control" multiple>
       {% for tag in project_form.fields.tags.queryset %}
           <option value="{{ tag.pk }}" >{{ tag.name }}</option>
       {% endfor %}
       </select>
-
-      
+    </div>
+    </div>
+    <div class="col">
+    
+      <div class='my-3'>
         <label
           class="fw-bold fs-5"
           for="{{ project_form.start_time.id_for_label }}"
@@ -64,6 +71,8 @@
         {% if project_form.start_time.errors %}
         <div class="alert alert-danger">{{ project_form.start_time.errors }}</div>
         {% endif %}
+      </div>
+      <div class='my-3'>
         <label
           class="fw-bold fs-5"
           for="{{ project_form.end_time.id_for_label }}"
@@ -73,17 +82,8 @@
         {% if project_form.end_time.errors %}
         <div class="alert alert-danger">{{ project_form.end_time.errors }}</div>
         {% endif %}
-        <label
-          class="fw-bold fs-5"
-          for="{{ project_form.completed.id_for_label }}"
-          >{{ project_form.completed.label }}</label
-        >
-        {{ project_form.completed }}
-        <label class="fw-bold fs-5" for="{{ project_form.closed.id_for_label }}"
-          >{{ project_form.closed.label }}</label
-        >
-        {{ project_form.closed }}
-        <h5>Images</h5>
+      </div>
+      <h5>Images</h5>
         {% for form in picture_formset %}
         <div class="my-3">{{form.image}}</div>
         {% if form.image.errors %}
@@ -93,7 +93,11 @@
           {{ picture_formset.non_form_errors }}
         </div>
         {% endif %}
-      </form>
+      </div>
+      <button type="submit" class="btn btn-primary fs-5 mt-4 px-5">
+          Create
+        </button>
+    </form>
     </div>
   </div>
 </div>

@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
@@ -25,6 +26,7 @@ class RegisterForm(UserCreationForm):
         required=True,
         widget=forms.EmailInput(attrs={"class": "form-control"}),
     )
+
     class Meta:
         model = User
         fields = (
@@ -57,9 +59,9 @@ class RegisterForm(UserCreationForm):
         user = super(RegisterForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
         phone_number = self.cleaned_data["phoneNumber"]
-        
+
         if UserProfile.objects.filter(phoneNumber=phone_number).exists():
-            self.add_error('phoneNumber', 'This phone number is already in use.')
+            self.add_error("phoneNumber", "This phone number is already in use.")
             return None
 
         user_profile = UserProfile(
@@ -79,7 +81,9 @@ class ProfileEditForm(forms.ModelForm):
         widget=forms.TextInput(attrs={"class": "form-control"})
     )
     last_name = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={"class": "form-control", "readonly": "readonly"})
+    )
 
     class Meta:
         model = UserProfile
@@ -107,12 +111,18 @@ class ProfileEditForm(forms.ModelForm):
             attrs={"class": "form-control", "type": "date"}
         )
         self.fields["address"].widget = forms.TextInput(attrs={"class": "form-control"})
+
+    def clean_birthdate(self):
+        birthdate = self.cleaned_data.get("birthdate")
+        if birthdate is not None and (datetime.now().year - birthdate.year < 18):
+            raise forms.ValidationError("You must be at least 18 years old")
+        return birthdate
+
     def save(self, commit=True):
         user = super(ProfileEditForm, self).save(commit=False)
         user.user.username = self.cleaned_data["username"]
         user.user.first_name = self.cleaned_data["first_name"]
         user.user.last_name = self.cleaned_data["last_name"]
-
         if commit:
             user.user.save()
             user.save()
