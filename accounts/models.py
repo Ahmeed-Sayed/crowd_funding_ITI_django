@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phoneNumber = models.CharField(max_length=11)
@@ -12,5 +13,5 @@ class UserProfile(models.Model):
         return self.user.username
 
     def save(self, *args, **kwargs):
-        self.email = self.email.lower()
-        super(User, self).save(*args, **kwargs)
+        self.email = self.user.email.lower()
+        super(UserProfile, self).save(*args, **kwargs)

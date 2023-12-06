@@ -41,24 +41,27 @@ PictureFormSet = forms.formset_factory(
 
 
 def home(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         search_form = ProjectSearchForm(request.POST)
         if search_form.is_valid():
             query = search_form.cleaned_data.get("query")
-            return redirect('searchResults', query=query)
+            return redirect("searchResults", query=query)
     else:
         categories = CategoriesModel.objects.all()
-        category_projects = {}
 
         project_lists = [
-            ProjectsModel.objects.all().annotate(avg_rating=Avg("ratings__rating")).order_by("-avg_rating")[:5],  # top_projects
+            ProjectsModel.objects.all()
+            .annotate(avg_rating=Avg("ratings__rating"))
+            .order_by("-avg_rating")[:5],  # top_projects
             ProjectsModel.objects.all().order_by("-start_time")[:5],  # latest_projects
-            ProjectsModel.objects.filter(is_featured=True).order_by("-start_time")[:5]  # featured_projects
+            ProjectsModel.objects.filter(is_featured=True).order_by("-start_time")[:5],
         ]
 
         for project_list in project_lists:
             for project in project_list:
-                project.total_donations = DonationModel.objects.filter(project=project).aggregate(sum=Sum("donation"))["sum"]
+                project.total_donations = DonationModel.objects.filter(
+                    project=project
+                ).aggregate(sum=Sum("donation"))["sum"]
                 if project.total_donations is None:
                     project.total_donations = 0
                 project.progress = (project.total_donations / project.target) * 100
@@ -79,23 +82,36 @@ def home(request):
         },
     )
 
-def searchResults(request,query):
-    
-    if request.method=="POST":
+
+def searchResults(request, query):
+    if request.method == "POST":
         search_form = ProjectSearchForm(request.POST)
         if search_form.is_valid():
-            query=search_form.cleaned_data['query']
+            query = search_form.cleaned_data["query"]
             projects = ProjectsModel.objects.filter(
-            Q(title__icontains=query) | Q(tags__name__icontains=query)
-        ).distinct()
-        search_form = ProjectSearchForm(initial={'query': query})
-        return render(request, 'projects/search.html', {'projects': projects, 'search_form': search_form})
+                Q(title__icontains=query)
+                | Q(tags__name__icontains=query)
+                | Q(category__name__icontains=query)
+            ).distinct()
+        search_form = ProjectSearchForm(initial={"query": query})
+        return render(
+            request,
+            "projects/search.html",
+            {"projects": projects, "search_form": search_form},
+        )
     else:
         projects = ProjectsModel.objects.filter(
-            Q(title__icontains=query) | Q(tags__name__icontains=query)
+            Q(title__icontains=query)
+            | Q(tags__name__icontains=query)
+            | Q(category__name__icontains=query)
         ).distinct()
-        search_form = ProjectSearchForm(initial={'query': query})
-        return render(request, 'projects/search.html', {'projects': projects, 'search_form': search_form})
+        search_form = ProjectSearchForm(initial={"query": query})
+        return render(
+            request,
+            "projects/search.html",
+            {"projects": projects, "search_form": search_form},
+        )
+
 
 def project_list(request):
     projects = ProjectsModel.objects.all()

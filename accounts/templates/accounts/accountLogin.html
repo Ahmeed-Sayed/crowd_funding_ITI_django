@@ -1,28 +1,43 @@
-{% extends 'base.html' %}
-{% block title %} Login {% endblock %}
-{% block body %}
-<div class='container rounded  fw-bold w-50 shadow shadow-lg px-5 py-5 mt-5'>
-    <form method="post" enctype="multipart/form-data">
+{% extends 'base.html' %} {% block title %} Login {% endblock %} {% block body%}
+<div class="container rounded fw-bold w-50 shadow shadow-lg px-5 py-5 mt-5">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="mb-4">
-        <label class='mb-2' for="{{ form.username.id_for_label }}">Email</label>
-        <input type="text" name="{{ form.username.html_name }}" class="form-control border-2">
-        {%if form.username.errors%}x<div class='alert alert-danger fw-bold my-3 '>{{ form.username.errors }}</div>{%endif%}
+      <label class="mb-2" for="{{ form.username.id_for_label }}">Email</label>
+      <input
+        type="text"
+        name="{{ form.username.html_name }}"
+        class="form-control border-2"
+      />
+      {%if form.username.errors%}
+      <div class="alert alert-danger fw-bold my-3">
+        {{ form.username.errors }}
+      </div>
+      {%endif%}
     </div>
     <div class="">
-        <label class='mb-2' for="{{ form.password.id_for_label }}">Password</label>
-        <input type="password" name="{{ form.password.html_name }}" class="form-control border-2">
-        {%if form.password.errors%}x<div class='alert alert-danger fw-bold my-3 '>{{ form.password.errors }}</div>{%endif%}
-
+      <label class="mb-2" for="{{ form.password.id_for_label }}"
+        >Password</label
+      >
+      <input
+        type="password"
+        name="{{ form.password.html_name }}"
+        class="form-control border-2"
+      />
+      {%if form.password.errors%}x
+      <div class="alert alert-danger fw-bold my-3">
+        {{ form.password.errors }}
+      </div>
+      {%endif%}
     </div>
-    <div class='mt-4'>
-        {% if form.errors %}
-            <div class="alert alert-danger fw-bold">
-                Please enter a valid email and password
-            </div>
-        {% endif %}
+    <div class="mt-4">
+      {% if form.errors %}
+      <div class="alert alert-danger fw-bold">
+        Please enter a valid email and password
+      </div>
+      {% endif %}
     </div>
     <button type="submit" class="btn btn-primary px-4 fs-5 mt-4">Submit</button>
-</form>
+  </form>
 </div>
 {% endblock %}

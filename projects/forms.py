@@ -7,7 +7,7 @@ from .models import (
     DonationModel,
     PictuersModel,
     CategoriesModel,
-    TagsModel
+    TagsModel,
 )
 
 from django.core.exceptions import ValidationError
@@ -49,15 +49,17 @@ class ProjectCreationForm(forms.ModelForm):
         return end_time
 
     def clean_target(self):
-        target = self.cleaned_data.get('target')
+        target = self.cleaned_data.get("target")
         if target and target <= 0:
-            raise ValidationError('Target must be greater than 0.')
+            raise ValidationError("Target must be greater than 0.")
         return target
 
     def __init__(self, *args, **kwargs):
         super(ProjectCreationForm, self).__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({"class": "form-control"})
+        self.fields["details"].widget.attrs.update({"rows": 4})
+
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -119,11 +121,13 @@ class PictureForm(forms.ModelForm):
 
 
 class ProjectSearchForm(forms.Form):
-    query = forms.CharField(label='',
-                            max_length=100,
-                            )
+    query = forms.CharField(
+        label="",
+        max_length=100,
+    )
+
     def clean_query(self):
-        query = self.cleaned_data.get('query')
+        query = self.cleaned_data.get("query")
         if not query or query.isspace():
             raise forms.ValidationError("This field cannot be empty.")
         return query

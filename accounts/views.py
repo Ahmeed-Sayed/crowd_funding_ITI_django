@@ -53,7 +53,7 @@ def activateEmail(request, user, to_email):
     if email.send():
         messages.success(
             request,
-            f"Dear {user}, please go to you email {to_email} inbox and click on \
+            f"Dear {user}, please go to your email {to_email} inbox and click on \
                 received activation link to confirm and complete the registration. Note: Check your spam folder.",
         )
     else:
@@ -113,8 +113,13 @@ def accountLogout(request):
 
 def profileView(request, id):
     user = get_object_or_404(UserProfile, id=id)
-    form = ProfileEditForm(instance=user)
-    return render(request, "accounts/profile.html", {"user": user, "form": form})
+    return render(
+        request,
+        "accounts/profile.html",
+        {
+            "user": user,
+        },
+    )
 
 
 class ProfileEditView(View):

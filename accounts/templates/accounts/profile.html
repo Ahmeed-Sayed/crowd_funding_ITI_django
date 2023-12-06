@@ -1,133 +1,177 @@
-{%extends 'base.html'%}
-{%load static%}
-{%block body%}
-    <main id="main" class="ProfileMain ">
-      <section class="section profile">
-        <div class="row justify-content-center">
-          {% comment %} sidebar for image and username {% endcomment %}
-          <div class="col-xl-4 col-lg-4 col-md-5 col-sm-10 mb-2">
-            <div class="card UserCard">
-              <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                <img src="{{  user.image.url }}" alt="Profile" class="rounded-circle" width="200px" height="200px">
-                <h2>username : {{user.user.username}}</h2>
-                <h5>Email: {{user.user.email}}</h5>
-              </div>
-            </div>
+{%extends 'base.html'%} {%load static%} {%block body%}
+<main id="main" class="ProfileMain">
+  <section class="section profile">
+    <div class="row justify-content-center">
+      <div class="col-xl-4 col-lg-4 col-md-5 col-sm-10 mb-2">
+        <div class="card UserCard">
+          <div
+            class="card-body profile-card pt-4 d-flex flex-column align-items-center"
+          >
+            <img
+              src="{{  user.image.url }}"
+              alt="Profile"
+              class="rounded-circle"
+              width="200px"
+              height="200px"
+            />
+            <h2>username : {{user.user.username}}</h2>
+            <h5>Email: {{user.user.email}}</h5>
           </div>
-          <div class="col-xl-7 col-lg-7 col-md-7 col-sm-10 ">
-            <div class="card ProfileInformation ">
-              <div class="card-body pt-3">
-                <ul class="nav nav-tabs nav-tabs-bordered">
-                  <li class="nav-item">
-                    <button class="nav-link active" data-bs-toggle="tab"
-                      data-bs-target="#profile-overview">Overview</button>
-                  </li>
-                  <li class="nav-item"> <a href='{% url "profileEdit" user.id%}'>
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button></a>
-                  </li>
-                </ul>
-                <div class="tab-content pt-2">
-                  <div class="tab-pane fade show active profile-overview" id="profile-overview">
-                    <h5 class="card-title">Profile Details</h5>
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label g-2">Full Name</div>
-                      <div class="col-lg-9 col-md-8 g-2">{{user.user.first_name}} {{user.user.last_name}} </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label g-2">Email</div>
-                      <div class="col-lg-9 col-md-8 g-2">{{user.user.email}}</div>
-                    </div>
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label g-2">Phone</div>
-                      <div class="col-lg-9 col-md-8 g-2">{{user.phoneNumber}}</div>
-                    </div>
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label g-2">address</div>
-                      <div class="col-lg-9 col-md-8 g-2">{{user.address}}</div>
-                    </div>
-                    <div class="row">
-                      <div class="col-lg-3 col-md-4 label g-2">birthdate</div>
-                      <div class="col-lg-9 col-md-8 g-2">{{user.birthdate}}</div>
-                    </div>
+        </div>
+      </div>
+      <div class="col-xl-7 col-lg-7 col-md-7 col-sm-10">
+        <div class="card ProfileInformation">
+          <div class="card-body pt-3">
+            <ul class="nav nav-tabs nav-tabs-bordered">
+              <li class="nav-item">
+                <button
+                  class="nav-link active"
+                  data-bs-toggle="tab"
+                  data-bs-target="#profile-overview"
+                >
+                  Overview
+                </button>
+              </li>
+              <li class="nav-item">
+                <a href='{% url "profileEdit" user.id%}'>
+                  <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#profile-edit"
+                  >
+                    Edit Profile
+                  </button></a
+                >
+              </li>
+            </ul>
+            <div class="tab-content pt-2">
+              <div
+                class="tab-pane fade show active profile-overview"
+                id="profile-overview"
+              >
+                <h5 class="card-title">Profile Details</h5>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label g-2">Full Name</div>
+                  <div class="col-lg-9 col-md-8 g-2">
+                    {{user.user.first_name}} {{user.user.last_name}}
                   </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label g-2">Email</div>
+                  <div class="col-lg-9 col-md-8 g-2">{{user.user.email}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label g-2">Phone</div>
+                  <div class="col-lg-9 col-md-8 g-2">{{user.phoneNumber}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label g-2">address</div>
+                  <div class="col-lg-9 col-md-8 g-2">{{user.address}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label g-2">birthdate</div>
+                  <div class="col-lg-9 col-md-8 g-2">{{user.birthdate}}</div>
                 </div>
               </div>
             </div>
           </div>
-          {% comment %} Delete my account {% endcomment %}
-          <div class="col-xl-4 col-lg-4 col-md-5 col-sm-10 mb-2">
-            <div class="card UserCard">
-              <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                <h4>Delete My account</h4>
-                <form method="POST" action="{% url 'profileDelete' user.id %}">
-                  {% csrf_token %}
-                  <input
-                    type="submit"
-                    value="Delete Profile"
-                    style=" background-color: #f44336;
-                            color: #fff;
-                            padding: 10px 20px;
-                            border: none;
-                            cursor: pointer;
-                            border-radius: 5px;
-                            font-weight: bold; "
-                    onclick="return confirm('Are you sure you want to delete your profile?')"
-                  />
-                </form>
-              </div>
-            </div>
+        </div>
+      </div>
+      {% comment %} Delete my account {% endcomment %}
+      <div class="col-xl-4 col-lg-4 col-md-5 col-sm-10 mb-2">
+        <div class="card UserCard">
+          <div
+            class="card-body profile-card pt-4 d-flex flex-column align-items-center"
+          >
+            <h4>Delete My account</h4>
+            <form method="POST" action="{% url 'profileDelete' user.id %}">
+              {% csrf_token %}
+              <input
+                type="submit"
+                value="Delete Profile"
+                style="
+                  background-color: #f44336;
+                  color: #fff;
+                  padding: 10px 20px;
+                  border: none;
+                  cursor: pointer;
+                  border-radius: 5px;
+                  font-weight: bold;
+                "
+                onclick="return confirm('Are you sure you want to delete your profile?')"
+              />
+            </form>
           </div>
-          {% comment %} my Projects {% endcomment %}
-          <div class="col-xl-7 col-lg-7 col-md-7 col-sm-10 ">
-            <div class="card ProfileInformation ">
-              <div class="card-body">
-                <div class="tab-content">
-                  <div class="tab-pane fade show active profile-overview" id="profile-overview">
-                    <div class="row">
-                      <h2> My Projects </h2>
-                      {% for project in user.projects.all%}
-                          <div class="card m-2" style="width: 19rem;">
-                            <div class="card-body">
-                              <img src={{project.images.first.image.url}}  width='250px' height='250px' class="">
-                              <h5 class="card-title">{{ project.title }}</h5>
-                              <p class="card-text">{{ project.details }}</p>
-                              <small> Started at {{ project.start_time }} </small>
-                              <small> End in {{ project.end_time }} </small>
-                              <a href="{%url 'projectDetails' project.id%}" class="btn btn-primary mt-2">Go to Project</a>
-                            </div>
-                          </div>
-                      {%endfor%}
+        </div>
+      </div>
+      {% comment %} my Projects {% endcomment %}
+      <div class="col-xl-7 col-lg-7 col-md-7 col-sm-10">
+        <div class="card ProfileInformation">
+          <div class="card-body">
+            <div class="tab-content">
+              <div
+                class="tab-pane fade show active profile-overview"
+                id="profile-overview"
+              >
+                <div class="row">
+                  <h2>My Projects</h2>
+                  {% for project in user.projects.all%}
+                  <div class="card m-2" style="width: 19rem">
+                    <div class="card-body">
+                      <img
+                        src="{{project.images.first.image.url}}"
+                        width="250px"
+                        height="250px"
+                        class=""
+                      />
+                      <h5 class="card-title">{{ project.title }}</h5>
+                      <p class="card-text">{{ project.details }}</p>
+                      <small> Started at {{ project.start_time }} </small>
+                      <small> End in {{ project.end_time }} </small>
+                      <a
+                        href="{%url 'projectDetails' project.id%}"
+                        class="btn btn-primary mt-2"
+                        >Go to Project</a
+                      >
                     </div>
                   </div>
+                  {%endfor%}
                 </div>
               </div>
             </div>
           </div>
-          {% comment %} Empty Space {% endcomment %}
-          <div class="col-xl-4 col-lg-4 col-md-5 col-sm-10 mb-2">
-          </div>
-          {% comment %} my Donations {% endcomment %}
-          <div class="col-xl-7 col-lg-7 col-md-7 col-sm-10 pt-2">
-            <div class="card ProfileInformation ">
-              <div class="card-body pt-3">
-                <div class="tab-content pt-2">
-                  <div class="tab-pane fade show active profile-overview" id="profile-overview">
-                    <div class="row">
-                      <h2> My Donations </h2>
-                      <div class='d-flex flex-column  mb-5'>
-                      {% for donation in user.donations.all%}
-                          <div class="card me-3 p-3" >
-                              <h5 >You Donated {{donation.donation}} to {{donation.project.title}} Project </h5>
-                          </div>
-                      {%endfor%}
-                      </div>
+        </div>
+      </div>
+      {% comment %} Empty Space {% endcomment %}
+      <div class="col-xl-4 col-lg-4 col-md-5 col-sm-10 mb-2"></div>
+      {% comment %} my Donations {% endcomment %}
+      <div class="col-xl-7 col-lg-7 col-md-7 col-sm-10 pt-2">
+        <div class="card ProfileInformation">
+          <div class="card-body pt-3">
+            <div class="tab-content pt-2">
+              <div
+                class="tab-pane fade show active profile-overview"
+                id="profile-overview"
+              >
+                <div class="row">
+                  <h2>My Donations</h2>
+                  <div class="d-flex flex-column mb-5">
+                    {% for donation in user.donations.all%}
+                    <div class="card me-3 p-3">
+                      <h5>
+                        You Donated {{donation.donation}} to
+                        {{donation.project.title}} Project
+                      </h5>
                     </div>
+                    {%endfor%}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
-    </main>
+      </div>
+    </div>
+  </section>
+</main>
 {%endblock%}
