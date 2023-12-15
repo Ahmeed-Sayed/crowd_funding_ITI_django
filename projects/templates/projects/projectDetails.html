@@ -8,10 +8,14 @@
       {% endfor %}
   </div>
   {% endif %}
-  {% comment %} slider {% endcomment %}
-  <div class="container mt-4 border p-3  shadow shadow-lg rounded">
-    <h3>Project Images</h3>
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+
+  <div class="container mt-4 border p-3  shadow shadow-lg rounded d-flex justify-content-start">
+  
+  
+    <div class='left-section w-75'>
+  
+  
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
         {% for image in  currentProject.images.all %}
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
@@ -20,9 +24,7 @@
       <div class="carousel-inner ">
         {% for image in currentProject.images.all %}
         <div class="carousel-item  {% if forloop.first %}active{% endif %}">
-          <div class='d-flex justify-content-center'>
-          <img src="{{ image.image.url }}" class="d-block w-75" height="650px" alt="{{ project.title }}">
-        </div>
+          <img src="{{ image.image.url }}" class="d-block w-100 " height="450px" alt="{{ project.title }}">
         </div>
         {% endfor %}
       </div>
@@ -35,18 +37,19 @@
         <span class="visually-hidden">Next</span>
       </button>
     </div>
-  </div>
-  {% comment %} projectDetails section {% endcomment %}
-  <div class="container mt-4 border p-3  shadow shadow-lg rounded">
+    
+    
+    
+    <div class="container mt-4 border p-3  shadow shadow-lg rounded ">
     <div class="row">
         <div class="col-md-8">
             <h1>{{ currentProject.title }}</h1>
             <h3>Project Description:</h3>
             <p>{{ currentProject.details }}</p>
-            <h3>Categories:</h3>
+            {% comment %} <h3>Categories:</h3>
             {% for category in currentProject.category.all %}
               <p>{{ category.name }}</p>
-            {% endfor %}
+            {% endfor %} {% endcomment %}
             <h3>Tags:</h3>
             {% for tag in currentProject.tags.all %}
               <p>{{ tag.name }}</p>
@@ -66,6 +69,9 @@
             <p>Average Rating: {{ averageRating }}</p>
 
         </div>
+        
+  </div>
+        
         <div class="col-md-4">
             <div class="row">
                 <div class="col-md-12">
@@ -139,5 +145,37 @@
       {% endfor %}
       </div>
     {%endif%}
+    
   </div>
+  
+</div>
+</div>
+<div class='ms-3 w-25'>
+  <div>
+<div class='d-flex justify-content-center  '>
+  <div class='me-3'>
+  <img src='{{currentProject.user.image.url}}' width='80px' height='90px' class='rounded'/>
+  </div>
+  <div>
+    <p class='fw-bold p-0'>Organizer: <span class='text-primary'>{{currentProject.user.user.username}}</span></p>
+    <p style='font-size:10px' class='text-muted py-0'>Start Date {{ currentProject.start_time }}</p>
+    <p style='font-size:10px' class='text-muted py-0'>End Date {{ currentProject.end_time }}</p>
+</div>
+</div><div class='shadow shadow-lg mt-5 p-2'>
+  <span class='fw-bold'>Latest Donations</span>
+  {% for donation in currentProject.donations.all|slice:":-3"%}
+    <div class='d-flex justify-content-start py-3'>
+      <div class='me-3'>
+        <img src='{{ donation.user.image.url }}' alt='user photo' width='80px' height='90px' class='rounded'/>
+      </div>
+      <div>
+        <p class='fw-bold text-primary'>{{ donation.user.user.username }}</p>
+        <span style="color: green"> ${{ donation.donation }}</span>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+</div>
+</div>
 {%endblock%}
