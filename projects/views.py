@@ -187,6 +187,15 @@ class ProjectDetailsView(View):
             if projectRatings
             else 0
         )
+        currentProject.total_donations = DonationModel.objects.filter(
+            project=currentProject
+        ).aggregate(sum=Sum("donation"))["sum"]
+        if currentProject.total_donations is None:
+            currentProject.total_donations = 0
+        currentProject.progress = round(
+            (currentProject.total_donations / currentProject.target) * 100, 2
+        )
+        print(currentProject.donations.all().count())
         return render(
             request,
             "projects/projectDetails.html",

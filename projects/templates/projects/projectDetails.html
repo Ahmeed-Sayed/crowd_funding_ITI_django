@@ -1,181 +1,187 @@
-{%extends 'base.html'%}
-{%block body%}
+{% extends 'base.html' %}
+{% load static %}
 
+{% block css %}
+  <link rel="stylesheet" href="{% static 'projects/projectDetails.css' %}" />
+{% endblock %}
+{% block body %}
   {% if messages %}
-  <div class="messages">
+    <div class="messages">
       {% for message in messages %}
-      <div{% if message.tags %} class="{{ message.tags }} alert alert-danger"{% endif %}>{{ message }}</div>
+        <div{% if message.tags %} class="{{ message.tags }} alert alert-danger"{% endif %}>{{ message }}</div>
       {% endfor %}
-  </div>
+    </div>
   {% endif %}
 
-  <div class="container mt-4 border p-3  shadow shadow-lg rounded d-flex justify-content-start">
-  
-  
-    <div class='left-section w-75'>
-  
-  
+  <div class="mt-4 p-3 rounded parent">
+    <div class='left-section'>
       <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-        {% for image in  currentProject.images.all %}
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
-        {% endfor %}
-      </div>
-      <div class="carousel-inner ">
-        {% for image in currentProject.images.all %}
-        <div class="carousel-item  {% if forloop.first %}active{% endif %}">
-          <img src="{{ image.image.url }}" class="d-block w-100 " height="450px" alt="{{ project.title }}">
+        <div class="carousel-indicators">
+          {% for image in currentProject.images.all %}
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
+          {% endfor %}
         </div>
-        {% endfor %}
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-    
-    
-    
-    <div class="container mt-4 border p-3  shadow shadow-lg rounded ">
-    <div class="row">
-        <div class="col-md-8">
-            <h1>{{ currentProject.title }}</h1>
-            <h3>Project Description:</h3>
-            <p>{{ currentProject.details }}</p>
-            {% comment %} <h3>Categories:</h3>
-            {% for category in currentProject.category.all %}
-              <p>{{ category.name }}</p>
-            {% endfor %} {% endcomment %}
-            <h3>Tags:</h3>
-            {% for tag in currentProject.tags.all %}
-              <p>{{ tag.name }}</p>
-            {% endfor %}
-            <h3>Total target: {{ currentProject.target }}$</h3>
-            <h3>Start Date: </h3>{{ currentProject.start_time }}
-            <h3>End Date: </h3>{{ currentProject.end_time }}
-            <h3>Donations:
-              {% for donation in currentProject.donations.all %}
-                  <p style="color: red">User: {{ donation.user.user.username }} Donated, Amount: {{ donation.donation }}</p>
-              {% endfor %}
-            </h3>
-            <h3>Ratings:</h3>
-            {% for rating in currentProject.ratings.all %}
-            <p>{{ rating.user.user.username }} || {{ rating.rating }}</p>
-              {% endfor %}
-            <p>Average Rating: {{ averageRating }}</p>
-
-        </div>
-        
-  </div>
-        
-        <div class="col-md-4">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Support this Project</h5>
-                            <form method="post" class="form-group">
-                              {% csrf_token %}
-                              {% if not currentProject.completed %}
-                                <input type="number" name="donation" class="form-control" min="1" required>
-                                <div class='d-flex justify-content-end me-2 '>
-                                  <input type="submit" name="submit-donation" value="Donate" class="btn btn-primary mt-2 px-4 py-2">
-                                </div>
-                              {% else %}
-                                <input type="number" name="donation" class="form-control" min="1" disabled>
-                                <div class='d-flex justify-content-end me-2 '>
-                                  <input type="submit" name="submit-donation" value="Donate" class="btn btn-primary mt-2 px-5 py-2">
-                                </div>
-                              {% endif %}
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 mt-3">
-                  <div class="card">
-                    <div class="card-body">
-                      <h3> Rate Project </h3>
-                      <form method="post" class="form-group">
-                        {% csrf_token %}
-                        {{ratingForm}}
-                        <div class='d-flex justify-content-end me-2 '>
-                        <input type="submit" name="submit-rating" value="Submit Rating" class="btn btn-primary mt-2 px-3 py-2">
-                        </div>
-                      </form>
-                    </div>
-                </div>
-                <div class="col-md-12 mt-3">
-                  <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Actions</h5>
-                        <a href='{%url "reportProject" id=currentProject.id%}'><button class='btn btn-danger'>Report Project</button></a>
-                        <a href='{%url "deleteProject" id=currentProject.id%}'><button class='btn btn-danger'>Delete Project</button></a>
-                    </div>
-                </div>
+        <div class="carousel-inner">
+          {% for image in currentProject.images.all %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <img src="{{ image.image.url }}" class="d-block w-100 rounded" height="450px" alt="{{ project.title }}">
             </div>
+          {% endfor %}
         </div>
-    </div>
-  </div>
-  {% comment %} comments section {% endcomment %}
-  <div class='border p-3  shadow shadow-lg rounded'>
-    <h2 class='mb-3'>Give us your opinion </h2>
-    <form method="post" class="form-group">
-      {% csrf_token %}
-      <textarea name="text" id="commentText" class="form-control" required></textarea>
-      <div class="d-flex justify-content-end ">
-        <input type="submit" name="submit-comment" value="Submit Comment" class="btn btn-primary ms-2 px-4 my-3 ">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
       </div>
-    </form>
-
-    {%if currentProject.comments.all %}
-      <div class='p-3'>
-      <h2>Comments </h2>
-      {% for comment in currentProject.comments.all %}
-        <div class='form-control shadow shadow-lg pt-3 my-3'>
-          <div class='d-flex justify-content-between'>
-            <p>{{ comment.user.user.username }} : </p>
-            <a href='{%url "reportComment" id=currentProject.id commentID=comment.id %}'><button type'button' class='btn btn-danger'>Report Comment</button></a>
+      <div style='background-color: #eff5f4 ' class='rounded pt-3'>
+        <div class="progress border-2 " style="height: 25px">
+          <div
+            class="progress-bar fs-5 fw-bold"
+            role="progressbar"
+            style="width: {{currentProject.progress}}% "
+            aria-valuenow="25"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            {{currentProject.progress}}%
           </div>
-          <p>{{ comment.text }}</p>
         </div>
-      {% endfor %}
+        <div class='d-flex justify-content-between px-2 align-items-center'>
+          <p class='fs-5 fw-bold '><span style='color: rgb(32, 227, 120) '>${{currentProject.total_donations}}</span> Raised</p>
+          <p class='fs-5 fw-bold'><span style='color: rgb(32, 227, 120) '>${{currentProject.target}}</span> Target </p>
+        </div>
       </div>
-    {%endif%}
-    
-  </div>
-  
-</div>
-</div>
-<div class='ms-3 w-25'>
-  <div>
-<div class='d-flex justify-content-center  '>
-  <div class='me-3'>
-  <img src='{{currentProject.user.image.url}}' width='80px' height='90px' class='rounded'/>
-  </div>
-  <div>
-    <p class='fw-bold p-0'>Organizer: <span class='text-primary'>{{currentProject.user.user.username}}</span></p>
-    <p style='font-size:10px' class='text-muted py-0'>Start Date {{ currentProject.start_time }}</p>
-    <p style='font-size:10px' class='text-muted py-0'>End Date {{ currentProject.end_time }}</p>
-</div>
-</div><div class='shadow shadow-lg mt-5 p-2'>
-  <span class='fw-bold'>Latest Donations</span>
-  {% for donation in currentProject.donations.all|slice:":-3"%}
-    <div class='d-flex justify-content-start py-3'>
-      <div class='me-3'>
-        <img src='{{ donation.user.image.url }}' alt='user photo' width='80px' height='90px' class='rounded'/>
-      </div>
-      <div>
-        <p class='fw-bold text-primary'>{{ donation.user.user.username }}</p>
-        <span style="color: green"> ${{ donation.donation }}</span>
+
+      <div class=" mt-4 ">
+        <div class="row">
+          <div class="col">
+            <div class='mb-2'>
+              {% for tag in currentProject.tags.all %}
+                <span class='bg-danger text-light px-2 py-1 rounded fs-5'>{{ tag.name }}</span>
+              {% endfor %}
+            </div>
+            <div class='d-flex justify-content-between pe-2'>
+            <h1>{{ currentProject.title }}</h1>
+            <p> Rating {{averageRating}}</p>
+          </div>
+            <p class='fs-5'>{{ currentProject.details }}</p>
+          </div>
+        </div>
+        {% if currentProject.comments.all %}
+        <div class='mt-3'>
+          <h2 class='fw-bold'>Comments </h2>
+          {% for comment in currentProject.comments.all %}
+            <div class=' pt-3 my-3'>
+              <div class='d-flex justify-content-between'>
+               
+                <div class='d-flex justify-content-start'> 
+                  <img src={{comment.user.image.url}} width='120px' height='110px' class='rounded'/>
+                <div class='ms-3'>
+                  <p class='fs-4 fw-bold'>{{ comment.user.user.username }}</p>
+                  <p class='me-5'>{{ comment.text }}</p>
+                </div>
+              </div>
+
+                <a href='{%url "reportComment" id=currentProject.id commentID=comment.id %}' class='ms-2'><button type='button' class='btn btn-danger'>Report </button></a>
+              </div>
+              
+            </div>
+            <hr/>
+
+          {% endfor %}
+        </div>
+      {% endif %}
+        <div class=' rounded'>
+          <h2 class='mb-3 fw-bold'>Leave a Comment</h2>
+          <form method="post" class="form-group">
+            {% csrf_token %}
+            <textarea name="text" id="commentText" class="form-control" required></textarea>
+            <div class="d-flex justify-content-end ">
+              <input type="submit" name="submit-comment" value="Submit Comment" class="btn btn-primary ms-2 px-4 my-3 ">
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  {% endfor %}
-</div>
 
-</div>
-</div>
-{%endblock%}
+    <div class='ms-3 right-section'>
+      <div>
+        <div class='d-flex justify-content-start w-75 p-2 align-items-center' style='background-color: #eff5f4 '>
+          <div class='me-3'>
+            <img src='{{currentProject.user.image.url}}' width='100px' height='90px' class='rounded'/>
+          </div>
+          <div class='fw-bold'>
+            <p class='p-0 fs-5'>Organizer: <span class='text-primary'>{{currentProject.user.user.username}}</span></p>
+            <p style='font-size:12px' class='text-muted py-0'>Start Date {{ currentProject.start_time }}</p>
+            <p style='font-size:12px' class='text-muted py-0'>End Date {{ currentProject.end_time }}</p>
+          </div>
+        </div>
+        {%if currentProject.donations.all.count > 0 %}
+
+        <div class=' mt-3 p-2 w-75' style='background-color: #eff5f4 '>
+          <span class='fw-bold fs-4'>Latest Donations</span>
+          {% for donation in currentProject.donations.all %}
+            <div class='d-flex justify-content-start py-3  p-2' >
+              <div class='me-3'>
+                <img src='{{ donation.user.image.url }}' alt='user photo' width='90px' height='90px' class='rounded'/>
+              </div>
+              <div>
+                <p class='fw-bold '>{{ donation.user.user.username }}</p>
+                <span style="color: rgb(32, 227, 120); font-weight:bold"> ${{ donation.donation }}</span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        {%endif%}
+      </div>
+      <hr class=' bg-dark w-75 my-4'/>
+      <div class="w-75">
+        <h4 class="my-4 fw-bold">Support this Project</h4>
+        <form method="post" class="form-group">
+          {% csrf_token %}
+          {% if not currentProject.completed %}
+            <input type="number" name="donation" class="form-control" min="1" required>
+            <div class='d-flex justify-content-end me-2 '>
+              <input type="submit" name="submit-donation" value="Donate" class="btn text-light fw-bold mt-2 px-4 py-2" style='background-color: rgb(32, 227, 120) '>
+            </div>
+          {% else %}
+            <input type="number" name="donation" class="form-control" min="1" disabled>
+            <div class='d-flex justify-content-end me-2 '>
+              <input type="submit" name="submit-donation" value="Donate" class="btn btn-success mt-2 px-3 py-2">
+            </div>
+          {% endif %}
+        </form>
+      </div>
+      <hr class=' bg-dark w-75 my-4'/>
+      <div class="w-75">
+        <div class="my-3">
+          <h3 class='my-4 fw-bold'> Rate Project </h3>
+          <form method="post" class="form-group">
+            {% csrf_token %}
+            {{ratingForm}}
+            <div class='d-flex justify-content-end me-2 '>
+              <input type="submit" name="submit-rating" value="Submit Rating" class="btn btn-primary mt-2 px-3 py-2 fw-bold">
+            </div>
+          </form>
+        </div>
+      </div>
+      <hr class=' bg-dark w-75 my-4'/>
+      <div class="w-75  ">
+        <div class="my-3 ">
+          <h3 class="my-4 fw-bold">Actions</h3>
+          <div class='d-flex justify-content-end'>
+            {%if currentProject.user.id == request.session.profileId%}
+              <a href='{%url "deleteProject" id=currentProject.id%}'><button class='btn btn-danger  mt-2 px-3 py-2 fw-bold'>Delete Project</button></a>
+            {%else%}
+              <a href='{%url "reportProject" id=currentProject.id%}'><button class='btn btn-danger  mt-2 px-3 py-2 fw-bold'>Report Project</button></a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

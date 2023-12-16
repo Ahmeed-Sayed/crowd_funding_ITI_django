@@ -1,0 +1,12 @@
+.parent {
+  margin: 6rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.left-section {
+  width: 60%;
+}
+.right-section {
+  width: 40%;
+}
