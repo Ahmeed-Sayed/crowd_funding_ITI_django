@@ -121,6 +121,14 @@ def project_list(request):
 def category_projects(request, category_id):
     category = CategoriesModel.objects.get(pk=category_id)
     projects = ProjectsModel.objects.filter(category=category)
+    for project in projects:
+        project.total_donations = DonationModel.objects.filter(
+            project=project
+        ).aggregate(sum=Sum("donation"))["sum"]
+        if project.total_donations is None:
+            project.total_donations = 0
+        project.progress = round((project.total_donations / project.target) * 100, 2)
+
     return render(
         request,
         "projects/category_projects.html",
@@ -179,6 +187,15 @@ class ProjectDetailsView(View):
             if projectRatings
             else 0
         )
+        currentProject.total_donations = DonationModel.objects.filter(
+            project=currentProject
+        ).aggregate(sum=Sum("donation"))["sum"]
+        if currentProject.total_donations is None:
+            currentProject.total_donations = 0
+        currentProject.progress = round(
+            (currentProject.total_donations / currentProject.target) * 100, 2
+        )
+        print(currentProject.donations.all().count())
         return render(
             request,
             "projects/projectDetails.html",

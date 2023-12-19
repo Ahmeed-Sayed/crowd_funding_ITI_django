@@ -72,6 +72,8 @@ class CommentForm(forms.ModelForm):
 
 
 class RatingForm(forms.ModelForm):
+    rating = forms.IntegerField(label="")
+
     class Meta:
         model = UserProjectRating
         fields = ["rating"]
