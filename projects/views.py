@@ -115,6 +115,15 @@ def searchResults(request, query):
 
 def project_list(request):
     projects = ProjectsModel.objects.all()
+    for project in projects:
+            for project in projects:
+                project.total_donations = DonationModel.objects.filter(
+                    project=project
+                ).aggregate(sum=Sum("donation"))["sum"]
+                if project.total_donations is None:
+                    project.total_donations = 0
+                project.progress = (project.total_donations / project.target) * 100
+
     return render(request, "projects/project_list.html", {"projects": projects})
 
 

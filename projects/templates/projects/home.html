@@ -1,181 +1,336 @@
-{%extends 'base.html'%} {% load static %} {%block body%}
+{%extends 'base.html'%}
+{%load static%}
 
-<style>
-  img {
-    min-width: 500px;
-  }
-</style>
-<div class="container border p-3 shadow shadow-lg rounded">
-  <h4 class="px-3">Search For a Project</h4>
-  <form
-    method="POST"
-    class="d-flex text-center align-items-center p-3 m-2 bg-dark"
-    style="border-radius: 10px"
-  >
-    {% csrf_token %} {{ search_form }}
-    <div>
-      <input type="submit" class="btn btn-primary m-2 p-2" value="Search" />
-    </div>
-  </form>
+    {%block title%}Kind Heart Charity - Free Bootstrap 5.2.2 CSS Template{%endblock%}
 
-  <div class="border border-1 shadow shadow-lg my-5 rounded p-3">
-    <h2 class="mb-3">Top Projects</h2>
-    <div id="myCarousel" class="carousel slide center" data-ride="carousel">
-      <!-- Indicators -->
-      <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-        <li data-target="#myCarousel" data-slide-to="3"></li>
-        <li data-target="#myCarousel" data-slide-to="4"></li>
-      </ol>
-
-      <!-- Slides -->
-      <div class="carousel-inner text-center">
-        {% for project in top_projects %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-          <div class="d-flex justify-content-center mb-5">
-            <a href="{%url 'projectDetails' project.id%}">
-              <img src="{{ project.images.first.image.url }}" height="400px" />
-            </a>
-          </div>
-          <div class="carousel-caption d-none d-md-block">
-            <h3 class="" style="color: white !important">
-              {{ project.title }}
-            </h3>
-            <h5 class="" style="color: white !important">
-              Project Target: ${{ project.target }}
-            </h5>
-            <div class="progress" style="height: 30px">
+    {%block body%}
+  <div id="section_1">
+    
+    <main>
+      <section class="hero-section hero-section-full-height">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-12 col-12 p-0">
               <div
-                class="progress-bar"
-                role="progressbar"
-                style="width: {{ project.progress }}%; font-size: 20px;"
-                aria-valuenow="{{ project.progress }}"
-                aria-valuemin="0"
-                aria-valuemax="100"
+                id="hero-slide"
+                class="carousel carousel-fade slide"
+                data-bs-ride="carousel"
               >
-                {%if project.total_donations%} $ {{ project.total_donations }}
-                {%endif%}
+                <div class="carousel-inner">
+                 {% for project in top_projects %}
+
+                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                  
+                    <img src="{{ project.images.first.image.url }}" class="carousel-image img-fluid"  />
+
+                    <div
+                      class="carousel-caption d-flex flex-column justify-content-end"
+                    >
+                      <h1>{{project.title|title}}</h1>
+
+                    </div>
+                  </div>
+{%endfor%}
+                  
+                </div>
+
+                <button
+                  class="carousel-control-prev"
+                  type="button"
+                  data-bs-target="#hero-slide"
+                  data-bs-slide="prev"
+                >
+                  <span
+                    class="carousel-control-prev-icon"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+
+                <button
+                  class="carousel-control-next"
+                  type="button"
+                  data-bs-target="#hero-slide"
+                  data-bs-slide="next"
+                >
+                  <span
+                    class="carousel-control-next-icon"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
               </div>
             </div>
           </div>
         </div>
-        {% endfor %}
-      </div>
+      </section>
 
-      <!-- Controls -->
-      <a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </a>
-      <a class="carousel-control-next" href="#myCarousel" data-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </a>
-    </div>
-  </div>
+      <section class="section-padding">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-10 col-12 text-center mx-auto">
+              <h2 class="mb-5">Welcome to Our Crowd Funding Website</h2>
+            </div>
 
-  <div class="border border-1 shadow shadow-lg my-5 rounded p-3">
-    <h2>Latest Projects</h2>
-    <div id="myCarousel2" class="carousel slide" data-bs-ride="carousel">
-      <ol class="carousel-indicators">
-        <li data-target="#myCarousel2" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel2" data-slide-to="1"></li>
-        <li data-target="#myCarousel2" data-slide-to="2"></li>
-        <li data-target="#myCarousel2" data-slide-to="3"></li>
-        <li data-target="#myCarousel2" data-slide-to="4"></li>
-      </ol>
-      <div class="carousel-inner" role="listbox">
-        {% for project in latest_projects %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-          <div class="d-flex justify-content-center mb-5">
-            <a href="{%url 'projectDetails' project.id%}">
-              <img src="{{ project.images.first.image.url }}" height="400px" />
-            </a>
-          </div>
-          <div class="carousel-caption d-none d-md-block">
-            <h3 class="" style="color: white !important">
-              {{ project.title }}
-            </h3>
-            <h5 class="" style="color: white !important">
-              Project Target: ${{ project.target }}
-            </h5>
-            <div class="progress" style="height: 30px">
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
               <div
-                class="progress-bar text-center"
-                role="progressbar"
-                style="width: {{ project.progress }}%; font-size: 20px;"
-                aria-valuenow="{{ project.progress }}"
-                aria-valuemin="0"
-                aria-valuemax="100"
+                class="featured-block d-flex justify-content-center align-items-center"
               >
-                {%if project.total_donations%} $ {{ project.total_donations }}
-                {%endif%}
+                <a href="donate.html" class="d-block">
+                  <img
+                  src="{%static 'images/technology.png'%}"
+                  class="featured-block-image img-fluid"
+                    alt=""
+                  />
+
+                  <p class="featured-block-text">
+                     <strong>Technology</strong>
+                  </p>
+                </a>
               </div>
             </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-      <!-- Controls -->
-      <a class="carousel-control-prev" href="#myCarousel2" data-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </a>
-      <a class="carousel-control-next" href="#myCarousel2" data-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </a>
-    </div>
-  </div>
 
-  <div class="border border-1 shadow shadow-lg my-5 rounded p-3">
-    <h2>Featuerd Projects</h2>
-    <div id="myCarousel3" class="carousel slide" data-bs-ride="carousel">
-      <ol class="carousel-indicators">
-        <li data-target="#myCarousel3" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel3" data-slide-to="1"></li>
-        <li data-target="#myCarousel3" data-slide-to="2"></li>
-        <li data-target="#myCarousel3" data-slide-to="3"></li>
-        <li data-target="#myCarousel3" data-slide-to="4"></li>
-      </ol>
-      <div class="carousel-inner" role="listbox">
-        {% for project in featured_projects %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-          <div class="d-flex justify-content-center mb-5">
-            <a href="{%url 'projectDetails' project.id%}">
-              <img src="{{ project.images.first.image.url }}" height="400px" />
-            </a>
-          </div>
-          <div class="carousel-caption d-none d-md-block">
-            <h3 class="" style="color: white !important">
-              {{ project.title }}
-            </h3>
-            <h5 class="" style="color: white !important">
-              Project Target: ${{ project.target }}
-            </h5>
-            <div class="progress" style="height: 30px">
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
               <div
-                class="progress-bar"
-                role="progressbar"
-                style="width: {{ project.progress }}%; font-size: 20px;"
-                aria-valuenow="{{ project.progress }}"
-                aria-valuemin="0"
-                aria-valuemax="100"
+                class="featured-block d-flex justify-content-center align-items-center"
               >
-                {%if project.total_donations%} $ {{project.total_donations}}
-                {%endif%}
+                <a href="donate.html" class="d-block">
+                  <img
+                  src="{%static 'images/healthcare.png'%}"
+                  class="featured-block-image img-fluid"
+                    alt=""
+                  />
+
+                  <p class="featured-block-text">
+                    <strong>Health and Fitness</strong> 
+                  </p>
+                </a>
               </div>
             </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
+              <div
+                class="featured-block d-flex justify-content-center align-items-center"
+              >
+                <a href="donate.html" class="d-block">
+                  <img
+                  src="{%static 'images/education.png'%}"
+                    class="featured-block-image img-fluid"
+                    alt=""
+                  />
+
+                  <p class="featured-block-text">
+                    <strong>Education</strong>
+                  </p>
+                </a>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
+              <div
+                class="featured-block d-flex justify-content-center align-items-center"
+              >
+                <a href="donate.html" class="d-block">
+                  <img
+                    src="{%static 'images/environment.png'%}"
+                    class="featured-block-image img-fluid"
+                    alt=""
+                  />
+
+                  <p class="featured-block-text">
+                    <strong>Environment</strong> 
+                  </p>
+                </a>
+              </div>
+            </div>
+
+            
           </div>
         </div>
-        {% endfor %}
-      </div>
-      <!-- Controls -->
-      <a class="carousel-control-prev" href="#myCarousel3" data-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </a>
-      <a class="carousel-control-next" href="#myCarousel3" data-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </a>
-    </div>
+      </section>
+
+
+          
+
+      <section class="section-padding section-bg" id="section_2">
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-12 text-center mb-4">
+              <h2> Top Rated Projects</h2>
+            </div>
+            {% for project in top_projects %}
+
+            <div class="col-lg-4 col-md-6 col-12 my-3">
+              <div class="custom-block-wrap">
+                <a href="{%url 'projectDetails' project.id%}">
+                  <img src="{{ project.images.first.image.url }}" 
+                  class="custom-block-image img-fluid"  />
+                </a>
+
+                <div class="custom-block">
+                  <div class="custom-block-body">
+                    <h5 class="mb-3">{{project.title|title}}</h5>
+
+                    <p>
+                      Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
+                      omeg kohm tokito
+                    </p>
+
+                    <div class="progress mt-4">
+                      <div
+                        class="progress-bar"
+                        style="width:{{project.progress}}%"
+                        role="progressbar"
+                        aria-valuenow="75"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+
+                    <div class="d-flex align-items-center my-2">
+                      <p class="mb-0">
+                        <strong>Raised:</strong>
+                        {{project.total_donations}}
+                      </p>
+
+                      <p class="ms-auto mb-0">
+                        <strong>Goal:</strong>
+                        {{project.target}}
+                      </p>
+                    </div>
+                  </div>
+
+                  <a href="{%url 'projectDetails' project.id%}" class="custom-btn btn">Donate now</a>
+                </div>
+              </div>
+            </div>
+            {%endfor%}
+          
+          </div>
+        </div>
+        </section>
+
+      <section class="volunteer-section section-padding" id="section_4">
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-12 text-center mb-4">
+              <h2 class='text-light'> Latest Projects</h2>
+            </div>
+            {% for project in latest_projects  %}
+
+            <div class="col-lg-4 col-md-6 col-12 my-3">
+              <div class="custom-block-wrap">
+                <a href="{%url 'projectDetails' project.id%}">
+                  <img src="{{ project.images.first.image.url }}" 
+                  class="custom-block-image img-fluid"  />
+                </a>
+
+                <div class="custom-block">
+                  <div class="custom-block-body">
+                    <h5 class="mb-3">{{project.title|title}}</h5>
+
+                    <p>
+                      Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
+                      omeg kohm tokito
+                    </p>
+
+                    <div class="progress mt-4">
+                      <div
+                        class="progress-bar"
+                        style="width:{{project.progress}}%"
+                        role="progressbar"
+                        aria-valuenow="75"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+
+                    <div class="d-flex align-items-center my-2">
+                      <p class="mb-0">
+                        <strong>Raised:</strong>
+                        {{project.total_donations}}
+                      </p>
+
+                      <p class="ms-auto mb-0">
+                        <strong>Goal:</strong>
+                        {{project.target}}
+                      </p>
+                    </div>
+                  </div>
+
+                  <a href="{%url 'projectDetails' project.id%}" class="custom-btn btn ">Donate now</a>
+                </div>
+              </div>
+            </div>
+            {%endfor%}
+          
+          </div>
+        </div>
+        </section>
+
+
+      <section class="news-section section-padding" id="section_5">
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-12 text-center mb-4">
+              <h2 > Featured Projects</h2>
+            </div>
+            {% for project in featured_projects  %}
+
+            <div class="col-lg-4 col-md-6 col-12 my-3">
+              <div class="custom-block-wrap">
+                <a href="{%url 'projectDetails' project.id%}">
+                  <img src="{{ project.images.first.image.url }}" 
+                  class="custom-block-image img-fluid"  />
+                </a>
+
+                <div class="custom-block">
+                  <div class="custom-block-body">
+                    <h5 class="mb-3">{{project.title|title}}</h5>
+
+                    <p>
+                      Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
+                      omeg kohm tokito
+                    </p>
+
+                    <div class="progress mt-4">
+                      <div
+                        class="progress-bar"
+                        style="width:{{project.progress}}%"
+                        role="progressbar"
+                        aria-valuenow="75"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+
+                    <div class="d-flex align-items-center my-2">
+                      <p class="mb-0">
+                        <strong>Raised:</strong>
+                        {{project.total_donations}}
+                      </p>
+
+                      <p class="ms-auto mb-0">
+                        <strong>Goal:</strong>
+                        {{project.target}}
+                      </p>
+                    </div>
+                  </div>
+
+                  <a href="{%url 'projectDetails' project.id%}" class="custom-btn btn ">Donate now</a>
+                </div>
+              </div>
+            </div>
+            {%endfor%}
+          
+          </div>
+        </div>
+      </section>
+
+    
+
+
+
   </div>
-</div>
-{%endblock%}
+  {%endblock%}
+</html>
