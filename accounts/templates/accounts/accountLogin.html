@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block title %} Login {% endblock %} {% block body%}
-<div class="container rounded fw-bold w-50 shadow shadow-lg px-5 py-5 mt-5">
-  <form method="post" enctype="multipart/form-data">
+<div class="container rounded fw-bold w-50  px-5 py-5 my-5">
+  <form method="post" class='custom-form' enctype="multipart/form-data">
     {% csrf_token %}
     <div class="mb-4">
       <label class="mb-2" for="{{ form.username.id_for_label }}">Email</label>
@@ -37,7 +37,8 @@
       </div>
       {% endif %}
     </div>
-    <button type="submit" class="btn btn-primary px-4 fs-5 mt-4">Submit</button>
-  </form>
+    <div class='d-flex justify-content-end'>
+    <button type="submit" class="btn btn-primary px-4 fs-5 mt-4">Login</button>
+    </div>  </form>
 </div>
 {% endblock %}

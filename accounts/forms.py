@@ -21,7 +21,7 @@ class RegisterForm(UserCreationForm):
         validators=[validate_phone_number],
         widget=forms.TextInput(attrs={"class": "form-control"}),
     )
-    image = forms.ImageField(widget=forms.FileInput(attrs={"class": "form-control"}))
+    image = forms.ImageField(widget=forms.FileInput(attrs={"class": "form-control py-2"}),label="Profile Picture")
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(attrs={"class": "form-control"}),
@@ -35,8 +35,8 @@ class RegisterForm(UserCreationForm):
             "last_name",
             "email",
             "password1",
-            "phoneNumber",
             "password2",
+            "phoneNumber",
             "image",
         )
         widgets = {

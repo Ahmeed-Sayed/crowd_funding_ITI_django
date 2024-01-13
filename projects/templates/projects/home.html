@@ -1,336 +1,349 @@
-{%extends 'base.html'%}
-{%load static%}
+{%extends 'base.html'%} {%load static%} {%block title%}Kind Heart Charity - Free
+Bootstrap 5.2.2 CSS Template{%endblock%} {%block body%}
+<div id="section_1">
+  <main>
+    <section class="hero-section hero-section-full-height">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12 col-12 p-0">
+            <div
+              id="hero-slide"
+              class="carousel carousel-fade slide"
+              data-bs-ride="carousel"
+            >
+              <div class="carousel-inner">
+                {% for project in top_projects %}
 
-    {%block title%}Kind Heart Charity - Free Bootstrap 5.2.2 CSS Template{%endblock%}
+                <div
+                  class="carousel-item {% if forloop.first %}active{% endif %}"
+                >
+                  <img
+                    src="{{ project.images.first.image.url }}"
+                    class="carousel-image img-fluid"
+                  />
 
-    {%block body%}
-  <div id="section_1">
-    
-    <main>
-      <section class="hero-section hero-section-full-height">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-lg-12 col-12 p-0">
-              <div
-                id="hero-slide"
-                class="carousel carousel-fade slide"
-                data-bs-ride="carousel"
-              >
-                <div class="carousel-inner">
-                 {% for project in top_projects %}
-
-                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                  
-                    <img src="{{ project.images.first.image.url }}" class="carousel-image img-fluid"  />
-
-                    <div
-                      class="carousel-caption d-flex flex-column justify-content-end"
-                    >
-                      <h1>{{project.title|title}}</h1>
-
-                    </div>
+                  <div
+                    class="carousel-caption d-flex flex-column justify-content-end"
+                  >
+                    <h1>{{project.title|title}}</h1>
                   </div>
-{%endfor%}
-                  
                 </div>
-
-                <button
-                  class="carousel-control-prev"
-                  type="button"
-                  data-bs-target="#hero-slide"
-                  data-bs-slide="prev"
-                >
-                  <span
-                    class="carousel-control-prev-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span class="visually-hidden">Previous</span>
-                </button>
-
-                <button
-                  class="carousel-control-next"
-                  type="button"
-                  data-bs-target="#hero-slide"
-                  data-bs-slide="next"
-                >
-                  <span
-                    class="carousel-control-next-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span class="visually-hidden">Next</span>
-                </button>
+                {%endfor%}
               </div>
+
+              <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#hero-slide"
+                data-bs-slide="prev"
+              >
+                <span
+                  class="carousel-control-prev-icon"
+                  aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+
+              <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#hero-slide"
+                data-bs-slide="next"
+              >
+                <span
+                  class="carousel-control-next-icon"
+                  aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Next</span>
+              </button>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="section-padding">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-10 col-12 text-center mx-auto">
-              <h2 class="mb-5">Welcome to Our Crowd Funding Website</h2>
-            </div>
+    <section class="section-padding">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10 col-12 text-center mx-auto">
+            <h2 class="mb-5">Welcome to Our Crowd Funding Website</h2>
+          </div>
 
-            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
-              <div
-                class="featured-block d-flex justify-content-center align-items-center"
-              >
-                <a href="donate.html" class="d-block">
-                  <img
+          <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
+            <div
+              class="featured-block d-flex justify-content-center align-items-center"
+            >
+              <a href="{%url 'category' 1%}" class="d-block">
+                <img
                   src="{%static 'images/technology.png'%}"
                   class="featured-block-image img-fluid"
-                    alt=""
-                  />
+                  alt=""
+                />
 
-                  <p class="featured-block-text">
-                     <strong>Technology</strong>
-                  </p>
-                </a>
-              </div>
+                <p class="featured-block-text">
+                  <strong>Technology</strong>
+                </p>
+              </a>
             </div>
+          </div>
 
-            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
-              <div
-                class="featured-block d-flex justify-content-center align-items-center"
-              >
-                <a href="donate.html" class="d-block">
-                  <img
+          <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
+            <div
+              class="featured-block d-flex justify-content-center align-items-center"
+            >
+              <a href="{%url 'category' 2%}" class="d-block">
+                <img
                   src="{%static 'images/healthcare.png'%}"
                   class="featured-block-image img-fluid"
-                    alt=""
-                  />
+                  alt=""
+                />
 
-                  <p class="featured-block-text">
-                    <strong>Health and Fitness</strong> 
-                  </p>
-                </a>
-              </div>
+                <p class="featured-block-text">
+                  <strong>Health and Fitness</strong>
+                </p>
+              </a>
             </div>
+          </div>
 
-            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
-              <div
-                class="featured-block d-flex justify-content-center align-items-center"
-              >
-                <a href="donate.html" class="d-block">
-                  <img
+          <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
+            <div
+              class="featured-block d-flex justify-content-center align-items-center"
+            >
+              <a href="{%url 'category' 3%}" class="d-block">
+                <img
                   src="{%static 'images/education.png'%}"
-                    class="featured-block-image img-fluid"
-                    alt=""
-                  />
+                  class="featured-block-image img-fluid"
+                  alt=""
+                />
 
-                  <p class="featured-block-text">
-                    <strong>Education</strong>
+                <p class="featured-block-text">
+                  <strong>Education</strong>
+                </p>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
+            <div
+              class="featured-block d-flex justify-content-center align-items-center"
+            >
+              <a href="{%url 'category' 4%}" class="d-block">
+                <img
+                  src="{%static 'images/environment.png'%}"
+                  class="featured-block-image img-fluid"
+                  alt=""
+                />
+
+                <p class="featured-block-text">
+                  <strong>Environment</strong>
+                </p>
+              </a>
+            </div>
+          </div>
+          <form
+            class="custom-form search-form"
+            method="post"
+            role="form"
+          >
+          {% csrf_token %}
+            {{search_form}}
+
+            <button type="submit" class="form-control">
+              <i class="bi-search"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-padding section-bg" id="section_2">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-12 text-center mb-4">
+            <h2>Top Rated Projects</h2>
+          </div>
+          {% for project in top_projects %}
+
+          <div class="col-lg-4 col-md-6 col-12 my-3">
+            <div class="custom-block-wrap">
+              <a href="{%url 'projectDetails' project.id%}">
+                <img
+                  src="{{ project.images.first.image.url }}"
+                  class="custom-block-image img-fluid"
+                />
+              </a>
+
+              <div class="custom-block">
+                <div class="custom-block-body">
+                  <h5 class="mb-3">{{project.title|title}}</h5>
+
+                  <p>
+                    Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
+                    omeg kohm tokito
                   </p>
-                </a>
+
+                  <div class="progress mt-4">
+                    <div
+                      class="progress-bar"
+                      style="width:{{project.progress}}%"
+                      role="progressbar"
+                      aria-valuenow="75"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    ></div>
+                  </div>
+
+                  <div class="d-flex align-items-center my-2">
+                    <p class="mb-0">
+                      <strong>Raised:</strong>
+                      {{project.total_donations}}
+                    </p>
+
+                    <p class="ms-auto mb-0">
+                      <strong>Goal:</strong>
+                      {{project.target}}
+                    </p>
+                  </div>
+                </div>
+
+                <a
+                  href="{%url 'projectDetails' project.id%}"
+                  class="custom-btn btn"
+                  >Donate now</a
+                >
               </div>
             </div>
+          </div>
+          {%endfor%}
+        </div>
+      </div>
+    </section>
 
-            <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
-              <div
-                class="featured-block d-flex justify-content-center align-items-center"
-              >
-                <a href="donate.html" class="d-block">
-                  <img
-                    src="{%static 'images/environment.png'%}"
-                    class="featured-block-image img-fluid"
-                    alt=""
-                  />
+    <section class="volunteer-section section-padding" id="section_4">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-12 text-center mb-4">
+            <h2 class="text-light">Latest Projects</h2>
+          </div>
+          {% for project in latest_projects %}
 
-                  <p class="featured-block-text">
-                    <strong>Environment</strong> 
+          <div class="col-lg-4 col-md-6 col-12 my-3">
+            <div class="custom-block-wrap">
+              <a href="{%url 'projectDetails' project.id%}">
+                <img
+                  src="{{ project.images.first.image.url }}"
+                  class="custom-block-image img-fluid"
+                />
+              </a>
+
+              <div class="custom-block">
+                <div class="custom-block-body">
+                  <h5 class="mb-3">{{project.title|title}}</h5>
+
+                  <p>
+                    Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
+                    omeg kohm tokito
                   </p>
-                </a>
-              </div>
-            </div>
 
-            
-          </div>
-        </div>
-      </section>
-
-
-          
-
-      <section class="section-padding section-bg" id="section_2">
-        <div class="container">
-          <div class="row">
-              <div class="col-lg-12 col-12 text-center mb-4">
-              <h2> Top Rated Projects</h2>
-            </div>
-            {% for project in top_projects %}
-
-            <div class="col-lg-4 col-md-6 col-12 my-3">
-              <div class="custom-block-wrap">
-                <a href="{%url 'projectDetails' project.id%}">
-                  <img src="{{ project.images.first.image.url }}" 
-                  class="custom-block-image img-fluid"  />
-                </a>
-
-                <div class="custom-block">
-                  <div class="custom-block-body">
-                    <h5 class="mb-3">{{project.title|title}}</h5>
-
-                    <p>
-                      Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
-                      omeg kohm tokito
-                    </p>
-
-                    <div class="progress mt-4">
-                      <div
-                        class="progress-bar"
-                        style="width:{{project.progress}}%"
-                        role="progressbar"
-                        aria-valuenow="75"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
-                    </div>
-
-                    <div class="d-flex align-items-center my-2">
-                      <p class="mb-0">
-                        <strong>Raised:</strong>
-                        {{project.total_donations}}
-                      </p>
-
-                      <p class="ms-auto mb-0">
-                        <strong>Goal:</strong>
-                        {{project.target}}
-                      </p>
-                    </div>
+                  <div class="progress mt-4">
+                    <div
+                      class="progress-bar"
+                      style="width:{{project.progress}}%"
+                      role="progressbar"
+                      aria-valuenow="75"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    ></div>
                   </div>
 
-                  <a href="{%url 'projectDetails' project.id%}" class="custom-btn btn">Donate now</a>
-                </div>
-              </div>
-            </div>
-            {%endfor%}
-          
-          </div>
-        </div>
-        </section>
-
-      <section class="volunteer-section section-padding" id="section_4">
-        <div class="container">
-          <div class="row">
-              <div class="col-lg-12 col-12 text-center mb-4">
-              <h2 class='text-light'> Latest Projects</h2>
-            </div>
-            {% for project in latest_projects  %}
-
-            <div class="col-lg-4 col-md-6 col-12 my-3">
-              <div class="custom-block-wrap">
-                <a href="{%url 'projectDetails' project.id%}">
-                  <img src="{{ project.images.first.image.url }}" 
-                  class="custom-block-image img-fluid"  />
-                </a>
-
-                <div class="custom-block">
-                  <div class="custom-block-body">
-                    <h5 class="mb-3">{{project.title|title}}</h5>
-
-                    <p>
-                      Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
-                      omeg kohm tokito
+                  <div class="d-flex align-items-center my-2">
+                    <p class="mb-0">
+                      <strong>Raised:</strong>
+                      {{project.total_donations}}
                     </p>
 
-                    <div class="progress mt-4">
-                      <div
-                        class="progress-bar"
-                        style="width:{{project.progress}}%"
-                        role="progressbar"
-                        aria-valuenow="75"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
-                    </div>
-
-                    <div class="d-flex align-items-center my-2">
-                      <p class="mb-0">
-                        <strong>Raised:</strong>
-                        {{project.total_donations}}
-                      </p>
-
-                      <p class="ms-auto mb-0">
-                        <strong>Goal:</strong>
-                        {{project.target}}
-                      </p>
-                    </div>
+                    <p class="ms-auto mb-0">
+                      <strong>Goal:</strong>
+                      {{project.target}}
+                    </p>
                   </div>
-
-                  <a href="{%url 'projectDetails' project.id%}" class="custom-btn btn ">Donate now</a>
                 </div>
+
+                <a
+                  href="{%url 'projectDetails' project.id%}"
+                  class="custom-btn btn"
+                  >Donate now</a
+                >
               </div>
             </div>
-            {%endfor%}
-          
           </div>
+          {%endfor%}
         </div>
-        </section>
+      </div>
+    </section>
 
+    <section class="news-section section-padding" id="section_5">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-12 text-center mb-4">
+            <h2>Featured Projects</h2>
+          </div>
+          {% for project in featured_projects %}
 
-      <section class="news-section section-padding" id="section_5">
-        <div class="container">
-          <div class="row">
-              <div class="col-lg-12 col-12 text-center mb-4">
-              <h2 > Featured Projects</h2>
-            </div>
-            {% for project in featured_projects  %}
+          <div class="col-lg-4 col-md-6 col-12 my-3">
+            <div class="custom-block-wrap">
+              <a href="{%url 'projectDetails' project.id%}">
+                <img
+                  src="{{ project.images.first.image.url }}"
+                  class="custom-block-image img-fluid"
+                />
+              </a>
 
-            <div class="col-lg-4 col-md-6 col-12 my-3">
-              <div class="custom-block-wrap">
-                <a href="{%url 'projectDetails' project.id%}">
-                  <img src="{{ project.images.first.image.url }}" 
-                  class="custom-block-image img-fluid"  />
-                </a>
+              <div class="custom-block">
+                <div class="custom-block-body">
+                  <h5 class="mb-3">{{project.title|title}}</h5>
 
-                <div class="custom-block">
-                  <div class="custom-block-body">
-                    <h5 class="mb-3">{{project.title|title}}</h5>
+                  <p>
+                    Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
+                    omeg kohm tokito
+                  </p>
 
-                    <p>
-                      Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
-                      omeg kohm tokito
+                  <div class="progress mt-4">
+                    <div
+                      class="progress-bar"
+                      style="width:{{project.progress}}%"
+                      role="progressbar"
+                      aria-valuenow="75"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    ></div>
+                  </div>
+
+                  <div class="d-flex align-items-center my-2">
+                    <p class="mb-0">
+                      <strong>Raised:</strong>
+                      {{project.total_donations}}
                     </p>
 
-                    <div class="progress mt-4">
-                      <div
-                        class="progress-bar"
-                        style="width:{{project.progress}}%"
-                        role="progressbar"
-                        aria-valuenow="75"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
-                    </div>
-
-                    <div class="d-flex align-items-center my-2">
-                      <p class="mb-0">
-                        <strong>Raised:</strong>
-                        {{project.total_donations}}
-                      </p>
-
-                      <p class="ms-auto mb-0">
-                        <strong>Goal:</strong>
-                        {{project.target}}
-                      </p>
-                    </div>
+                    <p class="ms-auto mb-0">
+                      <strong>Goal:</strong>
+                      {{project.target}}
+                    </p>
                   </div>
-
-                  <a href="{%url 'projectDetails' project.id%}" class="custom-btn btn ">Donate now</a>
                 </div>
+
+                <a
+                  href="{%url 'projectDetails' project.id%}"
+                  class="custom-btn btn"
+                  >Donate now</a
+                >
               </div>
             </div>
-            {%endfor%}
-          
           </div>
+          {%endfor%}
         </div>
-      </section>
-
-    
-
-
-
-  </div>
-  {%endblock%}
-</html>
+      </div>
+    </section>
+  </main>
+</div>
+{%endblock%}
