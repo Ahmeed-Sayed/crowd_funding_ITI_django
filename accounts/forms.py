@@ -39,6 +39,7 @@ class RegisterForm(UserCreationForm):
             "phoneNumber",
             "image",
         )
+       
         widgets = {
             "username": forms.TextInput(attrs={"class": "form-control"}),
             "first_name": forms.TextInput(attrs={"class": "form-control"}),
@@ -54,6 +55,8 @@ class RegisterForm(UserCreationForm):
         self.fields["password2"].widget = forms.PasswordInput(
             attrs={"class": "form-control"}
         )
+        for field in self.fields:
+            field.label_suffix=""
 
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
@@ -96,6 +99,16 @@ class ProfileEditForm(forms.ModelForm):
             "address",
             "image",
         )
+        labels={
+            "username":"User Name",
+            "first_name":"First Name",
+            "last_name":"Last Name",
+            "email":'Email',
+            "phoneNumber":"Phone Number",
+            "birthDate":"Birthdate",
+            "address":"Address",
+            "image":"Profile Picture"
+        }
 
     def __init__(self, *args, **kwargs):
         super(ProfileEditForm, self).__init__(*args, **kwargs)

@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from accounts.models import UserProfile
 from django.core.validators import MaxValueValidator
@@ -88,6 +89,7 @@ class DonationModel(models.Model):
         ProjectsModel, related_name="donations", on_delete=models.CASCADE
     )
     donation = models.FloatField()
+    created_date=models.DateField(default=timezone.now)
 
     def __self__(self):
         return self.donation

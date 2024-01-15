@@ -41,34 +41,24 @@ PictureFormSet = forms.formset_factory(
 
 
 def home(request):
-    if request.method == "POST":
-        search_form = ProjectSearchForm(request.POST)
-        if search_form.is_valid():
-            query = search_form.cleaned_data.get("query")
-            return redirect("searchResults", query=query)
-    else:
-        categories = CategoriesModel.objects.all()
+    categories = CategoriesModel.objects.all()
+    project_lists = [
+        ProjectsModel.objects.all()
+        .annotate(avg_rating=Avg("ratings__rating"))
+        .order_by("-avg_rating")[:5],  # top_projects
+        ProjectsModel.objects.all().order_by("-start_time")[:5],  # latest_projects
+        ProjectsModel.objects.filter(is_featured=True).order_by("-start_time")[:5],
+    ]
+    for project_list in project_lists:
+        for project in project_list:
+            project.total_donations = DonationModel.objects.filter(
+                project=project
+            ).aggregate(sum=Sum("donation"))["sum"]
+            if project.total_donations is None:
+                project.total_donations = 0
+            project.progress = (project.total_donations / project.target) * 100
 
-        project_lists = [
-            ProjectsModel.objects.all()
-            .annotate(avg_rating=Avg("ratings__rating"))
-            .order_by("-avg_rating")[:5],  # top_projects
-            ProjectsModel.objects.all().order_by("-start_time")[:5],  # latest_projects
-            ProjectsModel.objects.filter(is_featured=True).order_by("-start_time")[:5],
-        ]
-
-        for project_list in project_lists:
-            for project in project_list:
-                project.total_donations = DonationModel.objects.filter(
-                    project=project
-                ).aggregate(sum=Sum("donation"))["sum"]
-                if project.total_donations is None:
-                    project.total_donations = 0
-                project.progress = (project.total_donations / project.target) * 100
-
-        top_projects, latest_projects, featured_projects = project_lists
-
-        search_form = ProjectSearchForm()
+    top_projects, latest_projects, featured_projects = project_lists
 
     return render(
         request,
@@ -78,7 +68,6 @@ def home(request):
             "latest_projects": latest_projects,
             "featured_projects": featured_projects,
             "categories": categories,
-            "search_form": search_form,
         },
     )
 
@@ -114,20 +103,38 @@ def searchResults(request, query):
 
 
 def project_list(request):
+    if request.method == "POST":
+        search_form = ProjectSearchForm(request.POST)
+        if search_form.is_valid():
+            query = search_form.cleaned_data.get("query")
+            return redirect("searchResults", query=query)
+
+    search_form = ProjectSearchForm()
+
     projects = ProjectsModel.objects.all()
     for project in projects:
-            for project in projects:
-                project.total_donations = DonationModel.objects.filter(
-                    project=project
-                ).aggregate(sum=Sum("donation"))["sum"]
-                if project.total_donations is None:
-                    project.total_donations = 0
-                project.progress = (project.total_donations / project.target) * 100
+        for project in projects:
+            project.total_donations = DonationModel.objects.filter(
+                project=project
+            ).aggregate(sum=Sum("donation"))["sum"]
+            if project.total_donations is None:
+                project.total_donations = 0
+            project.progress = (project.total_donations / project.target) * 100
 
-    return render(request, "projects/project_list.html", {"projects": projects})
+    return render(
+        request,
+        "projects/project_list.html",
+        {"projects": projects, "search_form": search_form},
+    )
 
 
 def category_projects(request, category_id):
+    if request.method == "POST":
+        search_form = ProjectSearchForm(request.POST)
+        if search_form.is_valid():
+            query = search_form.cleaned_data.get("query")
+            return redirect("searchResults", query=query)
+    search_form=ProjectSearchForm()    
     category = CategoriesModel.objects.get(pk=category_id)
     projects = ProjectsModel.objects.filter(category=category)
     for project in projects:
@@ -141,7 +148,7 @@ def category_projects(request, category_id):
     return render(
         request,
         "projects/category_projects.html",
-        {"category": category, "projects": projects},
+        {"category": category, "projects": projects,'search_form':search_form},
     )
 
 
@@ -237,7 +244,7 @@ class ProjectDetailsView(View):
             elif donation_amount > currentProject.target - total_donations:
                 messages.error(
                     request,
-                    f"Error, donation amount cannot exceed the remaining target amount. You can donate {currentProject.target-total_donations}$",
+                    f"Error, donation amount cannot exceed the remaining target amount. Current Maximum donation is: {currentProject.target-total_donations}$",
                 )
             elif total_donations < currentProject.target:
                 if donationForm.is_valid():
@@ -326,8 +333,9 @@ def reportProject(request, id):
         user=currentUser, project=currentProject
     ).first()
     if existingReport:
-        messages.info(request, "You have already reported this comment.")
+        messages.info(request, "You have already reported this Project.")
         return redirect("projectDetails", id=id)
+    messages.info(request, "Project Reported Successfully")
     ProjectReportModel.objects.create(user=currentUser, project=currentProject)
     return redirect("projectDetails", id=id)
 

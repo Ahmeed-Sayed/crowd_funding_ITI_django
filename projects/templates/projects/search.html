@@ -1,12 +1,19 @@
 {%extends 'base.html'%} {%block body%}
 <div class="container mt-4  p-3 ">
-  <form class="custom-form search-form" method="post" role="form">
-    {% csrf_token %} {{search_form}}
+  <div class='d-flex justify-content-center mb-5'> 
+    <form
+      class="custom-form search-form w-75"
+      method="post"
+      role="form"
+    >
+    {% csrf_token %}
+      {{search_form}}
 
-    <button type="submit" class="form-control">
-      <i class="bi-search"></i>
-    </button>
-  </form>
+      <button type="submit" class="form-control">
+        <i class="bi-search"></i>
+      </button>
+    </form>
+  </div>
 
   <section class="section-padding pt-2 " id="section_4">
     <div class="container">

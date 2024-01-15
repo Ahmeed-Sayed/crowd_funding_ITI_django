@@ -126,7 +126,7 @@ class ProfileEditView(View):
     def get(self, request, *args, **kwargs):
         id = kwargs.pop("id")
         user = get_object_or_404(UserProfile, id=id)
-        form = ProfileEditForm(instance=user)
+        form = ProfileEditForm(instance=user, label_suffix="")
         return render(request, "accounts/profileEdit.html", {"form": form})
 
     def post(self, request, *args, **kwargs):

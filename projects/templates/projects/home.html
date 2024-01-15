@@ -140,18 +140,6 @@ Bootstrap 5.2.2 CSS Template{%endblock%} {%block body%}
               </a>
             </div>
           </div>
-          <form
-            class="custom-form search-form"
-            method="post"
-            role="form"
-          >
-          {% csrf_token %}
-            {{search_form}}
-
-            <button type="submit" class="form-control">
-              <i class="bi-search"></i>
-            </button>
-          </form>
         </div>
       </div>
     </section>
