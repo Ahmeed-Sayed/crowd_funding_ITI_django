@@ -136,4 +136,4 @@ class ProjectSearchForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(ProjectSearchForm, self).__init__(*args, **kwargs)
-        self.fields["query"].widget = forms.TextInput(attrs={"class": "form-control"})
+        self.fields["query"].widget = forms.TextInput(attrs={"class": "form-control","placeholder":"Search for a Project"})

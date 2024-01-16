@@ -1,6 +1,6 @@
 {%extends 'base.html'%} {%block body%}
-<div class="container">
-  <form method="post" enctype="multipart/form-data">
+<div class="container w-50 my-5">
+  <form method="post" class='custom-form' enctype="multipart/form-data">
     {% csrf_token %} {{form}}
     <button type="submit" class="btn btn-primary">Submit Edit</button>
   </form>
