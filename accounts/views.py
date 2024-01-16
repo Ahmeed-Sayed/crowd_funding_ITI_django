@@ -13,6 +13,17 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
+from django.utils.decorators import method_decorator
+
+
+def login_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if request.session.get("profileId"):
+            return view_func(request, *args, **kwargs)
+        else:
+            return redirect("accountLogin")
+
+    return wrapper
 
 
 def activate(request, uidb64, token):
@@ -106,12 +117,16 @@ class AccountLogin(View):
         return render(request, "accounts/accountLogin.html", {"form": form})
 
 
+@login_required
 def accountLogout(request):
     request.session.flush()
     return redirect(reverse("home"))
 
 
+@login_required
 def profileView(request, id):
+    if request.session.get("profileId") != id:
+        return render(request, "404.html")
     user = get_object_or_404(UserProfile, id=id)
     return render(
         request,
@@ -123,14 +138,20 @@ def profileView(request, id):
 
 
 class ProfileEditView(View):
+    @method_decorator(login_required, name="dispatch")
     def get(self, request, *args, **kwargs):
         id = kwargs.pop("id")
+        if request.session.get("profileId") != id:
+            return render(request, "404.html")
         user = get_object_or_404(UserProfile, id=id)
         form = ProfileEditForm(instance=user, label_suffix="")
         return render(request, "accounts/profileEdit.html", {"form": form})
 
+    @method_decorator(login_required, name="dispatch")
     def post(self, request, *args, **kwargs):
         id = kwargs.pop("id")
+        if request.session.get("profileId") != id:
+            return render(request, "404.html")
         user = get_object_or_404(UserProfile, id=id)
         form = ProfileEditForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
@@ -140,8 +161,11 @@ class ProfileEditView(View):
             return render(request, "accounts/profileEdit.html", {"form": form})
 
 
+@login_required
 def profileDelete(request, id):
     if request.method == "POST":
+        if request.session.get("profileId") != id:
+            return render(request, "404.html")
         profile = get_object_or_404(UserProfile, id=id)
         user = profile.user
         request.session.flush()

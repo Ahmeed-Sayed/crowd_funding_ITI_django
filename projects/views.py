@@ -25,6 +25,9 @@ from .forms import (
     ProjectSearchForm,
 )
 
+from accounts.views import login_required
+from django.utils.decorators import method_decorator
+
 
 class BasePictureFormSet(forms.BaseFormSet):
     def clean(self):
@@ -134,7 +137,7 @@ def category_projects(request, category_id):
         if search_form.is_valid():
             query = search_form.cleaned_data.get("query")
             return redirect("searchResults", query=query)
-    search_form=ProjectSearchForm()    
+    search_form = ProjectSearchForm()
     category = CategoriesModel.objects.get(pk=category_id)
     projects = ProjectsModel.objects.filter(category=category)
     for project in projects:
@@ -148,14 +151,13 @@ def category_projects(request, category_id):
     return render(
         request,
         "projects/category_projects.html",
-        {"category": category, "projects": projects,'search_form':search_form},
+        {"category": category, "projects": projects, "search_form": search_form},
     )
 
 
 class CreateProject(View):
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
-        if "profileId" not in request.session:
-            return redirect(reverse("accountLogin"))
         project_form = ProjectCreationForm()
         picture_formset = PictureFormSet(prefix="pictures")
         return render(
@@ -164,9 +166,8 @@ class CreateProject(View):
             {"project_form": project_form, "picture_formset": picture_formset},
         )
 
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
-        if "profileId" not in request.session:
-            return redirect(reverse("accountLogin"))
         project_form = ProjectCreationForm(request.POST)
         picture_formset = PictureFormSet(request.POST, request.FILES, prefix="pictures")
         if project_form.is_valid() and picture_formset.is_valid():
@@ -226,6 +227,7 @@ class ProjectDetailsView(View):
             },
         )
 
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         id = kwargs.pop("id")
         currentProject = ProjectsModel.objects.get(id=id)
@@ -300,9 +302,8 @@ class ProjectDetailsView(View):
         return redirect("projectDetails", id=id)
 
 
+@login_required
 def reportComment(request, id, commentID):
-    if "profileId" not in request.session:
-        return redirect(reverse("accountLogin"))
     currentProject = get_object_or_404(ProjectsModel, id=id)
     currentComment = get_object_or_404(CommentsModel, id=commentID)
     currentUser = get_object_or_404(UserProfile, id=request.session["profileId"])
@@ -321,9 +322,8 @@ def reportComment(request, id, commentID):
     return redirect("projectDetails", id=id)
 
 
+@login_required
 def reportProject(request, id):
-    if "profileId" not in request.session:
-        return redirect(reverse("accountLogin"))
     currentProject = get_object_or_404(ProjectsModel, id=id)
     currentUser = get_object_or_404(UserProfile, id=request.session["profileId"])
     if currentProject.user.id == request.session["profileId"]:
@@ -340,9 +340,10 @@ def reportProject(request, id):
     return redirect("projectDetails", id=id)
 
 
+@login_required
 def deleteProject(request, id):
-    if "profileId" not in request.session:
-        return redirect(reverse("accountLogin"))
+    if request.session.get("profileId") != id:
+        return render(request, "404.html")
     currentUser = get_object_or_404(UserProfile, id=request.session["profileId"])
     currentProject = get_object_or_404(ProjectsModel, id=id)
     if currentProject.user.id != request.session["profileId"]:
