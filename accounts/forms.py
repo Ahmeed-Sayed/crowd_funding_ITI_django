@@ -20,8 +20,12 @@ class RegisterForm(UserCreationForm):
         max_length=20,
         validators=[validate_phone_number],
         widget=forms.TextInput(attrs={"class": "form-control"}),
+        label="Phone Number",
     )
-    image = forms.ImageField(widget=forms.FileInput(attrs={"class": "form-control py-2"}),label="Profile Picture")
+    image = forms.ImageField(
+        widget=forms.FileInput(attrs={"class": "form-control py-2"}),
+        label="Profile Picture",
+    )
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(attrs={"class": "form-control"}),
@@ -39,7 +43,16 @@ class RegisterForm(UserCreationForm):
             "phoneNumber",
             "image",
         )
-       
+        labels = {
+            "username": "Username",
+            "first_name": "First Name",
+            "last_name": "Last Name",
+            "email": "Email",
+            "password1": "Password",
+            "password2": "Confirm Password",
+            "phoneNumber": "Phone Number",
+        }
+
         widgets = {
             "username": forms.TextInput(attrs={"class": "form-control"}),
             "first_name": forms.TextInput(attrs={"class": "form-control"}),
@@ -55,8 +68,7 @@ class RegisterForm(UserCreationForm):
         self.fields["password2"].widget = forms.PasswordInput(
             attrs={"class": "form-control"}
         )
-        for field in self.fields:
-            field.label_suffix=""
+        self.fields["password2"].label = "Confirm Password"
 
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
@@ -66,7 +78,9 @@ class RegisterForm(UserCreationForm):
         if UserProfile.objects.filter(phoneNumber=phone_number).exists():
             self.add_error("phoneNumber", "This phone number is already in use.")
             return None
-
+        if User.objects.filter(email=user.email).exists():
+            self.add_error("email", "This email is already in use.")
+            return None
         user_profile = UserProfile(
             user=user,
             phoneNumber=phone_number,
@@ -99,15 +113,15 @@ class ProfileEditForm(forms.ModelForm):
             "address",
             "image",
         )
-        labels={
-            "username":"User Name",
-            "first_name":"First Name",
-            "last_name":"Last Name",
-            "email":'Email',
-            "phoneNumber":"Phone Number",
-            "birthDate":"Birthdate",
-            "address":"Address",
-            "image":"Profile Picture"
+        labels = {
+            "username": "User Name",
+            "first_name": "First Name",
+            "last_name": "Last Name",
+            "email": "Email",
+            "phoneNumber": "Phone Number",
+            "birthDate": "Birthdate",
+            "address": "Address",
+            "image": "Profile Picture",
         }
 
     def __init__(self, *args, **kwargs):

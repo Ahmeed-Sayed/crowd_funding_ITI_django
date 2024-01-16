@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
 from .models import UserProfile
@@ -18,10 +18,15 @@ from django.utils.decorators import method_decorator
 
 def login_required(view_func):
     def wrapper(request, *args, **kwargs):
-        if request.session.get("profileId"):
-            return view_func(request, *args, **kwargs)
-        else:
-            return redirect("accountLogin")
+        profileId = request.session.get("profileId")
+        username = request.session.get("username")
+
+        if profileId and username:
+            user = get_object_or_404(User, username=username)
+            if UserProfile.objects.filter(user=user, id=profileId).exists():
+                return view_func(request, *args, **kwargs)
+
+        return redirect("accountLogin")
 
     return wrapper
 
@@ -163,13 +168,10 @@ class ProfileEditView(View):
 
 @login_required
 def profileDelete(request, id):
-    if request.method == "POST":
-        if request.session.get("profileId") != id:
-            return render(request, "404.html")
-        profile = get_object_or_404(UserProfile, id=id)
-        user = profile.user
-        request.session.flush()
-        user.delete()
-        return redirect(reverse("home"))
-    else:
-        return None
+    if request.session.get("profileId") != id:
+        return render(request, "404.html")
+    profile = get_object_or_404(UserProfile, id=id)
+    profile.delete()
+
+    request.session.flush()
+    return redirect(reverse("home"))

@@ -319,6 +319,7 @@ def reportComment(request, id, commentID):
     CommentReportModel.objects.create(
         user=currentUser, project=currentProject, comment=currentComment
     )
+    messages.info(request, "Comment Reported Successfully")
     return redirect("projectDetails", id=id)
 
 
@@ -335,8 +336,8 @@ def reportProject(request, id):
     if existingReport:
         messages.info(request, "You have already reported this Project.")
         return redirect("projectDetails", id=id)
-    messages.info(request, "Project Reported Successfully")
     ProjectReportModel.objects.create(user=currentUser, project=currentProject)
+    messages.info(request, "Project Reported Successfully")
     return redirect("projectDetails", id=id)
 
 
@@ -344,7 +345,6 @@ def reportProject(request, id):
 def deleteProject(request, id):
     if request.session.get("profileId") != id:
         return render(request, "404.html")
-    currentUser = get_object_or_404(UserProfile, id=request.session["profileId"])
     currentProject = get_object_or_404(ProjectsModel, id=id)
     if currentProject.user.id != request.session["profileId"]:
         messages.info(request, "Only the project creator can delete the project")
