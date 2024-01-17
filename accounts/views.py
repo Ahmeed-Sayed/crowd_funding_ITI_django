@@ -80,11 +80,16 @@ def activateEmail(request, user, to_email):
 
 
 class AccountRegister(View):
+
     def get(self, request):
+        if request.session.get("profileId") and request.session.get("username"):
+            request.session.flush()
         form = RegisterForm()
         return render(request, "accounts/accountRegister.html", {"form": form})
 
     def post(self, request):
+        if request.session.get("profileId") and request.session.get("username"):
+            request.session.flush()
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
             result = form.save(commit=False)
@@ -103,6 +108,8 @@ class AccountRegister(View):
 
 class AccountLogin(View):
     def post(self, request, *args, **kwargs):
+        if request.session.get("profileId") and request.session.get("username"):
+            request.session.flush()
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
             email = form.cleaned_data.get("username")
@@ -118,6 +125,8 @@ class AccountLogin(View):
         return render(request, "accounts/accountLogin.html", {"form": form})
 
     def get(self, request, *args, **kwargs):
+        if request.session.get("profileId") and request.session.get("username"):
+            request.session.flush()
         form = AuthenticationForm()
         return render(request, "accounts/accountLogin.html", {"form": form})
 
