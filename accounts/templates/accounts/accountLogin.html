@@ -1,44 +1,60 @@
 {% extends 'base.html' %} {% block title %} Login {% endblock %} {% block body%}
-<div class="container rounded fw-bold w-50  px-5 py-5 my-5">
-  <form method="post" class='custom-form' enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="mb-4">
-      <label class="mb-2" for="{{ form.username.id_for_label }}">Email</label>
-      <input
-        type="text"
-        name="{{ form.username.html_name }}"
-        class="form-control border-2"
-      />
-      {%if form.username.errors%}
-      <div class="alert alert-danger fw-bold my-3">
-        {{ form.username.errors }}
+{%if messages%} {% for message in messages%}
+<div class="alert alert-success rounded text-center">{{ message }}</div>
+{% endfor %} {%endif%}
+
+<div
+  class=" rounded fw-bold d-flex justify-content-center align-items-center"style="min-height: 100vh;background-color:#f0f8ff" 
+>
+  <div class="shadow shadow-lg p-5 d-flex justify-content-center w-50 rounded-5" style="background-color:white">
+    <form
+      method="post"
+      class="custom-form p-5 w-100 rounded"
+      enctype="multipart/form-data"
+    >
+      {% csrf_token %}
+      <div class="mb-4">
+        <label class="mb-2" for="{{ form.username.id_for_label }}">Email</label>
+        <input
+          type="text"
+          name="{{ form.username.html_name }}"
+          class="form-control border-2"
+        />
+        {%if form.username.errors%}
+        <div class="alert alert-danger fw-bold my-3">
+          {{ form.username.errors }}
+        </div>
+        {%endif%}
       </div>
-      {%endif%}
-    </div>
-    <div class="">
-      <label class="mb-2" for="{{ form.password.id_for_label }}"
-        >Password</label
-      >
-      <input
-        type="password"
-        name="{{ form.password.html_name }}"
-        class="form-control border-2"
-      />
-      {%if form.password.errors%}x
-      <div class="alert alert-danger fw-bold my-3">
-        {{ form.password.errors }}
+      <div class="">
+        <label class="mb-2" for="{{ form.password.id_for_label }}"
+          >Password</label
+        >
+        <input
+          type="password"
+          name="{{ form.password.html_name }}"
+          class="form-control border-2"
+        />
+        {%if form.password.errors%}x
+        <div class="alert alert-danger fw-bold my-3">
+          {{ form.password.errors }}
+        </div>
+        {%endif%}
       </div>
-      {%endif%}
-    </div>
-    <div class="mt-4">
-      {% if form.errors %}
-      <div class="alert alert-danger fw-bold">
-        Please enter a valid email and password
+      <div class="mt-4">
+        {% if form.errors %}
+        <div class="alert alert-danger fw-bold">
+          Please enter a valid email and password
+        </div>
+        {% endif %}
       </div>
-      {% endif %}
-    </div>
-    <div class='d-flex justify-content-end'>
-    <button type="submit" class="btn btn-primary px-4 fs-5 mt-4">Login</button>
-    </div>  </form>
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <a href="{%url 'password_reset' %}" class="text-primary"
+          >Forget Password?</a
+        >
+        <button type="submit" class="btn btn-primary px-4 fs-5">Login</button>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}

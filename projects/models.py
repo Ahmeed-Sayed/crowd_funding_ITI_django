@@ -1,8 +1,8 @@
 from django.utils import timezone
 from django.db import models
 from accounts.models import UserProfile
-from django.core.validators import MaxValueValidator
-
+from django.core.validators import MaxValueValidator,MinValueValidator,MinLengthValidator
+from accounts.models import SoftDeleteModel
 
 class CategoriesModel(models.Model):
     name = models.CharField(max_length=50)
@@ -18,12 +18,12 @@ class TagsModel(models.Model):
         return self.name
 
 
-class ProjectsModel(models.Model):
+class ProjectsModel(SoftDeleteModel,models.Model):
     user = models.ForeignKey(
         UserProfile, related_name="projects", on_delete=models.CASCADE
     )
     title = models.CharField(max_length=200)
-    details = models.TextField(max_length=3000)
+    details = models.TextField(max_length=3000,validators=[MinLengthValidator(50)])
     category = models.ManyToManyField(CategoriesModel)
     target = models.IntegerField()
     tags = models.ManyToManyField(TagsModel)
@@ -81,7 +81,7 @@ class CommentReportModel(models.Model):
         return f"User {self.user.user.username} report on Project {self.project.title}"
 
 
-class DonationModel(models.Model):
+class DonationModel(SoftDeleteModel,models.Model):
     user = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name="donations"
     )

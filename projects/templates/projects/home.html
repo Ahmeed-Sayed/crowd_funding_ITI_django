@@ -1,5 +1,4 @@
-{%extends 'base.html'%} {%load static%} {%block title%}Kind Heart Charity - Free
-Bootstrap 5.2.2 CSS Template{%endblock%} {%block body%}
+{%extends 'base.html'%} {%load static%} {%block title%}Fundy{%endblock%} {%block body%}
 <div id="section_1">
   <main>
     <section class="hero-section hero-section-full-height">
@@ -12,20 +11,21 @@ Bootstrap 5.2.2 CSS Template{%endblock%} {%block body%}
               data-bs-ride="carousel"
             >
               <div class="carousel-inner">
-                {% for project in top_projects %}
+                {% for project in featured_projects %}
 
                 <div
                   class="carousel-item {% if forloop.first %}active{% endif %}"
                 >
+                <a href="{%url 'projectDetails' project.id %}">
                   <img
                     src="{{ project.images.first.image.url }}"
                     class="carousel-image img-fluid"
                   />
-
+              </a>
                   <div
-                    class="carousel-caption d-flex flex-column justify-content-end"
+                    class="carousel-caption d-flex flex-column justify-content-end align-items-bottom"
                   >
-                    <h1>{{project.title|title}}</h1>
+                    <h1 class='ms-5'>{{project.title|title}}</h1>
                   </div>
                 </div>
                 {%endfor%}
@@ -70,12 +70,13 @@ Bootstrap 5.2.2 CSS Template{%endblock%} {%block body%}
           </div>
 
           <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
+            <a href="{%url 'category' 1%}" class="d-block">
+
             <div
-              class="featured-block d-flex justify-content-center align-items-center"
+              class="featured-block d-flex flex-column justify-content-center align-items-center"
             >
-              <a href="{%url 'category' 1%}" class="d-block">
                 <img
-                  src="{%static 'images/technology.png'%}"
+                  src="{%static 'images/Technology.png'%}"
                   class="featured-block-image img-fluid"
                   alt=""
                 />
@@ -83,17 +84,18 @@ Bootstrap 5.2.2 CSS Template{%endblock%} {%block body%}
                 <p class="featured-block-text">
                   <strong>Technology</strong>
                 </p>
-              </a>
             </div>
-          </div>
+          </a>
+        </div>
 
           <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
+            <a href="{%url 'category' 2%}" class="d-block">
+
             <div
-              class="featured-block d-flex justify-content-center align-items-center"
+              class="featured-block d-flex flex-column justify-content-center align-items-center"
             >
-              <a href="{%url 'category' 2%}" class="d-block">
                 <img
-                  src="{%static 'images/healthcare.png'%}"
+                  src="{%static 'images/Health and Care.png'%}"
                   class="featured-block-image img-fluid"
                   alt=""
                 />
@@ -101,17 +103,17 @@ Bootstrap 5.2.2 CSS Template{%endblock%} {%block body%}
                 <p class="featured-block-text">
                   <strong>Health and Fitness</strong>
                 </p>
-              </a>
             </div>
-          </div>
+          </a>
+        </div>
 
           <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-4">
-            <div
-              class="featured-block d-flex justify-content-center align-items-center"
+            <a href="{%url 'category' 3%}" class="d-block">
+              <div
+              class="featured-block d-flex  flex-column justify-content-center align-items-center"
             >
-              <a href="{%url 'category' 3%}" class="d-block">
                 <img
-                  src="{%static 'images/education.png'%}"
+                  src="{%static 'images/Education.png'%}"
                   class="featured-block-image img-fluid"
                   alt=""
                 />
@@ -119,17 +121,18 @@ Bootstrap 5.2.2 CSS Template{%endblock%} {%block body%}
                 <p class="featured-block-text">
                   <strong>Education</strong>
                 </p>
-              </a>
             </div>
-          </div>
+          </a>
+        </div>
 
           <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
+            <a href="{%url 'category' 4%}" class="d-block">
+
             <div
-              class="featured-block d-flex justify-content-center align-items-center"
+              class="featured-block d-flex flex-column justify-content-center align-items-center"
             >
-              <a href="{%url 'category' 4%}" class="d-block">
                 <img
-                  src="{%static 'images/environment.png'%}"
+                  src="{%static 'images/Environment.png'%}"
                   class="featured-block-image img-fluid"
                   alt=""
                 />
@@ -137,9 +140,9 @@ Bootstrap 5.2.2 CSS Template{%endblock%} {%block body%}
                 <p class="featured-block-text">
                   <strong>Environment</strong>
                 </p>
-              </a>
             </div>
-          </div>
+          </a>
+        </div>
         </div>
       </div>
     </section>
@@ -166,8 +169,9 @@ Bootstrap 5.2.2 CSS Template{%endblock%} {%block body%}
                   <h5 class="mb-3">{{project.title|title}}</h5>
 
                   <p>
-                    Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
-                    omeg kohm tokito
+                    {%if project.details|length > 150%}
+                    {{project.details|slice:150}}... {%else%}
+                    {{project.details}} {%endif%}
                   </p>
 
                   <div class="progress mt-4">
@@ -229,71 +233,9 @@ Bootstrap 5.2.2 CSS Template{%endblock%} {%block body%}
                   <h5 class="mb-3">{{project.title|title}}</h5>
 
                   <p>
-                    Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
-                    omeg kohm tokito
-                  </p>
-
-                  <div class="progress mt-4">
-                    <div
-                      class="progress-bar"
-                      style="width:{{project.progress}}%"
-                      role="progressbar"
-                      aria-valuenow="75"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-
-                  <div class="d-flex align-items-center my-2">
-                    <p class="mb-0">
-                      <strong>Raised:</strong>
-                      {{project.total_donations}}
-                    </p>
-
-                    <p class="ms-auto mb-0">
-                      <strong>Goal:</strong>
-                      {{project.target}}
-                    </p>
-                  </div>
-                </div>
-
-                <a
-                  href="{%url 'projectDetails' project.id%}"
-                  class="custom-btn btn"
-                  >Donate now</a
-                >
-              </div>
-            </div>
-          </div>
-          {%endfor%}
-        </div>
-      </div>
-    </section>
-
-    <section class="news-section section-padding" id="section_5">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-12 text-center mb-4">
-            <h2>Featured Projects</h2>
-          </div>
-          {% for project in featured_projects %}
-
-          <div class="col-lg-4 col-md-6 col-12 my-3">
-            <div class="custom-block-wrap">
-              <a href="{%url 'projectDetails' project.id%}">
-                <img
-                  src="{{ project.images.first.image.url }}"
-                  class="custom-block-image img-fluid"
-                />
-              </a>
-
-              <div class="custom-block">
-                <div class="custom-block-body">
-                  <h5 class="mb-3">{{project.title|title}}</h5>
-
-                  <p>
-                    Lorem Ipsum dolor sit amet, consectetur adipsicing kengan
-                    omeg kohm tokito
+                    {%if project.details|length > 150%}
+                    {{project.details|slice:150}}... {%else%}
+                    {{project.details}} {%endif%}
                   </p>
 
                   <div class="progress mt-4">

@@ -12,20 +12,21 @@
   crossorigin="anonymous"
 />
 
-{%endblock%} {%block body%}
+{%endblock%} 
+{%block title%} Profile {%endblock%}{%block body%}
 
 
 
 <div class="container my-5 " >
   <div class="row">
-    <div class="col-lg-4 col-xl-4">
+    <div class="col-lg-4 col-xl-4 border-end">
       <div class="card-box text-center">
         <img
         src="{{  user.image.url }}"
         alt="Profile"
-        class="rounded-5 img-thumbnail mb-3"
-        width="50%"
-        height="50%"
+        class="rounded-5  mb-3"
+        width="200px"
+        height="200px"
       />
         <h5 class="mb-3">{{user.user.username}}</h5>
         <a href="{%url 'profileEdit' user.id %}">
@@ -36,7 +37,7 @@
           Edit Profile
         </button>
       </a>
-      <a href="{%url "profileDelete" user.id%}" >
+      <a href="{%url "profileDelete" user.id %}" >
         <button
           type="button"
           class="btn btn-danger btn-xs waves-effect mb-2 waves-light"
@@ -61,10 +62,10 @@
           </p>
          
           <p class="text-muted mb-2 ">
-            <strong>Address :</strong><span class="ml-2">{%if user.address is not none%} {{user.address}} {%else%} (Not Added Yet) {%endif%}</span>
+            <strong>Address :</strong><span class="ml-2">{%if user.address is not none%} {{user.address}} {%else%} Empty {%endif%}</span>
           </p>
           <p class="text-muted mb-1 ">
-            <strong>Birthdate :</strong> <span class="ml-2">{%if user.birthdate is not none%} {{user.birthdate}} {%else%} (Not Added Yet) {%endif%}</span>
+            <strong>Birthdate :</strong> <span class="ml-2">{%if user.birthdate is not none%} {{user.birthdate}} {%else%} Empty {%endif%}</span>
           </p>
         </div>
 
@@ -84,7 +85,7 @@
             </h5>
         {% if user.projects.all|length == 0 %}
             <div class='d-flex justify-content-center align-items-center' style='padding-top:30px'>
-              <p class="fs-5">No projects yet, <a  href="{% url 'createProject'%}" class='text-primary'> Create Project </a></p>
+              <p class="fs-5">No personal projects yet, <a  href="{% url 'createProject'%}" class='fw-bold' style="color:#3160b7"> Create Project </a></p>
             </div>
             {%else%}
             <div class="table-responsive">
@@ -103,7 +104,7 @@
 
                   <tr>
                     <td>{{forloop.counter}}</td>
-                    <td>{{project.title|title}}</td>
+                    <td><a href="{%url 'projectDetails' project.id%}" style="color:#3160b7">{{project.title|title}}</a></td>
                     <td>{{project.start_time}}</td>
                     <td>{{project.end_time}}</td>
                     <td>
@@ -129,7 +130,7 @@
               </h5>
           {% if user.donations.all|length == 0 %}
               <div class='d-flex justify-content-center align-items-center' style='padding-top:30px'>
-                <p class="fs-5">No donations yet, <a  href="{% url 'project_list'%}" class='text-primary'> Start donating </a></p>
+                <p class="fs-5">No personal donations yet, <a  href="{% url 'project_list'%}" class='fw-bold' style="color:#3160b7"> Start donating </a></p>
               </div>
               {%else%}
               <div class="table-responsive">

@@ -23,11 +23,13 @@
 
       <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0 my-3">
         <div class="custom-block-wrap">
+          <a href="{%url 'projectDetails' project.id %}">
+
           <img
             src="{{ project.images.first.image.url }}"
             class="custom-block-image"
           />
-
+          </a>
           <div class="custom-block">
             <div class="custom-block-body">
               <h5 class="mb-3">{{project.title|title}}</h5>
