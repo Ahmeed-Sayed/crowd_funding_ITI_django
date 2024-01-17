@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.db import models
 from accounts.models import UserProfile
-from django.core.validators import MaxValueValidator,MinValueValidator
+from django.core.validators import MaxValueValidator,MinValueValidator,MinLengthValidator
 from accounts.models import SoftDeleteModel
 
 class CategoriesModel(models.Model):
@@ -23,7 +23,7 @@ class ProjectsModel(SoftDeleteModel,models.Model):
         UserProfile, related_name="projects", on_delete=models.CASCADE
     )
     title = models.CharField(max_length=200)
-    details = models.TextField(max_length=3000,validators=[MinValueValidator(50)])
+    details = models.TextField(max_length=3000,validators=[MinLengthValidator(50)])
     category = models.ManyToManyField(CategoriesModel)
     target = models.IntegerField()
     tags = models.ManyToManyField(TagsModel)

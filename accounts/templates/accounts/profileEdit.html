@@ -1,8 +1,12 @@
-{%extends 'base.html'%} {%block body%}
+{%extends 'base.html'%}
+{%block title%} Profile Edit {%endblock%}
+ {%block body%}
 <div class="container w-50 my-5">
   <form method="post" class='custom-form' enctype="multipart/form-data">
     {% csrf_token %} {{form}}
-    <button type="submit" class="btn btn-primary">Submit Edit</button>
-  </form>
+    <div class='d-flex justify-content-end'>
+    <button type="submit" class="btn custom-btn">Submit Edit</button>
+</div>
+</form>
 </div>
 {%endblock%}

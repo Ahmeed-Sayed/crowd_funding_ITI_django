@@ -84,6 +84,7 @@ https://templatemo.com/tm-581-kind-heart-charity
 body {
   background-color: var(--white-color);
   font-family: var(--body-font-family); 
+  height: 100%;
 }
 
 

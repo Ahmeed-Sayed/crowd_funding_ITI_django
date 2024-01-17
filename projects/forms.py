@@ -37,6 +37,7 @@ class ProjectCreationForm(forms.ModelForm):
 
     def clean_start_time(self):
         start_time = self.cleaned_data.get("start_time")
+        print(type(start_time))
         if start_time and start_time < timezone.now():
             raise ValidationError("Start date should be today or later.")
         return start_time

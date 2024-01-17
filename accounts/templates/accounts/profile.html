@@ -12,7 +12,8 @@
   crossorigin="anonymous"
 />
 
-{%endblock%} {%block body%}
+{%endblock%} 
+{%block title%} Profile {%endblock%}{%block body%}
 
 
 
@@ -61,10 +62,10 @@
           </p>
          
           <p class="text-muted mb-2 ">
-            <strong>Address :</strong><span class="ml-2">{%if user.address is not none%} {{user.address}} {%else%} (Not Added Yet) {%endif%}</span>
+            <strong>Address :</strong><span class="ml-2">{%if user.address is not none%} {{user.address}} {%else%} Empty {%endif%}</span>
           </p>
           <p class="text-muted mb-1 ">
-            <strong>Birthdate :</strong> <span class="ml-2">{%if user.birthdate is not none%} {{user.birthdate}} {%else%} (Not Added Yet) {%endif%}</span>
+            <strong>Birthdate :</strong> <span class="ml-2">{%if user.birthdate is not none%} {{user.birthdate}} {%else%} Empty {%endif%}</span>
           </p>
         </div>
 

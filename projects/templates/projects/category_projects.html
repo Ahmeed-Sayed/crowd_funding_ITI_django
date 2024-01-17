@@ -1,4 +1,7 @@
-{% extends 'base.html'%} {% load static %} {% block body %}
+{% extends 'base.html'%} {% load static %}
+{%block title%}{{category.name|title}} Projects{%endblock%}
+
+{% block body %}
 
 <section  class='mb-5' id="section_3">
     <div class="row">
@@ -36,20 +39,23 @@
 
       {% for project in projects %}
 
-      <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0">
+      <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0 gy-3">
         <div class="custom-block-wrap">
+          <a href="{%url 'projectDetails' project.id %}">
+
           <img
             src="{{ project.images.first.image.url }}"
             class="custom-block-image"
           />
-
+          </a>
           <div class="custom-block">
             <div class="custom-block-body">
               <h5 class="mb-3">{{project.title|title}}</h5>
 
               <p>
-                Lorem Ipsum dolor sit amet, consectetur adipsicing kengan omeg
-                kohm tokito
+                {%if project.details|length > 150%}
+                {{project.details|slice:150}}... {%else%} {{project.details}}
+                {%endif%}
               </p>
 
               <div class="progress mt-4">
