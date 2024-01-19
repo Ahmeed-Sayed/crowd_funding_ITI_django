@@ -1124,15 +1124,6 @@ blockquote::before {
   font-weight: var(--font-weight-semibold);
 }
 
-#DonationFrequencyOne {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-#DonationFrequencyMonthly {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
 
 .custom-form .form-check-radio {
   position: relative;
@@ -1253,19 +1244,6 @@ blockquote::before {
   color: var(--dark-color);
 }
 
-.subscribe-form {
-  background: var(--section-bg-color);
-  border-radius: var(--border-radius-small);
-  padding: 30px;
-}
-
-.subscribe-form .form-control {
-  background: var(--white-color);
-}
-
-.donate-form .form-control {
-  margin-bottom: 0;
-}
 
 
 /*---------------------------------------
@@ -1335,38 +1313,6 @@ blockquote::before {
   margin-bottom: 5px;
 }
 
-
-/*---------------------------------------
-  SOCIAL ICON               
------------------------------------------*/
-.social-icon {
-  margin: 0;
-  padding: 0;
-}
-
-.social-icon-item {
-  list-style: none;
-  display: inline-block;
-  vertical-align: top;
-}
-
-.social-icon-link {
-  background: var(--site-footer-bg-color);
-  border-radius: var(--border-radius-large);
-  color: var(--white-color);
-  font-size: var(--copyright-font-size);
-  display: block;
-  margin-right: 5px;
-  text-align: center;
-  width: 35px;
-  height: 35px;
-  line-height: 38px;
-}
-
-.social-icon-link:hover {
-  background: var(--primary-color);
-  color: var(--white-color);
-}
 
 
 /*---------------------------------------
@@ -1487,54 +1433,14 @@ blockquote::before {
     height: 60px;
   }
 
-  .news-detail-header-section {
-    padding-top: 100px;
-    padding-bottom: 100px;
-  }
-
-  .cta-section::before {
-    width: 150px;
-    height: 150px;
-  }
-
-  .cta-section::after {
-    bottom: -60px;
-    width: 100px;
-    height: 100px;
-  }
-
-  .cta-section .row {
-    padding-top: 50px;
-    padding-bottom: 50px;
-  }
+ 
 
   .volunteer-section::after {
     width: 300px;
     height: 300px;
   }
 
-  .testimonial-section::before {
-    width: 150px;
-    height: 150px;
-  }
-
-  .testimonial-section::after {
-    width: 200px;
-    height: 200px;
-  }
-
-  #testimonial-carousel .carousel-caption {
-    padding-top: 0;
-  }
-
-  blockquote {
-    padding: 70px 30px 30px 30px;
-  }
-
-  .about-image {
-    width: inherit;
-    height: 450px;
-  }
+  
 
   .volunteer-image {
     width: 250px;
@@ -1635,25 +1541,4 @@ blockquote::before {
     width: 200px;
     height: 200px;
   }
-
-  .testimonial-section::before {
-    top: -50px;
-    width: 100px;
-    height: 100px;
-  }
-
-  .testimonial-section::after {
-    bottom: -150px;
-    width: 200px;
-    height: 200px;
-  }
-
-  .social-share .tags-block {
-    margin-bottom: 10px;
-  }
-
-  .donate-form {
-    padding: 25px;
-  }
 }
-

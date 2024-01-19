@@ -149,7 +149,7 @@
                     
                     <tr>
                       <td>{{forloop.counter}}</td>
-                      <td>{{donation.project.title|title}}</td>
+                      <td><a href="{%url 'projectDetails' donation.project.id%}" style="color:#3160b7">{{donation.project.title|title}}</a></td>
                       <td>{{donation.created_date}}</td>
                       <td >
                         {%if donation.project.completed %}
