@@ -6,15 +6,16 @@
 <div
   class=" rounded fw-bold d-flex justify-content-center align-items-center"style="min-height: 100vh;background-color:#f0f8ff" 
 >
-  <div class="shadow shadow-lg p-5 d-flex justify-content-center w-50 rounded-5" style="background-color:white">
+  <div class="shadow shadow-lg p-5 d-flex justify-content-center  rounded-5" style="background-color:white">
     <form
       method="post"
       class="custom-form p-5 w-100 rounded"
       enctype="multipart/form-data"
     >
       {% csrf_token %}
-      <div class="mb-4">
-        <label class="mb-2" for="{{ form.username.id_for_label }}">Email</label>
+      <div class='row'>
+      <div class="mb-4 col-md-12">
+        <h5 class="mb-2" for="{{ form.username.id_for_label }}">Email</h5>
         <input
           type="text"
           name="{{ form.username.html_name }}"
@@ -26,9 +27,9 @@
         </div>
         {%endif%}
       </div>
-      <div class="">
-        <label class="mb-2" for="{{ form.password.id_for_label }}"
-          >Password</label
+      <div class="col-12">
+        <h5 class="mb-2" for="{{ form.password.id_for_label }}"
+          >Password</h5
         >
         <input
           type="password"

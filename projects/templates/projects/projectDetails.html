@@ -14,8 +14,8 @@
     </div>
   {% endif %}
 
-  <div class="ps-md-5 pt-5 rounded d-flex justify-content-center flex-row">
-    <section class="w-75" style="width: 60% !important">
+  <div class=" px-5 pt-5 rounded gx-5 row">
+    <section class="col col-lg-8 col-md-12 " >
       <!-- Carousel -->
       <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
@@ -95,9 +95,9 @@
             <div class='pt-3 my-3'>
               <div class='d-flex justify-content-between'>
                 <div class='d-flex justify-content-start'>
-                  <img src="{{ comment.user.image.url }}" width='120px' height='110px' class='rounded'/>
+                  <img src="{{ comment.user.image.url }}" width='120px' height='110px' class='rounded-4'/>
                   <div class='ms-3'>
-                    <p class='fs-4 fw-bold'>{{ comment.user.user.username }}</p>
+                    <p class='fs-4 fw-bold'>{{ comment.user.user.first_name }} {{ comment.user.user.last_name }}</p>
                     <p class='me-5'>{{ comment.text }}</p>
                   </div>
                 </div>
@@ -107,7 +107,6 @@
             <hr class='bg-dark my-4'/>
           {% endfor %}
       {% endif %}
-      <!-- Leave a comment -->
       <div class='rounded my-4'>
         <h4 class='mb-3 fw-bold'>Leave a Comment</h4>
         <form method="post" class="custom-form">
@@ -121,10 +120,10 @@
     </section>
 
     <!-- Sidebar -->
-    <section class='ms-5 w-25 ps-3'>
-      <div>
+    <section class='col-md-12 col-lg-4  '>
+      <div >
         <!-- Publisher information -->
-        <div class='d-flex flex-column justify-content-start w-100 p-2 border-bottom'>
+        <div class='d-flex flex-column justify-content-end  p-2 border-bottom'>
           <h4 class='text-center mb-4 '>Publisher</h4>
           <div class='me-3  d-flex flex-column align-items-center'>
             <img src='{{ currentProject.user.image.url }}' width='150px' height='150px' class='rounded mb-4'/>
@@ -133,28 +132,29 @@
         </div>
       </div>
       <!-- Donation form -->
-      <div class="">
-        <h4 class="my-4  text-center">Support  Project</h4>
+      <div>
+        <h4 class="my-4  text-center">Support Project</h4>
+        {% if  not currentProject.completed and not currentProject.closed %}
+            
         <form method="post" class="custom-form">
           {% csrf_token %}
-          {% if not currentProject.completed %}
-            <input type="number" name="donation" class="form-control" min="1" required>
+          <input type="number" name="donation" class="form-control" min="1" required>
             <div class='d-flex justify-content-end me-2 '>
               <input type="submit" name="submit-donation" value="Donate" class="custom-btn mt-2 px-3 py-2" />
             </div>
-          {% else %}
-            <input type="number" name="donation" class="form-control" min="1" >
-            <div class='d-flex justify-content-end me-2 '>
-              <input type="submit" name="submit-donation" value="Donate" class="custom-btn mt-2 px-3 py-2">
-            </div>
-          {% endif %}
-        </form>
+         </form>
+         {% elif currentProject.completed %}
+         <h5 class='text-center text-success'> The project has reached its target! </h5>
+         {% elif currentProject.closed %}
+        <h5 class='text-center'> The project was closed! </h5>
+        {% endif %}
       </div>
-      <hr class='bg-dark my-4'/>
       <!-- Rating form -->
-      <div class="text-center">
+      {% if  not currentProject.closed %}
+      <div class="text-center border-top mt-4">
         <div class="my-3">
           <h4 class='my-4 '> Rate Project From 1 to 5 </h4>
+          
           <form method="post" class="custom-form">
             {% csrf_token %}
             {{ ratingForm }}
@@ -164,6 +164,7 @@
           </form>
         </div>
       </div>
+      {%endif%}
     </section>
   </div>
 
