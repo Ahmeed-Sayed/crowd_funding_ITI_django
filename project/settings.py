@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import environ
+import dj_database_url
 
 env = environ.Env()
 environ.Env.read_env()
@@ -68,7 +69,8 @@ DATABASES = {
         "PORT": "5432",
     }
 }
-
+databaseURL = env("DATABASE_URL")
+DATABASES["default"] = dj_database_url.parse(databaseURL)
 
 AUTH_PASSWORD_VALIDATORS = [
     {
