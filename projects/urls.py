@@ -26,5 +26,5 @@ urlpatterns = [
         views.deleteProject,
         name="deleteProject",
     ),
-    path("projectSearch/<str:query>?/", views.searchResults, name="searchResults"),
+    path("projectSearch/<str:query>/", views.searchResults, name="searchResults"),
 ]

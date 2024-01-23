@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
   {% load static %}
-  
-<head>
+
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %} {% endblock %}</title>
@@ -23,12 +22,11 @@
         font-family: "Open Sans", sans-serif;
       }
     </style>
-
   </head>
-  <body >
+  <body>
     <nav class="navbar navbar-expand-lg bg-light shadow-lg">
       <div class="container">
-        <a class="navbar-brand" href="{%url 'home'%}" >
+        <a class="navbar-brand" href="{%url 'home'%}">
           <span class="text-center">
             Fundy
             <small>Crowd Funding App</small>
@@ -55,9 +53,14 @@
             <li class="nav-item">
               <a class="nav-link" href="{%url 'project_list'%}">Projects</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{%url 'createProject'%}"
+                >Create Project</a
+              >
+            </li>
             <li class="nav-item dropdown">
               <a
-                class="nav-link  dropdown-toggle"
+                class="nav-link dropdown-toggle"
                 id="navbarLightDropdownMenuLink"
                 role="button"
                 data-bs-toggle="dropdown"
@@ -93,7 +96,7 @@
             </li>
             <li class="nav-item dropdown">
               <a
-                class="nav-link  dropdown-toggle"
+                class="nav-link dropdown-toggle"
                 id="navbarLightDropdownMenuLink"
                 role="button"
                 data-bs-toggle="dropdown"
@@ -138,15 +141,11 @@
         </div>
       </div>
     </nav>
-    <div style='min-height:100vh'>
-    {%block body%} {%endblock%}
-    </div>
+    <div style="min-height: 100vh">{%block body%} {%endblock%}</div>
 
     <footer class="site-footer">
       <div class="container">
         <div class="row">
-          
-
           <div class="col-lg-4 col-md-6 col-12 mb-4">
             <h5 class="site-footer-title mb-3">Quick Links</h5>
 
@@ -156,13 +155,10 @@
               </li>
 
               <li class="footer-menu-item">
-                <a href="{%url 'project_list'%}" class="footer-menu-link">Projects</a>
+                <a href="{%url 'project_list'%}" class="footer-menu-link"
+                  >Projects</a
+                >
               </li>
-
-              
-
-              
-              
             </ul>
           </div>
 
@@ -189,7 +185,6 @@
               <i class="bi-geo-alt me-2"></i>
               Cairo, Egypt
             </p>
-
           </div>
         </div>
       </div>
@@ -203,8 +198,6 @@
                 <a href="https://templatemo.com" target="_blank">TemplateMo</a>
               </p>
             </div>
-
-            
           </div>
         </div>
       </div>

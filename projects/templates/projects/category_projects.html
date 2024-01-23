@@ -1,13 +1,13 @@
 {% extends 'base.html'%} {% load static %} {%block title%}{{category.name|title}} Projects{%endblock%} {% block body %}
 
 <section class="mb-5" id="section_3">
-  <div class="row gx-5">
+  <div class="row  gx-0">
     <div
       style="background-color: #f0f8ff"
       class="py-5 d-flex justify-content-center align-items-center"
     >
       <h2 style="color: var(--primary-color)">{{category}} Projects</h2>
-      <div class="d-flex justify-content-center ms-3">
+      <div class="d-flex justify-content-center">
         <img
           src="{% with 'images/'|add:category.name|add:'.png' as img_src %}{% static img_src %}{% endwith %}"
           class="featured-block-image img-fluid"
@@ -28,7 +28,7 @@
     </div>
   </div>
   <div class="container">
-    <div class="row">
+    <div class="row ">
       {% for project in projects %}
 
       <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0 gy-3">
