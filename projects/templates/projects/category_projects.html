@@ -7,13 +7,7 @@
       class="py-5 d-flex justify-content-center align-items-center"
     >
       <h2 style="color: var(--primary-color)">{{category}} Projects</h2>
-      <div class="d-flex justify-content-center">
-        <img
-          src="{% with 'images/'|add:category.name|add:'.png' as img_src %}{% static img_src %}{% endwith %}"
-          class="featured-block-image img-fluid"
-          alt=""
-        />
-      </div>
+      
     </div>
     <div class="col-lg-12 col-12 text-center mb-4">
       <div class="d-flex justify-content-center mb-5">
