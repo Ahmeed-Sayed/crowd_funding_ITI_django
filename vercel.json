@@ -3,11 +3,11 @@
 
     "builds": [{
 
-        "src": "djangoprojectname/wsgi.py",
+        "src": "project/wsgi.py",
 
         "use": "@vercel/python",
 
-        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.11.5" }
 
     }],
 
@@ -17,7 +17,7 @@
 
             "src": "/(.*)",
 
-            "dest": "djangoprojectname/wsgi.py"
+            "dest": "project/wsgi.py"
 
         }
 
