@@ -1,7 +1,8 @@
 from pathlib import Path
 import os
 import environ
-#import dj_database_url
+
+# import dj_database_url
 
 env = environ.Env()
 environ.Env.read_env()
@@ -21,6 +22,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "accounts",
     "projects",
     "bootstrap4",
@@ -29,6 +31,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -83,7 +86,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+CORS_ALLOW_ALL_ORIGINS = True
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
