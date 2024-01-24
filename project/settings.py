@@ -61,16 +61,12 @@ WSGI_APPLICATION = "project.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": "localhost",
-        "NAME": os.environ.get("DATABASE_NAME"),
-        "USER": os.environ.get("DATABASE_USER"),
-        "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
-        "PORT": "5432",
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "fundy_db",
     }
 }
-databaseURL = os.environ.get("DATABASE_URL")
-DATABASES["default"] = dj_database_url.parse(databaseURL)
+# databaseURL = os.environ.get("DATABASE_URL")
+# DATABASES["default"] = dj_database_url.parse(databaseURL)
 
 AUTH_PASSWORD_VALIDATORS = [
     {

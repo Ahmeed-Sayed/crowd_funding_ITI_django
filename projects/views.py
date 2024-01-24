@@ -85,6 +85,13 @@ def searchResults(request, query):
                 | Q(tags__name__icontains=query)
                 | Q(category__name__icontains=query)
             ).distinct()
+            for project in projects:
+                project.total_donations = DonationModel.objects.filter(
+                    project=project
+                ).aggregate(sum=Sum("donation"))["sum"]
+                if project.total_donations is None:
+                    project.total_donations = 0
+                project.progress = (project.total_donations / project.target) * 100    
         search_form = ProjectSearchForm(initial={"query": query})
         return render(
             request,
@@ -97,6 +104,13 @@ def searchResults(request, query):
             | Q(tags__name__icontains=query)
             | Q(category__name__icontains=query)
         ).distinct()
+        for project in projects:
+                project.total_donations = DonationModel.objects.filter(
+                    project=project
+                ).aggregate(sum=Sum("donation"))["sum"]
+                if project.total_donations is None:
+                    project.total_donations = 0
+                project.progress = (project.total_donations / project.target) * 100
         search_form = ProjectSearchForm(initial={"query": query})
         return render(
             request,
