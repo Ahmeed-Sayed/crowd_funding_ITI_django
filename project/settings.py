@@ -85,8 +85,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-CORS_ALLOWED_ORIGINS = [
-    "https://crowdfundingitidjango-production.up.railway.app",
+CSRF_TRUSTED_ORIGINS = [
+"https://*.railway.app"
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 LANGUAGE_CODE = "en-us"
